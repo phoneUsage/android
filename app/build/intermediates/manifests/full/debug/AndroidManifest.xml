@@ -33,7 +33,7 @@
             android:value="@string/parse_client_key" />
 
         <activity
-            android:name="edu.dartmouth.phoneusage.MainActivity"
+            android:name="edu.dartmouth.phoneusage.controllers.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
