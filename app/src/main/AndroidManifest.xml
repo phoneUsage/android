@@ -8,13 +8,13 @@
   ~ of patent rights can be found in the PATENTS file in the same directory.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.parse.starter" >
+    package="edu.dartmouth.phoneusage" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".StarterApplication"
+        android:name="edu.dartmouth.phoneusage.StarterApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,7 +27,7 @@
             android:value="@string/parse_client_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="edu.dartmouth.phoneusage.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
