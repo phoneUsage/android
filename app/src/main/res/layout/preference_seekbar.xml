@@ -7,8 +7,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Target Percentile"
-        android:textSize="18sp"
-        android:id="@+id/Percenctile_title_textview" />
+        android:textSize="17sp"
+        android:id="@+id/percentile_title_textview" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
