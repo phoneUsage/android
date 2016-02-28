@@ -26,6 +26,7 @@ local.properties
 .idea/scopes/scope_settings.xml
 .idea/codeStyleSettings.xml
 .idea/vcs.xml
+.idea/codeStyleSettings.xml
 *.iml
 
 # OS-specific files
