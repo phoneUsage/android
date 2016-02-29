@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
 	private static final int STATUS_BAR_NOTIFICATION = 0;
 	public NotificationManager nm;
 	int mPercentage;
+	int mUnlocks;
 
 	/**
 	 * Called when the activity is first created.
@@ -98,6 +99,7 @@ public class MainActivity extends Activity {
 		new Thread(new Runnable() {
 			public void run() {
 				mPercentage = 45;
+				mUnlocks = 60;
 				boolean mRun = true;
 				while (mRun) {
 					CharSequence title =  mPercentage +  "%, 60 unlocks";
