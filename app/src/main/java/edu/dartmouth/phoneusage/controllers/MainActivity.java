@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
 		final Notification noti = new Notification(R.mipmap.ic_launcher, tickerText, when);
 		Context context = this.getApplicationContext();
 		Intent notiIntent = new Intent(context, MainActivity.class);
-		PendingIntent pi = PendingIntent.getService(context, 0, notiIntent, 0);
+		PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, 0);
 		//noti.flags |= Notification.FLAG_AUTO_CANCEL;
 		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
 		contentView.setImageViewResource(R.id.status_icon, R.mipmap.ic_launcher);
