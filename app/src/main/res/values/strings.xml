@@ -15,4 +15,8 @@
 
     <string name="hello_world">Hello World!</string>
     <string name="action_settings">Settings</string>
+
+
+    <!-- Week View Strings -->
+    <string name="week_usage_chart_title">Weekly Phone Usage (Hours)</string>
 </resources>
