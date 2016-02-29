@@ -12,14 +12,24 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,6 +44,10 @@ public class MainActivity extends Activity {
 	private ViewPager viewPager;
 	private ArrayList<Fragment> fragments;
 	private ActionTabsViewPagerAdapter myViewPageAdapter;
+	private static final int STATUS_BAR_NOTIFICATION = 0;
+	public NotificationManager nm;
+	int mPercentage;
+	int mUnlocks;
 
 	/**
 	 * Called when the activity is first created.
@@ -42,7 +56,15 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		setupTabs();
+		setupNotification();
 
+	}
+
+	/*helper functions*/
+
+	//set up tabs with fragments
+	private void setupTabs(){
 		// Define SlidingTabLayout (shown at top)
 		// and ViewPager (shown at bottom) in the layout.
 		// Get their instances.
@@ -75,5 +97,41 @@ public class MainActivity extends Activity {
         registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(ubc, new IntentFilter(Intent.ACTION_SHUTDOWN));
     }
+
+	//set up the notification
+	private void setupNotification(){
+		nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		CharSequence tickerText = "hello";
+		long when = System.currentTimeMillis();
+		final Notification noti = new Notification(R.mipmap.ic_launcher, tickerText, when);
+		Context context = this.getApplicationContext();
+		Intent notiIntent = new Intent(context, MainActivity.class);
+		PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, 0);
+		//noti.flags |= Notification.FLAG_AUTO_CANCEL;
+		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
+		contentView.setImageViewResource(R.id.status_icon, R.mipmap.ic_launcher);
+		noti.contentView = contentView;
+		noti.contentIntent = pi;
+		nm.notify(STATUS_BAR_NOTIFICATION, noti);
+		new Thread(new Runnable() {
+			public void run() {
+				mPercentage = 45;
+				mUnlocks = 60;
+				boolean mRun = true;
+				while (mRun) {
+					CharSequence title =  mPercentage +  "%, 60 unlocks";
+					noti.contentView.setTextViewText(R.id.status_text, title);
+					noti.contentView.setProgressBar(R.id.progressBar, 100, mPercentage, false);
+					if(mPercentage>=100){
+						noti.contentView.setProgressBar(R.id.full_progressBar, 100, 100, false);
+					}
+
+					nm.notify(STATUS_BAR_NOTIFICATION, noti);
+					SystemClock.sleep(10000);
+				}
+			}
+		}).start();
+
+	}
 }
 
