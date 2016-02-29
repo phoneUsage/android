@@ -48,6 +48,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             return;
 
         setValue(progress);
+        setSummary(progress+"%");
     }
 
     @Override

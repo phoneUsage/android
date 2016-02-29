@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 		Context context = this.getApplicationContext();
 		Intent notiIntent = new Intent(context, MainActivity.class);
 		PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, 0);
-		//noti.flags |= Notification.FLAG_AUTO_CANCEL;
+		noti.flags |= Notification.FLAG_ONGOING_EVENT;
 		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
 		contentView.setImageViewResource(R.id.status_icon, R.mipmap.ic_launcher);
 		noti.contentView = contentView;
