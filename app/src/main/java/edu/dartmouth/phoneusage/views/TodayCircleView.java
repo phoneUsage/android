@@ -40,6 +40,7 @@ public class TodayCircleView extends View {
 
         // stored information
         long duration = mSharedPreferences.getLong(mDurationKey, 6600000);
+        // long duration = 6600000; // USE FOR TESTING
         long limitation = mSharedPreferences.getLong(mLimitationKey, 8800000);
         double percentage = (double) duration / (double) limitation;
 
@@ -55,7 +56,10 @@ public class TodayCircleView extends View {
         long hours = (duration / 3600000) % 24;
         long minutes = (duration / 60000) % 60;
 
-        String timeText = String.format("%2d m %2d s", hours, minutes);
+        long hoursLimit = (limitation / 3600000) % 24;
+        long minutesLimit = (limitation / 60000) % 60;
+
+        String timeText = String.format("%2d h %2d m", hours, minutes);
         String percentageText = String.format("%.2f%%", percentage * 100);
         String unlocksText = String.valueOf(mSharedPreferences.getLong(mUnlocksKey, 0));
 
@@ -66,7 +70,7 @@ public class TodayCircleView extends View {
 
         int r = (int) (Math.min(1.0, percentage) * 255.0);
         int g = (int) (Math.max(0.0, 1.0 - percentage) * 255.0);
-        int b = 10;
+        int b = 25;
 
         // perform ordered drawing
         mPaint.setColor(Color.rgb(r, g, b));
@@ -76,11 +80,14 @@ public class TodayCircleView extends View {
         canvas.drawText(timeText, x, y - OFFSET, mPaint);
         canvas.drawText(percentageText, x, y + OFFSET, mPaint);
         canvas.drawText(unlocksText, x, getHeight() - OFFSET * 3, mPaint);
-        canvas.drawText("unlocks", x, getHeight() - OFFSET, mPaint);
+        canvas.drawText("Unlocks", x, getHeight() - OFFSET, mPaint);
+
+        timeText = String.format("%d h %d m", hoursLimit, minutesLimit);
+        canvas.drawText(timeText, x, OFFSET * 2, mPaint);
+        canvas.drawText("Limit", x, OFFSET * 4, mPaint);
     }
 
     /* CONSTANTS */
-    private static final int PADDING = 5;
-    private static final int TEXT_SIZE = 40;
+    private static final int TEXT_SIZE = 45;
     private static final int OFFSET = 25;
 }
