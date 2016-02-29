@@ -10,8 +10,13 @@ package edu.dartmouth.phoneusage.controllers;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +24,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.views.ActionTabsViewPagerAdapter;
@@ -59,8 +65,15 @@ public class MainActivity extends Activity {
 		slidingTabLayout.setDistributeEvenly(true);
 		slidingTabLayout.setViewPager(viewPager);
 
-
+        registerUsageBroadcastReceiver();
 	}
 
+    private void registerUsageBroadcastReceiver() {
+        UsageBroadcastReceiver ubc = new UsageBroadcastReceiver(this);
+        registerReceiver(ubc, new IntentFilter(Intent.ACTION_USER_PRESENT));
+        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_ON));
+        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SHUTDOWN));
+    }
 }
 

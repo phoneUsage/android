@@ -2,60 +2,60 @@
 <items version="2" >
 
     <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-1e0c686ba129482b7647ba42389b14846732b3ca.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-01e2fb75943c3e376f1e33571994d16bf129bd19.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="9aa93835393824b436f366120c9ba8a0260ce75d">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-cf9c53da691e4283e8dd3288d2a92092e09d0bd1.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-7f6fe5c64bd5db5af1f68eddb92333df11bb76d1.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.13.0/58a7d54b6a4f28be11f0cecec93097eddf473e6f/parse-android-1.13.0.jar"
+        jar="/Users/hunterestrada/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.13.0/58a7d54b6a4f28be11f0cecec93097eddf473e6f/parse-android-1.13.0.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="58a7d54b6a4f28be11f0cecec93097eddf473e6f">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/parse-android-1.13.0-257e98d1641996897bd3162e9808612f1ff8a454.jar" />
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/parse-android-1.13.0-586dd268def8793a47725611a8b2cdb245a66c9a.jar" />
     </item>
     <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.0/jars/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="79a5b6d9fbab3b5fb4c6f86a1ed7a17722fd937b">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-b5f4ce829d3e9dd144e218dc1492716a96b63bdd.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-18901eb1891830822f8bf7d2497067c3bea2aea8.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
+        jar="/Users/hunterestrada/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/bolts-tasks-1.4.0-bac819b78608b221d2c5d9ff5af0e1656c2881f9.jar" />
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/bolts-tasks-1.4.0-f44668f86961f3b9c514ab0467754e3139b2a733.jar" />
+    </item>
+    <item
+        jar="/Users/hunterestrada/Developer/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-e15d6ce84fb81636722a3dcf99dc1e46f5addca8.jar" />
+    </item>
+    <item
+        jar="/Users/hunterestrada/Developer/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/classes-9aeb0ef57c88f9af3c9e23cb11d026b7e3e26d46.jar" />
+    </item>
+    <item
+        jar="/Users/hunterestrada/Developer/android/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="79a5b6d9fbab3b5fb4c6f86a1ed7a17722fd937b">
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-a319ec6db069c1f1404f42a46518c921f7292dc9.jar" />
+    </item>
+    <item
+        jar="/Users/hunterestrada/Developer/android/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="9aa93835393824b436f366120c9ba8a0260ce75d">
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/classes-72669dcbb7c3d278c2bcb9d663ed519eaf386980.jar" />
+    </item>
+    <item
+        jar="/Users/hunterestrada/Developer/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/classes-4b8a118d7077be09e9e2dcc4c3cb8cce560a9d1a.jar" />
+    </item>
+    <item
+        jar="/Users/hunterestrada/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-1a00e3f3795ff689cfcd618965a8aba2d6c8b01b.jar" />
     </item>
 
 </items>

@@ -15,4 +15,8 @@
 
     <string name="hello_world">Hello World!</string>
     <string name="action_settings">Settings</string>
+    <string name="key_for_daily_duration">key_for_daily_duration</string>
+    <string name="key_for_daily_limit">key_for_daily_limit</string>
+    <string name="key_for_daily_limitation">key_for_daily_limitation</string>
+    <string name="key_for_unregistered_receiver">key_for_unregistered_receiver</string>
 </resources>
