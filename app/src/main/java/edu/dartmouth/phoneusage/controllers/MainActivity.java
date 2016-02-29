@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
 				boolean mRun = true;
 				while (mRun) {
 					CharSequence title =  mPercentage +  "%, 60 unlocks";
-					int width = getStatusBarWidth();
 					noti.contentView.setTextViewText(R.id.status_text, title);
 					noti.contentView.setProgressBar(R.id.progressBar, 100, mPercentage, false);
 					if(mPercentage>=100){
@@ -115,15 +114,5 @@ public class MainActivity extends Activity {
 		}).start();
 
 	}
-	public int getStatusBarWidth() {
-		int result = 0;
-		int resourceId = getResources().getIdentifier("status_bar_width", "dimen", "android");
-		if (resourceId > 0) {
-			result = getResources().getDimensionPixelSize(resourceId);
-		}
-		return result;
-	}
-
-
 }
 
