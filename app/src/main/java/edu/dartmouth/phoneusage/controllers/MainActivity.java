@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
     private void registerUsageBroadcastReceiver() {
         UsageBroadcastReceiver ubc = new UsageBroadcastReceiver(this);
         registerReceiver(ubc, new IntentFilter(Intent.ACTION_USER_PRESENT));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_ON));
+        // registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_ON));
         registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(ubc, new IntentFilter(Intent.ACTION_SHUTDOWN));
     }
