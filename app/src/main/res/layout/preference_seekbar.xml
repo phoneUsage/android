@@ -18,7 +18,9 @@
             android:id="@+id/seekbar"
             android:layout_width="0dp"
             android:layout_weight="80"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:progressTint="@android:color/holo_green_light"
+            android:thumbTint="@android:color/holo_green_dark" />
         <TextView
             android:id="@android:id/summary"
             android:layout_width="0dp"

@@ -23,16 +23,7 @@ public class TodayFragment extends Fragment implements UpdatableFragment {
         return mView;
     }
 
-//    @Override // update the the displayed information when visible
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//
-//        if (isVisibleToUser && mView != null) {
-//            mView.refreshDrawableState();
-//        }
-//    }
-
-    @Override // updates today circle view stats
+    @Override // updates today circle view stats when visible
     public void updateUI() {
         if (mView != null) {
             mView.findViewById(R.id.TodayCircleView).invalidate();
