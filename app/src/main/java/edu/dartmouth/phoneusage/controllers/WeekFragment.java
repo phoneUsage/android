@@ -28,7 +28,7 @@ import edu.dartmouth.phoneusage.R;
  * Fragment to display weekly overview of total phone usage and number of unlocks. Breaks down
  * on a weekly and daily basis using a chart.
  */
-public class WeekFragment extends Fragment {
+public class WeekFragment extends Fragment implements UpdatableFragment {
     private static String TAG = "WeekFragment";
 
     private CombinedChart mChart;
@@ -132,5 +132,10 @@ public class WeekFragment extends Fragment {
 
     private float getRandom(float range, float startsfrom) {
         return (float) (Math.random() * range) + startsfrom;
+    }
+
+    @Override
+    public void updateUI() {
+        // update UI elements when tab selected
     }
 }

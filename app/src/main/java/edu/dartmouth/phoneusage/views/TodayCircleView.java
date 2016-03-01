@@ -22,7 +22,6 @@ public class TodayCircleView extends View {
     String mUnlocksKey;
 
     Paint mPaint = new Paint();
-    int mColor;
 
     public TodayCircleView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -39,19 +38,10 @@ public class TodayCircleView extends View {
         super.onDraw(canvas);
 
         // stored information
-        long duration = mSharedPreferences.getLong(mDurationKey, 6600000);
         // long duration = 6600000; // USE FOR TESTING
+        long duration = mSharedPreferences.getLong(mDurationKey, 6600000);
         long limitation = mSharedPreferences.getLong(mLimitationKey, 8800000);
         double percentage = (double) duration / (double) limitation;
-
-        // center coordinates
-        int x = getWidth() / 2;
-        int y = getHeight() / 2;
-
-        // text information
-        mPaint.setColor(Color.BLACK);
-        mPaint.setTextSize(TEXT_SIZE);
-        mPaint.setTextAlign(Paint.Align.CENTER);
 
         long hours = (duration / 3600000) % 24;
         long minutes = (duration / 60000) % 60;
@@ -59,10 +49,14 @@ public class TodayCircleView extends View {
         long hoursLimit = (limitation / 3600000) % 24;
         long minutesLimit = (limitation / 60000) % 60;
 
+        // center coordinates
+        int x = getWidth() / 2;
+        int y = getHeight() / 2;
+
+        // text information
         String timeText = String.format("%2d h %2d m", hours, minutes);
         String percentageText = String.format("%.2f%%", percentage * 100);
         String unlocksText = String.valueOf(mSharedPreferences.getLong(mUnlocksKey, 0));
-
 
         // circle information based on text information
         double radius = Math.min((double) getWidth(), (double) getHeight()) / 2.0 * Math.min(percentage, 1.0) - OFFSET;
@@ -72,19 +66,26 @@ public class TodayCircleView extends View {
         int g = (int) (Math.max(0.0, 1.0 - percentage) * 255.0);
         int b = 25;
 
-        // perform ordered drawing
+        // draw circle
         mPaint.setColor(Color.rgb(r, g, b));
         canvas.drawCircle(x, y, (int) radius, mPaint);
 
+
+        // draw text
         mPaint.setColor(Color.BLACK);
+        mPaint.setTextSize(TEXT_SIZE);
+        mPaint.setTextAlign(Paint.Align.CENTER);
+
+        // circle text (middle)
         canvas.drawText(timeText, x, y - OFFSET, mPaint);
         canvas.drawText(percentageText, x, y + OFFSET, mPaint);
-        canvas.drawText(unlocksText, x, getHeight() - OFFSET * 3, mPaint);
-        canvas.drawText("Unlocks", x, getHeight() - OFFSET, mPaint);
-
+        // limit text (top)
         timeText = String.format("%d h %d m", hoursLimit, minutesLimit);
         canvas.drawText(timeText, x, OFFSET * 2, mPaint);
         canvas.drawText("Limit", x, OFFSET * 4, mPaint);
+        // unlock text (bottom)
+        canvas.drawText(unlocksText, x, getHeight() - OFFSET * 3, mPaint);
+        canvas.drawText("Unlocks", x, getHeight() - OFFSET, mPaint);
     }
 
     /* CONSTANTS */

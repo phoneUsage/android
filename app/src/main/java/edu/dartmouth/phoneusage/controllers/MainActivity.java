@@ -57,8 +57,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setupTabs();
+		registerUsageBroadcastReceiver();
 		setupNotification();
-
 	}
 
 	/*helper functions*/
@@ -86,8 +86,6 @@ public class MainActivity extends Activity {
 		// make sure the tabs are equally spaced.
 		slidingTabLayout.setDistributeEvenly(true);
 		slidingTabLayout.setViewPager(viewPager);
-
-        registerUsageBroadcastReceiver();
 	}
 
     private void registerUsageBroadcastReceiver() {
@@ -131,7 +129,14 @@ public class MainActivity extends Activity {
 				}
 			}
 		}).start();
-
 	}
+
+    @Override // update UI of all fragments when visible again
+    protected void onStart() {
+        super.onStart();
+        for (Fragment fragment : fragments) {
+            ((UpdatableFragment) fragment).updateUI();
+        }
+    }
 }
 
