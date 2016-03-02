@@ -47,6 +47,17 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	/**
+	 * Public instance getter.
+	 */
+	public static synchronized UnlockLockEventDbHelper getInstance(Context context) {
+		// Use the application context
+		if (mInstance == null) {
+			mInstance = new UnlockLockEventDbHelper(context.getApplicationContext());
+		}
+		return mInstance;
+	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// Execute SQL command on this new database to create our UnlockLockEvent table.
