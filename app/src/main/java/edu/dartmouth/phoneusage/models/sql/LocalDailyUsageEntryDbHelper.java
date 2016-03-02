@@ -1,4 +1,4 @@
-package edu.dartmouth.phoneusage.models;
+package edu.dartmouth.phoneusage.models.sql;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package edu.dartmouth.phoneusage.models;
+package edu.dartmouth.phoneusage.models.data_sources;
 
 /**
  * Created by SujayBusam on 3/2/16.
