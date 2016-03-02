@@ -19,8 +19,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
+import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.views.ActionTabsViewPagerAdapter;
@@ -49,8 +52,7 @@ public class MainActivity extends Activity {
 	private ViewPager viewPager;
 	private ArrayList<Fragment> fragments;
 	private ActionTabsViewPagerAdapter myViewPageAdapter;
-	private static final int STATUS_BAR_NOTIFICATION = 0;
-	public NotificationManager nm;
+
 	int mPercentage;
 	int mUnlocks;
 
@@ -61,19 +63,12 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		setupTabs();
-		setupNotification();
 
-		/*testing cloud code - remember to move this*/
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		ParseCloud.callFunctionInBackground("getStatistics", params, new FunctionCallback<ArrayList<Float>>(){
-			@Override
-			public void done(ArrayList<Float> objects, ParseException e) {
-				if(e==null){
-					Log.d("Average stdDev", objects+"");
-				}
-			}
-		});
+    // launch background service that maintains broadcast rx
+    Intent usageIntent = new Intent(this, UsageService.class);
+    startService(usageIntent);
+
+		setupTabs();
 	}
 
 	/*helper functions*/
@@ -101,52 +96,13 @@ public class MainActivity extends Activity {
 		// make sure the tabs are equally spaced.
 		slidingTabLayout.setDistributeEvenly(true);
 		slidingTabLayout.setViewPager(viewPager);
-
-        registerUsageBroadcastReceiver();
 	}
 
-    private void registerUsageBroadcastReceiver() {
-        UsageBroadcastReceiver ubc = new UsageBroadcastReceiver(this);
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_USER_PRESENT));
-        // registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_ON));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SHUTDOWN));
+    @Override // update UI of all fragments when visible again
+    protected void onStart() {
+        super.onStart();
+        for (Fragment fragment : fragments) {
+            ((UpdatableFragment) fragment).updateUI();
+        }
     }
-
-	//set up the notification
-	private void setupNotification(){
-		nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-		CharSequence tickerText = "hello";
-		long when = System.currentTimeMillis();
-		final Notification noti = new Notification(R.mipmap.ic_launcher, tickerText, when);
-		Context context = this.getApplicationContext();
-		Intent notiIntent = new Intent(context, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, 0);
-		noti.flags |= Notification.FLAG_ONGOING_EVENT;
-		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
-		contentView.setImageViewResource(R.id.status_icon, R.mipmap.ic_launcher);
-		noti.contentView = contentView;
-		noti.contentIntent = pi;
-		nm.notify(STATUS_BAR_NOTIFICATION, noti);
-		new Thread(new Runnable() {
-			public void run() {
-				mPercentage = 45;
-				mUnlocks = 60;
-				boolean mRun = true;
-				while (mRun) {
-					CharSequence title =  mPercentage +  "%, 60 unlocks";
-					noti.contentView.setTextViewText(R.id.status_text, title);
-					noti.contentView.setProgressBar(R.id.progressBar, 100, mPercentage, false);
-					if(mPercentage>=100){
-						noti.contentView.setProgressBar(R.id.full_progressBar, 100, 100, false);
-					}
-
-					nm.notify(STATUS_BAR_NOTIFICATION, noti);
-					SystemClock.sleep(10000);
-				}
-			}
-		}).start();
-
-	}
 }
-

@@ -6,6 +6,8 @@ import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
+import edu.dartmouth.phoneusage.controllers.UpdatableFragment;
+
 /**
  * Created by Fanglin Chen on 12/18/14.
  */
@@ -25,7 +27,9 @@ public class ActionTabsViewPagerAdapter extends FragmentPagerAdapter {
         this.fragments = fragments;
     }
 
+    // updates UI of requested fragment, then returns updated fragment
     public Fragment getItem(int pos){
+        ((UpdatableFragment) fragments.get(pos)).updateUI();
         return fragments.get(pos);
     }
 
