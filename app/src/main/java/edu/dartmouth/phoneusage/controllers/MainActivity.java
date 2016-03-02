@@ -34,7 +34,12 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
 import edu.dartmouth.phoneusage.utils.UsageService;
@@ -59,9 +64,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        // launch background service that maintains broadcast rx
-        Intent usageIntent = new Intent(this, UsageService.class);
-        startService(usageIntent);
+    // launch background service that maintains broadcast rx
+    Intent usageIntent = new Intent(this, UsageService.class);
+    startService(usageIntent);
 
 		setupTabs();
 	}
@@ -101,4 +106,3 @@ public class MainActivity extends Activity {
         }
     }
 }
-
