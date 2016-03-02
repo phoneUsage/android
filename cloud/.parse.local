@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "phoneUsage"
+    },
+    "phoneUsage": {
+      "applicationId": "Pat7pQzQrIHwhF1XcH1SkvrkKjFELl5xxUzC9fqU"
+    }
+  }
+}

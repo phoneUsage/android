@@ -32,7 +32,12 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
@@ -59,6 +64,16 @@ public class MainActivity extends Activity {
 		setupTabs();
 		setupNotification();
 
+		/*testing cloud code - remember to move this*/
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		ParseCloud.callFunctionInBackground("getStatistics", params, new FunctionCallback<ArrayList<Float>>(){
+			@Override
+			public void done(ArrayList<Float> objects, ParseException e) {
+				if(e==null){
+					Log.d("Average stdDev", objects+"");
+				}
+			}
+		});
 	}
 
 	/*helper functions*/
