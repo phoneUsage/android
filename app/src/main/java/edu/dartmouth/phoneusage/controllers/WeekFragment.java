@@ -25,6 +25,8 @@ import java.util.List;
 import edu.dartmouth.phoneusage.R;
 
 /**
+ * Created by SujayBusam on 2/27/16.
+ *
  * Fragment to display weekly overview of total phone usage and number of unlocks. Breaks down
  * on a weekly and daily basis using a chart.
  */

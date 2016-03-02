@@ -21,21 +21,21 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 
 	public static final String TABLE_NAME = "unlock_lock_event";
 	public static final String COLUMN_ID = "_id";
-	public static final String COLUMN_START_TIME_MS = "start_time_ms";
-	public static final String COLUMN_END_TIME_MS = "end_time_ms";
+	public static final String COLUMN_UNLOCK_TIME_MS = "unlock_time_ms";
+	public static final String COLUMN_LOCK_TIME_MS = "lock_time_ms";
 
 	public static final String[] ALL_COLUMNS = {
 			COLUMN_ID,
-			COLUMN_START_TIME_MS,
-			COLUMN_END_TIME_MS
+			COLUMN_UNLOCK_TIME_MS,
+			COLUMN_LOCK_TIME_MS
 	};
 
 	// SQL statement for the initial database creation.
 	private static final String DATABASE_CREATE_SQL =
 			"CREATE TABLE IF NOT EXISTS " + TABLE_NAME
 					+ " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-					+ COLUMN_START_TIME_MS + " DATETIME NOT NULL, "
-					+ COLUMN_END_TIME_MS + " DATETIME NOT NULL "
+					+ COLUMN_UNLOCK_TIME_MS + " DATETIME NOT NULL, "
+					+ COLUMN_LOCK_TIME_MS + " DATETIME NOT NULL "
 					+ ");";
 
 
