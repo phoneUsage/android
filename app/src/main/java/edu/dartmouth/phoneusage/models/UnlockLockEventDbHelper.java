@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  *
  * DB helper for the UnlockLockEvent model.
  *
- * Do not interface with this class directly! Use the UnlockLockEventDataSource, which is a wrapper
- * around this.
+ * Do not interface with this class directly! Use the UnlockLockEventDataSource, which is a nice
+ * wrapper around this that provides CRUD operation functions.
  */
 public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 	// Singleton instance
