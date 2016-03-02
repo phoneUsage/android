@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import edu.dartmouth.phoneusage.utils.MidnightScheduler;
 import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
 import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;

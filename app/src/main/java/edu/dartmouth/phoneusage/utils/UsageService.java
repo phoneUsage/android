@@ -22,6 +22,7 @@ import edu.dartmouth.phoneusage.controllers.MainActivity;
  * Created by hunterestrada on 3/2/16.
  */
 public class UsageService extends Service {
+    UsageBroadcastReceiver mUBC;
 
     @Override
     public void onCreate() {
@@ -41,9 +42,12 @@ public class UsageService extends Service {
         return START_STICKY;
     }
 
-    @Override
+    @Override // unregister associated receiver and kill the service
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+
+        Log.d(getClass().getName(), "removing");
+        unregisterReceiver(mUBC);
         stopSelf();
     }
 
@@ -53,10 +57,13 @@ public class UsageService extends Service {
     // register broadcast receiver to intercept usage events
     private void setupReceiver() {
         Log.d(getClass().getName(), "setupReceiver");
-        UsageBroadcastReceiver ubc  = new UsageBroadcastReceiver(this);
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_USER_PRESENT));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SHUTDOWN));
+        mUBC = new UsageBroadcastReceiver(this);
+        registerReceiver(mUBC, new IntentFilter(Intent.ACTION_USER_PRESENT));
+        registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+        registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SHUTDOWN));
+
+        // schedule uploading/resetting of data at midnight
+        MidnightScheduler.prepare(this);
     }
 
     // displays usage on the lock screen with a notification

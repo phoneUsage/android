@@ -15,8 +15,6 @@ import edu.dartmouth.phoneusage.R;
  * Created by hunterestrada on 2/28/16.
  */
 public class UsageBroadcastReceiver extends BroadcastReceiver {
-    public static final String TAG = "UBR";
-
     private String mDurationKey;
     private String mUnlocksKey;
     private SharedPreferences mSharedPreferences;
@@ -35,7 +33,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             // start duration and increment unlocks when screen unlock
             long totalUnlocks = mSharedPreferences.getLong(mUnlocksKey, 0);
             mSharedPreferences.edit().putLong(mUnlocksKey, ++totalUnlocks).apply();
-            Log.d(TAG, "unlocked: " + String.valueOf(totalUnlocks));
+            Log.d(getClass().getName(), "unlocked: " + String.valueOf(totalUnlocks));
 
             unlockDateTime = Calendar.getInstance().getTimeInMillis();
 
@@ -45,16 +43,16 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             long totalDuration = mSharedPreferences.getLong(mDurationKey, 0);
             mSharedPreferences.edit().putLong(mDurationKey, duration + totalDuration).apply();
 
-            Log.d(TAG, "locked: " + String.valueOf(duration / 1000) + " sec");
+            Log.d(getClass().getName(), "locked: " + String.valueOf(duration / 1000) + " sec");
             unlockDateTime = 0; // prepare for next duration
 
-        } else if (unlockDateTime > 0) { // shutdown
+        } else if (intent.getAction().equals(Intent.ACTION_SHUTDOWN) && unlockDateTime > 0) { // shutdown
             // stop and save duration when power off
             long duration = Calendar.getInstance().getTimeInMillis() - unlockDateTime;
             long totalDuration = mSharedPreferences.getLong(mDurationKey, 0);
             mSharedPreferences.edit().putLong(mDurationKey, duration + totalDuration).apply();
 
-            Log.d(TAG, "shutdown: " + String.valueOf(duration / 1000) + " sec");
+            Log.d(getClass().getName(), "shutdown: " + String.valueOf(duration / 1000) + " sec");
             unlockDateTime = 0; // prepare for next duration
         }
 
