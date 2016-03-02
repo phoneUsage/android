@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import edu.dartmouth.phoneusage.R;
@@ -22,6 +24,7 @@ public class TodayCircleView extends View {
     String mUnlocksKey;
 
     Paint mPaint = new Paint();
+    Rect mBounds = new Rect();
 
     public TodayCircleView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -37,7 +40,7 @@ public class TodayCircleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        mPaint.setTextSize(TEXT_SIZE);
         // stored information
         // long duration = 8800001; // USE FOR TESTING
         long duration = mSharedPreferences.getLong(mDurationKey, 6600000);
@@ -60,21 +63,21 @@ public class TodayCircleView extends View {
         String unlocksText = String.valueOf(mSharedPreferences.getLong(mUnlocksKey, 0));
 
         // circle information based on text information
-        double radius = Math.min((double) getWidth(), (double) getHeight()) / 2.0 * Math.min(percentage, 1.0) - OFFSET;
+        mPaint.getTextBounds("Unlocks", 0, 0, mBounds);
+
+        double radius = Math.min((double) getWidth(), (double) getHeight()) / 2.0 * Math.min(percentage / 100.0, 1.0) - mBounds.height();
+        Log.d(getClass().getName(), String.format("(%d, %d)", getWidth(), getHeight()));
+        Log.d(getClass().getName(), String.format("r = %f", radius));
         radius = Math.max(radius, mPaint.measureText(timeText)); // ensure radius exceeds text information
-
-        int c = getResources().getColor(android.R.color.holo_green_light);
-
-        int r = Color.red(c) + (int) (Math.min(1.0, percentage/100) * (255.0 - Color.red(c)));
-        int g = Color.green(c) + (int) (Math.max(0.0, 1.0 - percentage/100) * (255.0 - Color.green(c)));
-        int b = Color.blue(c);
+        Log.d(getClass().getName(), String.format("r = %f", radius));
 
         // draw circle
         if (percentage > 100) {
             mPaint.setColor(getResources().getColor(android.R.color.holo_red_dark));
+        } else if (percentage > 50) {
+            mPaint.setColor(getResources().getColor(android.R.color.holo_orange_light));
         } else {
-            mPaint.setColor(Color.rgb(r, g, b));
-
+            mPaint.setColor(getResources().getColor(android.R.color.holo_green_light));
         }
 
         canvas.drawCircle(x, y, (int) radius, mPaint);
@@ -88,7 +91,6 @@ public class TodayCircleView extends View {
             mPaint.setColor(Color.BLACK);
         }
 
-        mPaint.setTextSize(TEXT_SIZE);
         mPaint.setTextAlign(Paint.Align.CENTER);
 
         // circle text (middle)

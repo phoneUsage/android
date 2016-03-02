@@ -37,6 +37,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
+import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.views.ActionTabsViewPagerAdapter;
@@ -46,8 +47,7 @@ public class MainActivity extends Activity {
 	private ViewPager viewPager;
 	private ArrayList<Fragment> fragments;
 	private ActionTabsViewPagerAdapter myViewPageAdapter;
-	private static final int STATUS_BAR_NOTIFICATION = 0;
-	public NotificationManager nm;
+
 	int mPercentage;
 	int mUnlocks;
 
@@ -58,9 +58,12 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        // launch background service that maintains broadcast rx
+        Intent usageIntent = new Intent(this, UsageService.class);
+        startService(usageIntent);
+
 		setupTabs();
-		registerUsageBroadcastReceiver();
-		setupNotification();
 	}
 
 	/*helper functions*/
@@ -88,66 +91,6 @@ public class MainActivity extends Activity {
 		// make sure the tabs are equally spaced.
 		slidingTabLayout.setDistributeEvenly(true);
 		slidingTabLayout.setViewPager(viewPager);
-	}
-
-    private void registerUsageBroadcastReceiver() {
-        UsageBroadcastReceiver ubc = new UsageBroadcastReceiver(this);
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_USER_PRESENT));
-        // registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_ON));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        registerReceiver(ubc, new IntentFilter(Intent.ACTION_SHUTDOWN));
-    }
-
-	// displays usage on the lock screen with a notification
-	private void setupNotification(){
-		nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-		CharSequence tickerText = "hello";
-		long when = System.currentTimeMillis();
-		final Notification noti = new Notification(R.mipmap.ic_launcher, tickerText, when);
-		Context context = this.getApplicationContext();
-		Intent notiIntent = new Intent(context, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, 0);
-		noti.flags |= Notification.FLAG_ONGOING_EVENT;
-		final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
-		contentView.setImageViewResource(R.id.status_icon, R.mipmap.ic_launcher);
-		noti.contentView = contentView;
-		noti.contentIntent = pi;
-		nm.notify(STATUS_BAR_NOTIFICATION, noti);
-
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-
-		new Thread(new Runnable() {
-			public void run() {
-
-
-//              mPercentage = 45;
-//				mUnlocks = 60;
-				boolean mRun = true;
-				while (mRun) {
-                    long duration = sharedPreferences.getLong(getString(R.string.key_for_daily_duration), 0);
-                    long limitation = sharedPreferences.getLong(getString(R.string.key_for_daily_limitation), 8800000);
-
-                    // values to display on notification banner
-                    float percentage = ((float) duration / (float) limitation) * 100;
-                    long hours = (duration / 3600000) % 24;
-                    long minutes = (duration / 60000) % 60;
-                    long unlocks = sharedPreferences.getLong(getString(R.string.key_for_daily_unlocks), 0);
-
-
-                    String usageText = String.format("Usage: %.2f%% @ %d h %02d m\nUnlocks: %d", percentage, hours, minutes, unlocks);
-					// CharSequence title =  mPercentage +  "%, 60 unlocks";
-					noti.contentView.setTextViewText(R.id.status_text, usageText);
-					noti.contentView.setProgressBar(R.id.progressBar, 100, (int) (percentage), false);
-					if(mPercentage>=100){
-						noti.contentView.setProgressBar(R.id.full_progressBar, 100, 100, false);
-					}
-
-					nm.notify(STATUS_BAR_NOTIFICATION, noti);
-					SystemClock.sleep(10000);
-				}
-			}
-		}).start();
 	}
 
     @Override // update UI of all fragments when visible again
