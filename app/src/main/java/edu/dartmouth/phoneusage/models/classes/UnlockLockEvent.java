@@ -32,6 +32,10 @@ public class UnlockLockEvent {
 
 	// ********************************** Public getters ***************************************//
 
+	public Long getId() {
+		return id;
+	}
+
 	public Long getUnlockTimeMS() {
 		return unlockTimeMS;
 	}

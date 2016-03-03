@@ -1,10 +1,13 @@
 package edu.dartmouth.phoneusage.models.data_sources;
 
+import java.sql.SQLException;
+
+import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
+
 /**
  * Created by SujayBusam on 3/2/16.
  *
- * Use this class to call the public CRUD operation methods! See the abstract superclass for the
- * instance variables and methods this inherits.
+ * Use this class to call the public CRUD operation methods!
  *
  * Defines a data source class for UnlockLockEvent objects. This is a singleton class.
  * This interfaces with the ExerciseEntryDbHelper, and is a wrapper around it.
@@ -13,4 +16,18 @@ package edu.dartmouth.phoneusage.models.data_sources;
  */
 public class UnlockLockEventDataSource extends BaseDataSource {
 
+	private static String TAG = "UnlockLockDataSource";
+	private static UnlockLockEventDataSource instance;
+
+	private UnlockLockEventDbHelper mDbHelper;
+
+	@Override
+	public void open() throws SQLException {
+
+	}
+
+	@Override
+	public void close() {
+
+	}
 }

@@ -1,17 +1,24 @@
 package edu.dartmouth.phoneusage.models.data_sources;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+
+import java.sql.SQLException;
 
 /**
  * Created by SujayBusam on 3/2/16.
  *
- * Abstract base async database task that can be implemented by various DataSource classes.
+ * Abstract base async database task that is implemented by various DataSource classes.
  * Provides common instance variables and methods for all DataSource classes.
  *
  * Also provides the CompletionHandler interface and BaseEntryAsyncTask abstract class.
  */
 public abstract class BaseDataSource {
 
+	private SQLiteDatabase mDb;
+
+	public abstract void open() throws SQLException;
+	public abstract void close();
 
 	// ************************* CRUD async task base interfaces *********************************//
 
@@ -24,7 +31,7 @@ public abstract class BaseDataSource {
 	}
 
 	/**
-	 * Abstract base async task that can be implemented by various CRUD method tasks.
+	 * Abstract base async task that is implemented by various CRUD method tasks.
 	 */
 	abstract private class BaseEntryAsyncTask<S, T> extends AsyncTask<S, Void, T> {
 
