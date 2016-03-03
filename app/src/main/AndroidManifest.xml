@@ -36,7 +36,7 @@
         </activity>
 
         <service android:name=".utils.UsageService" />
-        <receiver android:name=".utils.MidnightBroadcastReceiver"/>
+        <receiver android:name=".utils.UsageBroadcastReceiver"/>
     </application>
 
 </manifest>

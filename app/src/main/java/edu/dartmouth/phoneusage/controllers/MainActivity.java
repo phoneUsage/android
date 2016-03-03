@@ -99,11 +99,12 @@ public class MainActivity extends Activity {
 		slidingTabLayout.setViewPager(viewPager);
 	}
 
-    @Override // update UI of all fragments when visible again
-    protected void onStart() {
-        super.onStart();
-        for (Fragment fragment : fragments) {
-            ((UpdatableFragment) fragment).updateUI();
-        }
-    }
+	@Override // update UI of all fragments when visible again
+	protected void onResume() {
+		super.onResume();
+
+		for (Fragment fragment : fragments) {
+			((UpdatableFragment) fragment).updateUI();
+		}
+	}
 }

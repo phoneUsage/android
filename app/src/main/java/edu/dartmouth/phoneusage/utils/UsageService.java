@@ -57,7 +57,7 @@ public class UsageService extends Service {
     // register broadcast receiver to intercept usage events
     private void setupReceiver() {
         Log.d(getClass().getName(), "setupReceiver");
-        mUBC = new UsageBroadcastReceiver(this);
+        mUBC = new UsageBroadcastReceiver();
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_USER_PRESENT));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SHUTDOWN));
