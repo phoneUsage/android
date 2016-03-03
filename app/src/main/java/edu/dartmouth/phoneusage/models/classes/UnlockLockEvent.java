@@ -15,7 +15,8 @@ public class UnlockLockEvent {
 	/**
 	 * Constructor with all fields provided.
 	 */
-	public UnlockLockEvent(Long unlockTimeMS, Long lockTimeMS) {
+	public UnlockLockEvent(Long id, Long unlockTimeMS, Long lockTimeMS) {
+		this.id = id;
 		this.unlockTimeMS = unlockTimeMS;
 		this.lockTimeMS = lockTimeMS;
 	}

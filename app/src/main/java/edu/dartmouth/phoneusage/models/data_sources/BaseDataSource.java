@@ -33,7 +33,7 @@ public abstract class BaseDataSource {
 	/**
 	 * Abstract base async task that is implemented by various CRUD method tasks.
 	 */
-	abstract private class BaseEntryAsyncTask<S, T> extends AsyncTask<S, Void, T> {
+	abstract public class BaseEntryAsyncTask<S, T> extends AsyncTask<S, Void, T> {
 
 		private final CompletionHandler<T> completionHandler;
 
