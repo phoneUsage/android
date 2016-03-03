@@ -41,6 +41,7 @@ import com.parse.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.dartmouth.phoneusage.utils.MidnightScheduler;
 import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
 import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
@@ -98,11 +99,12 @@ public class MainActivity extends Activity {
 		slidingTabLayout.setViewPager(viewPager);
 	}
 
-    @Override // update UI of all fragments when visible again
-    protected void onStart() {
-        super.onStart();
-        for (Fragment fragment : fragments) {
-            ((UpdatableFragment) fragment).updateUI();
-        }
-    }
+	@Override // update UI of all fragments when visible again
+	protected void onResume() {
+		super.onResume();
+
+		for (Fragment fragment : fragments) {
+			((UpdatableFragment) fragment).updateUI();
+		}
+	}
 }
