@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public abstract class BaseDataSource {
 
-	private SQLiteDatabase mDb;
+	protected SQLiteDatabase mDb;
 
 	public abstract void open() throws SQLException;
 	public abstract void close();
