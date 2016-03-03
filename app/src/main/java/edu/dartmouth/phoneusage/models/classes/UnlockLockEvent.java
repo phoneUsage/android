@@ -20,7 +20,7 @@ public class UnlockLockEvent {
 		this.lockTimeMS = lockTimeMS;
 	}
 
-	// ********************************** Public setters ***************************************//
+	// ********************************** Public Setters ***************************************//
 
 	public void setUnlockTimeMS(Long unlockTimeMS) {
 		this.unlockTimeMS = unlockTimeMS;
@@ -30,7 +30,7 @@ public class UnlockLockEvent {
 		this.lockTimeMS = lockTimeMS;
 	}
 
-	// ********************************** Public getters ***************************************//
+	// ********************************** Public Getters ***************************************//
 
 	public Long getId() {
 		return id;
@@ -43,4 +43,7 @@ public class UnlockLockEvent {
 	public Long getLockTimeMS() {
 		return lockTimeMS;
 	}
+
+	// ****************************** Useful Instance Methods ************************************//
+
 }
