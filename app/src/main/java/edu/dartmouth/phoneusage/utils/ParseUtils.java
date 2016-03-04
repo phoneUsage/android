@@ -13,6 +13,7 @@ import com.parse.ParseObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by benribovich on 3/4/16.
@@ -21,14 +22,14 @@ public class ParseUtils {
 
     public static void getStatsInfo(Context prefsContext){
         HashMap<String, Object> params = new HashMap<String, Object>();
-
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(prefsContext);
-        ParseCloud.callFunctionInBackground("getStatistics", params, new FunctionCallback<ArrayList<Float>>() {
+        ParseCloud.callFunctionInBackground("getStatistics", params, new FunctionCallback<Map<String,String>>() {
             @Override
-            public void done(ArrayList<Float> objects, ParseException e) {
+            public void done(Map<String,String> objects, ParseException e) {
                 if (e == null) {
-                    prefs.edit().putFloat("AVERAGE", objects.get(0)).apply();
-                    prefs.edit().putFloat("STDDEV", objects.get(1)).apply();
+                    Log.d("ParseUtils", "" + objects);
+                    prefs.edit().putFloat("AVERAGE", Float.parseFloat(objects.get("average"))).apply();
+                    prefs.edit().putFloat("STDDEV", Float.parseFloat(objects.get("stdDev"))).apply();
 
                 }
             }
