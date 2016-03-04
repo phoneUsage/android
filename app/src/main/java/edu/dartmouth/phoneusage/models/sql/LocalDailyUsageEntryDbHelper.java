@@ -102,28 +102,28 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 		mondayEntry.setDateTimeMS(monday.getTimeInMillis());
 		mondayEntry.setTotalUnlocks(124);
 		mondayEntry.setTotalUsageInHours(3.55f);
-		mondayEntry.setGoalHoursInHours(5.55f);
+		mondayEntry.setGoalHoursInHours(4.21f);
 
 		Calendar tuesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 1, 2016);
 		LocalDailyUsageEntry tuesdayEntry = new LocalDailyUsageEntry();
 		tuesdayEntry.setDateTimeMS(tuesday.getTimeInMillis());
 		tuesdayEntry.setTotalUnlocks(222);
-		tuesdayEntry.setTotalUsageInHours(4.55f);
-		tuesdayEntry.setGoalHoursInHours(5.55f);
+		tuesdayEntry.setTotalUsageInHours(3.18f);
+		tuesdayEntry.setGoalHoursInHours(4.90f);
 
 		Calendar wednesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 2, 2016);
 		LocalDailyUsageEntry wednesdayEntry = new LocalDailyUsageEntry();
 		wednesdayEntry.setDateTimeMS(wednesday.getTimeInMillis());
 		wednesdayEntry.setTotalUnlocks(88);
-		wednesdayEntry.setTotalUsageInHours(5.55f);
-		wednesdayEntry.setGoalHoursInHours(5.55f);
+		wednesdayEntry.setTotalUsageInHours(8.32f);
+		wednesdayEntry.setGoalHoursInHours(7.45f);
 
 		Calendar thursday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
 		LocalDailyUsageEntry thursdayEntry = new LocalDailyUsageEntry();
 		thursdayEntry.setDateTimeMS(thursday.getTimeInMillis());
 		thursdayEntry.setTotalUnlocks(124);
-		thursdayEntry.setTotalUsageInHours(3.55f);
-		thursdayEntry.setGoalHoursInHours(5.55f);
+		thursdayEntry.setTotalUsageInHours(8.00f);
+		thursdayEntry.setGoalHoursInHours(6.77f);
 
 		insert(db, sundayEntry);
 		insert(db, mondayEntry);
