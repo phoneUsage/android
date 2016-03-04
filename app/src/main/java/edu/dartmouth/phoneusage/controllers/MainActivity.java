@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import edu.dartmouth.phoneusage.models.classes.VoiceVoter;
 import edu.dartmouth.phoneusage.utils.Context_Service;
 import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
@@ -63,6 +65,8 @@ public class MainActivity extends Activity {
 	 */
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 
+	private VoiceVoter voiceVoter = new VoiceVoter();
+
 	/**
 	 * Called when the activity is first created.
 	 */
@@ -93,6 +97,7 @@ public class MainActivity extends Activity {
 				microphoneStarted = true;
 			}
 			doBindService();
+			new PollTask().execute();
 
 		}
 
@@ -160,13 +165,16 @@ public class MainActivity extends Activity {
 				case Context_Service.MSG_SPEECH_STATUS:
 				{
 					Integer speech = msg.getData().getInt("speech");
-					Log.d("Handler", "got speech data");
+
 					//Log.d("speech", "speech in main: "+speech);
 					if (speech==1.0) {
-						//Toast.makeText(getApplicationContext(), "Speech", Toast.LENGTH_SHORT).show();
+						voiceVoter.incrementSpeech();
+						Log.d("Handler", "got speech data");
 					}
-					else
-						//Toast.makeText(getApplicationContext(), "Noise", Toast.LENGTH_SHORT).show();
+					else {
+						voiceVoter.incrementNoise();
+						Log.d("Handler", "got noise data");
+					}
 
 					//statusSpeechView.setText(""+speech);
 					break;
@@ -296,6 +304,36 @@ public class MainActivity extends Activity {
 		}
 		if(mIsBound) {
 			sendMessageToService(Context_Service.MSG_STOP_MICROPHONE);
+		}
+	}
+
+	private class PollTask extends AsyncTask<Void,Void,Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			while(true){
+				if(voiceVoter.pollVoter()==1){
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(getApplicationContext(), "speaking", Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+				else{
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(getApplicationContext(), "noise", Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+				voiceVoter.reset();
+				try {
+					Thread.sleep(20000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

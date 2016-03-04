@@ -11,12 +11,16 @@ import android.util.Log;
 import java.util.Calendar;
 
 import edu.dartmouth.phoneusage.R;
+import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
+import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
+import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
+import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
 
 /**
  * Created by hunterestrada on 2/28/16.
  */
 public class UsageBroadcastReceiver extends BroadcastReceiver {
-    private long unlockDateTime = 0;
+    private long unlockDateTime = -1;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,9 +39,11 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             long dailyUnlocks = sharedPreferences.getLong(unlocksKey, 0);
             ParseUtils.addInfoToParse(dailyDuration, dailyUnlocks);
 
+
+
             // clear preferences to prepare for next day
             refreshPreferences(sharedPreferences, durationKey, unlocksKey);
-            unlockDateTime = 0;
+            unlockDateTime = -1;
 
 //            ParseUtils.getStatsInfo(context);
 
@@ -55,25 +61,47 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
         // SCREEN OFF
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && unlockDateTime > 0) {
             // stop and save duration when screen lock
-            long duration = Calendar.getInstance().getTimeInMillis() - unlockDateTime;
-            long totalDuration = sharedPreferences.getLong(durationKey, 0);
-            sharedPreferences.edit().putLong(durationKey, duration + totalDuration).apply();
+            long lockDateTime = Calendar.getInstance().getTimeInMillis();
+            long currentDuration = lockDateTime - unlockDateTime;
+            long totalDuration = sharedPreferences.getLong(durationKey, 0) + currentDuration;
 
-            Log.d(getClass().getName(), "locked: " + String.valueOf(duration / 1000) + " sec");
-            unlockDateTime = 0; // prepare for next duration
+            // save in shared preferences
+            sharedPreferences.edit().putLong(durationKey, totalDuration).apply();
+            // save in local database
+            UnlockLockEvent event = new UnlockLockEvent(-1, unlockDateTime, lockDateTime);
+            UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
+                    new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
+                @Override
+                public void onDbTaskCompleted(UnlockLockEvent result) {
+                    Log.d(getClass().getName(), "saved: " + result.toString());
+                }
+            });
+
+            unlockDateTime = -1; // prepare for next duration
 
         // PHONE SHUTDOWN
         } else if (intent.getAction().equals(Intent.ACTION_SHUTDOWN) && unlockDateTime > 0) {
             // stop and save duration when power off
-            long duration = Calendar.getInstance().getTimeInMillis() - unlockDateTime;
-            long totalDuration = sharedPreferences.getLong(durationKey, 0);
-            sharedPreferences.edit().putLong(durationKey, duration + totalDuration).apply();
+            long lockDateTime = Calendar.getInstance().getTimeInMillis();
+            long currentDuration = lockDateTime - unlockDateTime;
+            long totalDuration = sharedPreferences.getLong(durationKey, 0) + currentDuration;
 
-            Log.d(getClass().getName(), "shutdown: " + String.valueOf(duration / 1000) + " sec");
-            unlockDateTime = 0; // prepare for next duration
+            // save in shared preferences
+            sharedPreferences.edit().putLong(durationKey, totalDuration).apply();
+            // save in local database
+            UnlockLockEvent event = new UnlockLockEvent(-1, unlockDateTime, lockDateTime);
+            UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
+                    new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
+                @Override
+                public void onDbTaskCompleted(UnlockLockEvent result) {
+                    Log.d(getClass().getName(), "saved: " + result.toString());
+                }
+            });
 
+            unlockDateTime = -1; // prepare for next duration
         }
     }
+
 
     // restores default values to shared preferences
     private void refreshPreferences(SharedPreferences preferences, String durationKey, String unlocksKey) {
