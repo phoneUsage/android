@@ -40,7 +40,7 @@ public class MidnightScheduler {
 
     public static final int REQUEST_CODE = 238293; // constant random
 
-    public static final int HOUR_OF_DAY = 11;
-    public static final int MINUTE = 59;
+    public static final int HOUR_OF_DAY = 23;
+    public static final int MINUTE = 50;
     public static final int SECOND = 0;
 }
