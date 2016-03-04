@@ -38,7 +38,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             long dailyDuration = sharedPreferences.getLong(durationKey, 0);
             long dailyUnlocks = sharedPreferences.getLong(unlocksKey, 0);
 
-            
+
 
             // clear preferences to prepare for next day
             refreshPreferences(sharedPreferences, durationKey, unlocksKey);
