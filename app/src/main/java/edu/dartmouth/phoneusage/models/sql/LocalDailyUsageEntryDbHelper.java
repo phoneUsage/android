@@ -1,4 +1,4 @@
-package edu.dartmouth.phoneusage.models;
+package edu.dartmouth.phoneusage.models.sql;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  *
  * DB helper for the LocalDailyUsageEntry model.
  *
- * Do not interface with this class directly! Use the UnlockLockEventDataSource, which is a wrapper
- * around this.
+ * Do not interface with this class directly! Use the UnlockLockEventDataSource, which is a nice
+ * wrapper around this that provides CRUD operation functions.
  */
 public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	// Singleton instance
