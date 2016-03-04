@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
 			new PollTask().execute();
 
 		}
-		ParseUtils.getStatsInfo(this);
 
 		setupTabs();
 	}
