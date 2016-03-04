@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import edu.dartmouth.phoneusage.models.classes.VoiceVoter;
 import edu.dartmouth.phoneusage.utils.Context_Service;
+import edu.dartmouth.phoneusage.utils.ParseUtils;
 import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
@@ -100,6 +101,7 @@ public class MainActivity extends Activity {
 			new PollTask().execute();
 
 		}
+		ParseUtils.getStatsInfo(this);
 
 		setupTabs();
 	}

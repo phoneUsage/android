@@ -20,7 +20,7 @@ public class VoiceVoter {
 
     public int pollVoter(){
         //speaking
-        if(vote[1] > 100*vote[0]){
+        if(vote[1] > 50*vote[0]){
             return 1;
         }
         //noise

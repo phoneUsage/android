@@ -18,7 +18,9 @@ Parse.Cloud.define("getStatistics", function(request, response) {
       for (var i = 0; i < results.length; i++) {
         sum += results[i].get("totalUsage");
       }
-      mean = sum / results.length;
+      if(results.length >0){
+        mean = sum / results.length;
+      }
       for(var j=0; j<results.length; j++){
        diffSqredArr.push(Math.pow((results[j].get("totalUsage")-mean),2));
       }
@@ -27,7 +29,8 @@ Parse.Cloud.define("getStatistics", function(request, response) {
               return firstEl + nextEl;
             })/diffSqredArr.length));
       }
-      response.success([mean,stdDev]);
+      var jsonObject = {"average": mean.toString(), "stdDev": stdDev.toString()}
+      response.success(jsonObject);
     },
     error: function() {
       response.error("statistics lookup failed");
