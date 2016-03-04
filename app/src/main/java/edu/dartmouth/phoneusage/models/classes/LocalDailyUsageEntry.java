@@ -95,10 +95,10 @@ public class LocalDailyUsageEntry {
 	/**
 	 * Return the total daily usage in hours rounded to two decimal places.
 	 */
-	public double getTotalUsageInHours() {
+	public float getTotalUsageInHours() {
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(getTotalUsageMS());
-		double hours = minutes / 60.0;
-		return Math.round(hours * 100.0) / 100.0;
+		float hours = minutes / 60.0f;
+		return Math.round(hours * 100.0f) / 100.0f;
 	}
 
 	public long getDateTimeMS() {
@@ -107,6 +107,15 @@ public class LocalDailyUsageEntry {
 
 	public long getGoalHoursMS() {
 		return goalHoursMS;
+	}
+
+	/**
+	 * Return the goal hours in hours rounded to two decimal places.
+	 */
+	public float getGoalHoursInHours() {
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(getGoalHoursMS());
+		float hours = minutes / 60.0f;
+		return Math.round(hours * 100.0f) / 100.0f;
 	}
 
 	// ****************************** Useful Instance Methods ************************************//

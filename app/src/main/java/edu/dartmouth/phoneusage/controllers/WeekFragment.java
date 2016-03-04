@@ -19,16 +19,18 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
-import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
 import edu.dartmouth.phoneusage.models.data_sources.LocalDailyUsageEntryDataSource;
-import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
 import edu.dartmouth.phoneusage.utils.CalendarUtil;
 
 /**
@@ -39,18 +41,35 @@ import edu.dartmouth.phoneusage.utils.CalendarUtil;
  */
 public class WeekFragment extends Fragment implements UpdatableFragment {
     private static String TAG = "SVB-WeekFragment";
+    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE", Locale.US);
 
     private CombinedChart mChart;
-    private CombinedData mCombinedData;
     private String[] mDays = new String[] {
             "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
     };
+    private Map<String, List<LocalDailyUsageEntry>> mUsageDataMap;
 
+    /**
+     * Update UI elements when tab selected
+     */
     @Override
     public void updateUI() {
-        // update UI elements when tab selected
+        if (getActivity() == null) { return; }
 
-        // Reset the hashmap
+        // Get the start time in millis for the past Sunday
+        long sundayStartMS = CalendarUtil.calendarForLastSundayStart().getTimeInMillis();
+        long endDateTimeMS = Calendar.getInstance().getTimeInMillis();
+
+        // Get all LocalDailyUsageEntry objects from the past week and populate the weekly chart.
+        LocalDailyUsageEntryDataSource.getInstance(getActivity())
+                .fetchLocalDailyUsageEntriesBetweenDateTimes(sundayStartMS, endDateTimeMS,
+                        new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
+                            @Override
+                            public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                                populateWeeklyUsageChart(result);
+                            }
+                        });
+
     }
 
     @Override
@@ -61,20 +80,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         View view = inflater.inflate(R.layout.fragment_week, container, false);
 
         initWeeklyUsageChart(view);
-
-        // TODO: replace this with real data
-        List<Entry> lineEntries = new ArrayList<>();
-        for (int index = 0; index < mDays.length; index++)
-            lineEntries.add(new Entry(getRandom(4.5f, 0), index));
-
-        List<BarEntry> barEntries = new ArrayList<>();
-        for (int index = 0; index < mDays.length; index++)
-            barEntries.add(new BarEntry(getRandom(5.5f, 3), index));
-
-        updateLineData(lineEntries);
-        updateBarData(barEntries);
-        mChart.setData(mCombinedData);
-        mChart.invalidate();
+        updateUI();
 
         return view;
     }
@@ -83,38 +89,15 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
-        // JUST TESTING
-        Calendar sundayStart = CalendarUtil.calendarForDateStart(Calendar.FEBRUARY, 28, 2016);
-        Calendar thursdayEnd = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
-
-        Log.d(TAG, "Sunday start MS: " + sundayStart.getTimeInMillis());
-        Log.d(TAG, "Thursday end MS: " + thursdayEnd.getTimeInMillis());
-
-        LocalDailyUsageEntryDataSource.getInstance(getActivity())
-                .fetchLocalDailyUsageEntriesBetweenDateTimes(
-                        sundayStart.getTimeInMillis(), thursdayEnd.getTimeInMillis(),
-                        new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
-                            @Override
-                            public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
-                                for (LocalDailyUsageEntry entry : result) {
-                                    Log.d(TAG, entry.toString());
-                                }
-                            }
-                        });
-
-//        UnlockLockEventDataSource.getInstance(getActivity())
-//                .fetchUnlockLockEventsBetweenDateTimes(1457060781462L, 1457060781500L,
-//                        new BaseDataSource.CompletionHandler<List<UnlockLockEvent>>() {
-//                            @Override
-//                            public void onDbTaskCompleted(List<UnlockLockEvent> result) {
-//                                for (UnlockLockEvent event : result) {
-//                                    Log.d(TAG, event.toString());
-//                                }
-//                            }
-//                        });
+        mUsageDataMap = new HashMap<>();
     }
 
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+        updateUI();
+    }
 
     // **************************** Private Chart Helper Functions ****************************** //
 
@@ -140,14 +123,50 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        mCombinedData = new CombinedData(mDays);
     }
 
-    private void updateLineData(List<Entry> entries) {
+    private void populateWeeklyUsageChart(List<LocalDailyUsageEntry> usageEntries) {
+        // Rebuild the hash map that maps days to lists of entries
+        mUsageDataMap = new HashMap<>();
+        for (LocalDailyUsageEntry usageEntry : usageEntries) {
+            Calendar calForEntry = CalendarUtil.calendarFromMillis(usageEntry.getDateTimeMS());
+            String abbreviatedDay = dateFormatter.format(calForEntry.getTime());
+            if (mUsageDataMap.get(abbreviatedDay) == null) {
+                // No entries for this day yet, so create a new list.
+                List<LocalDailyUsageEntry> entryList = new ArrayList<>();
+                entryList.add(usageEntry);
+                mUsageDataMap.put(abbreviatedDay, entryList);
+            } else {
+                // Entries already exist for this day. Append the current one.
+                mUsageDataMap.get(abbreviatedDay).add(usageEntry);
+            }
+        }
+
+        // Build up the line and bar entries for the chart from the new data mapping.
+        List<Entry> lineEntries = new ArrayList<>();
+        List<BarEntry> barEntries = new ArrayList<>();
+        for (int dayIndex = 0; dayIndex < mDays.length; dayIndex++) {
+            List<LocalDailyUsageEntry> dailyEntries = mUsageDataMap.get(mDays[dayIndex]);
+            if (dailyEntries != null) {
+                for (LocalDailyUsageEntry dailyEntry : dailyEntries) {
+                    lineEntries.add(new Entry(dailyEntry.getTotalUsageInHours(), dayIndex));
+                    barEntries.add(new BarEntry(dailyEntry.getGoalHoursInHours(), dayIndex));
+                }
+            }
+        }
+
+        // Add the line and bar entries to the chart.
+        CombinedData combinedData = new CombinedData(mDays);
+        combinedData.setData(getLineData(lineEntries));
+        combinedData.setData(getBarData(barEntries));
+        mChart.setData(combinedData);
+        mChart.invalidate();
+    }
+
+    private LineData getLineData(List<Entry> entries) {
         LineData lineData = new LineData();
 
-        LineDataSet set = new LineDataSet(entries, "Your Total Usage (hours)");
+        LineDataSet set = new LineDataSet(entries, "Your Total Usage Hours");
         // set.setColor(Color.RED);
         set.setColor(getResources().getColor(android.R.color.holo_red_dark));
         set.setLineWidth(2.5f);
@@ -165,13 +184,13 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         lineData.addDataSet(set);
-        mCombinedData.setData(lineData);
+        return lineData;
     }
 
-    private void updateBarData(List<BarEntry> entries) {
+    private BarData getBarData(List<BarEntry> entries) {
         BarData barData = new BarData();
 
-        BarDataSet set = new BarDataSet(entries, "Your Goal Usage (hours)");
+        BarDataSet set = new BarDataSet(entries, "Your Goal Usage Hours");
         // set.setColor(Color.rgb(60, 220, 78));
         set.setColor(getResources().getColor(android.R.color.holo_green_light));
         //set.setValueTextColor(Color.rgb(60, 220, 78));
@@ -180,10 +199,6 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         barData.addDataSet(set);
-        mCombinedData.setData(barData);
-    }
-
-    private float getRandom(float range, float startsfrom) {
-        return (float) (Math.random() * range) + startsfrom;
+        return barData;
     }
 }

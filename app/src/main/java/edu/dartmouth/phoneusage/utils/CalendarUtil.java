@@ -42,4 +42,27 @@ public class CalendarUtil {
 		calendar.set(Calendar.YEAR, year);
 		return calendar;
 	}
+
+	/**
+	 * Return a Calendar instance set to the start of day (00:00:00:000) of last Sunday, which may
+	 * be today.
+	 */
+	public static Calendar calendarForLastSundayStart() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_WEEK, -(calendar.get(Calendar.DAY_OF_WEEK) - 1));
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+
+	/**
+	 * Create and return a Calendar instance from the given milliseconds.
+	 */
+	public static Calendar calendarFromMillis(long millis) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(millis);
+		return calendar;
+	}
 }

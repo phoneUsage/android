@@ -101,6 +101,7 @@ public class MainActivity extends Activity {
 
 	@Override // update UI of all fragments when visible again
 	protected void onResume() {
+		Log.d("MainActivity", "onResume");
 		super.onResume();
 
 		for (Fragment fragment : fragments) {
