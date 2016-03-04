@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.dartmouth.phoneusage.R;
+import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
+import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
+import edu.dartmouth.phoneusage.models.data_sources.LocalDailyUsageEntryDataSource;
 
 /**
  * Created by SujayBusam on 2/27/16.
@@ -31,13 +34,20 @@ import edu.dartmouth.phoneusage.R;
  * on a weekly and daily basis using a chart.
  */
 public class WeekFragment extends Fragment implements UpdatableFragment {
-    private static String TAG = "WeekFragment";
+    private static String TAG = "SVB-WeekFragment";
 
     private CombinedChart mChart;
     private CombinedData mCombinedData;
     private String[] mDays = new String[] {
             "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
     };
+
+    @Override
+    public void updateUI() {
+        // update UI elements when tab selected
+
+        // Reset the hashmap
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -69,6 +79,18 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+
+        // JUST TESTING
+        LocalDailyUsageEntryDataSource.getInstance(getActivity())
+                .fetchLocalDailyUsageEntriesBetweenDateTimes(1457060781462L, 1457060781464L,
+                        new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
+                            @Override
+                            public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                                for (LocalDailyUsageEntry entry : result) {
+                                    Log.d(TAG, entry.toString());
+                                }
+                            }
+                        });
     }
 
 
@@ -82,7 +104,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         mChart.setDrawBarShadow(false);
 
         // draw bars behind lines
-        mChart.setDrawOrder(new CombinedChart.DrawOrder[] {
+        mChart.setDrawOrder(new CombinedChart.DrawOrder[]{
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
         });
 
@@ -103,7 +125,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private void updateLineData(List<Entry> entries) {
         LineData lineData = new LineData();
 
-        LineDataSet set = new LineDataSet(entries, "Your Total Usage");
+        LineDataSet set = new LineDataSet(entries, "Your Total Usage (hours)");
         // set.setColor(Color.RED);
         set.setColor(getResources().getColor(android.R.color.holo_red_dark));
         set.setLineWidth(2.5f);
@@ -127,7 +149,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private void updateBarData(List<BarEntry> entries) {
         BarData barData = new BarData();
 
-        BarDataSet set = new BarDataSet(entries, "Goal Percentile Usage");
+        BarDataSet set = new BarDataSet(entries, "Your Goal Usage (hours)");
         // set.setColor(Color.rgb(60, 220, 78));
         set.setColor(getResources().getColor(android.R.color.holo_green_light));
         //set.setValueTextColor(Color.rgb(60, 220, 78));
@@ -141,10 +163,5 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
     private float getRandom(float range, float startsfrom) {
         return (float) (Math.random() * range) + startsfrom;
-    }
-
-    @Override
-    public void updateUI() {
-        // update UI elements when tab selected
     }
 }

@@ -35,7 +35,7 @@ public class UnlockLockEvent {
 
 	@Override
 	public String toString() {
-		return String.format("[ ID: %d, dateTimeMS: %d, unlockTimeMS: %d, lockTimeMS: %d ]",
+		return String.format("{ ID: %d, dateTimeMS: %d, unlockTimeMS: %d, lockTimeMS: %d }",
 				getId(), getDateTimeMS(), getUnlockTimeMS(), getLockTimeMS());
 	}
 

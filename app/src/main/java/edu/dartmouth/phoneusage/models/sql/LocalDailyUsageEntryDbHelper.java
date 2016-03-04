@@ -1,8 +1,16 @@
 package edu.dartmouth.phoneusage.models.sql;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.Date;
+
+import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
+import edu.dartmouth.phoneusage.models.data_sources.LocalDailyUsageEntryDataSource;
 
 /**
  * Created by SujayBusam on 3/2/16.
@@ -16,6 +24,7 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	// Singleton instance
 	private static LocalDailyUsageEntryDbHelper mInstance;
 
+	private static final String TAG = "SVB-DailyUsageDbHelper";
 	public static final String DATABASE_NAME = "local_daily_usage_entry.db";
 	public static final int DATABASE_VERSION = 1;
 
@@ -66,12 +75,39 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// Execute SQL command on this new database to create our UnlockLockEvent table.
+		// Execute SQL command on this new database to create our LocalDailyUsageEntry table,
+		// and add some test data.
 		db.execSQL(DATABASE_CREATE_SQL);
+		populateTestData(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Nothing yet
+	}
+
+	// **************************** Private helper functions *************************************//
+
+	private void populateTestData(SQLiteDatabase db) {
+		LocalDailyUsageEntry entry = new LocalDailyUsageEntry();
+		entry.setDateTimeMS(1457060781463L);
+		entry.setTotalUnlocks(65);
+		entry.setTotalUsageInHours(4.559f);
+		entry.setGoalHoursInHours(3.655f);
+
+		insert(db, entry);
+	}
+
+	private void insert(SQLiteDatabase db, LocalDailyUsageEntry entry) {
+		// Populate the ContentValues
+		ContentValues values = new ContentValues();
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_DATE_TIME_MS, entry.getDateTimeMS());
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_TOTAL_UNLOCKS, entry.getTotalUnlocks());
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_TOTAL_USAGE_MS, entry.getTotalUsageMS());
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_GOAL_HOURS_MS, entry.getGoalHoursMS());
+
+		// Insert into db and get ID
+		long insertId = db.insert(LocalDailyUsageEntryDbHelper.TABLE_NAME, null, values);
+		Log.d(TAG, "Inserted LocalDailyUsageEntry into db. Id: " + insertId);
 	}
 }

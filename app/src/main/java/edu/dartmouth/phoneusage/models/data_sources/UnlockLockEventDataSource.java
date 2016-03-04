@@ -24,7 +24,7 @@ import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
  */
 public class UnlockLockEventDataSource extends BaseDataSource {
 
-	private static String TAG = "SVB-UnlockLockDataSource";
+	private static final String TAG = "SVB-LockDataSource";
 	private static UnlockLockEventDataSource instance;
 
 	private UnlockLockEventDbHelper mDbHelper;
@@ -172,10 +172,10 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 	/**
 	 * Create and return an UnlockLockEvent object from the given Cursor.
 	 */
-	private UnlockLockEvent cursorToUnlockLockEvent(Cursor cursor) {
+	private UnlockLockEvent cursorToUnlockLockEvent(Cursor cursor) throws SQLException{
 		if (cursor.getCount() != UnlockLockEventDbHelper.ALL_COLUMNS.length) {
-			Log.e(TAG, "Invalid cursor passed in");
-			return null;
+			Log.e(TAG, "Invalid cursor passed in. Columns: " + cursor.getColumnCount());
+			throw new SQLException();
 		}
 
 		return new UnlockLockEvent(

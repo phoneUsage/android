@@ -15,7 +15,7 @@ public class LocalDailyUsageEntry {
 	private long dateTimeMS; // the date for the entry in milliseconds
 	private int totalUnlocks;
 	private long totalUsageMS; // in milliseconds
-	private long goalHoursMS; // today's goal hours in milliseconds for the local user
+	private long goalHoursMS; // today's goal hours in milliseconds for the local user (calculated using percentile)
 
 	/**
 	 * Default constructor with no fields given.
@@ -42,8 +42,8 @@ public class LocalDailyUsageEntry {
 
 	@Override
 	public String toString() {
-		return String.format("[ ID: %d, totalUnlocks: %d, totalUsageMS: %d, dateTimeMS: %d, " +
-				"goalHoursMS: %d ]", getId(), getTotalUnlocks(), getTotalUsageMS(), getDateTimeMS(),
+		return String.format("{ ID: %d, totalUnlocks: %d, totalUsageMS: %d, dateTimeMS: %d, " +
+				"goalHoursMS: %d }", getId(), getTotalUnlocks(), getTotalUsageMS(), getDateTimeMS(),
 				getGoalHoursMS());
 	}
 
@@ -57,12 +57,24 @@ public class LocalDailyUsageEntry {
 		this.totalUsageMS = totalUsageMS;
 	}
 
+	public void setTotalUsageInHours(float hours) {
+		int minutes = Math.round(hours * 60);
+		long usageInMS = TimeUnit.MINUTES.toMillis(minutes);
+		setTotalUsageMS(usageInMS);
+	}
+
 	public void setDateTimeMS(long dateTimeMS) {
 		this.dateTimeMS = dateTimeMS;
 	}
 
 	public void setGoalHoursMS(long goalHoursMS) {
 		this.goalHoursMS = goalHoursMS;
+	}
+
+	public void setGoalHoursInHours(float hours) {
+		int minutes = Math.round(hours * 60);
+		long goalInMS = TimeUnit.MINUTES.toMillis(minutes);
+		setGoalHoursMS(goalInMS);
 	}
 
 	// ********************************** Public Getters ***************************************//
@@ -80,6 +92,15 @@ public class LocalDailyUsageEntry {
 		return totalUsageMS;
 	}
 
+	/**
+	 * Return the total daily usage in hours rounded to two decimal places.
+	 */
+	public double getTotalUsageInHours() {
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(getTotalUsageMS());
+		double hours = minutes / 60.0;
+		return Math.round(hours * 100.0) / 100.0;
+	}
+
 	public long getDateTimeMS() {
 		return dateTimeMS;
 	}
@@ -90,12 +111,4 @@ public class LocalDailyUsageEntry {
 
 	// ****************************** Useful Instance Methods ************************************//
 
-	/**
-	 * Return the total daily usage in hours rounded to two decimal places.
-	 */
-	public double getTotalUsageHours() {
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(getTotalUsageMS());
-		double hours = minutes / 60.0;
-		return Math.round(hours * 100.0) / 100.0;
-	}
 }

@@ -3,6 +3,8 @@ package edu.dartmouth.phoneusage.models.data_sources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import java.sql.SQLException;
@@ -10,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
-import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.sql.LocalDailyUsageEntryDbHelper;
-import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
 
 /**
  * Created by SujayBusam on 3/2/16.
@@ -26,7 +26,7 @@ import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
  */
 public class LocalDailyUsageEntryDataSource extends BaseDataSource {
 
-	private static String TAG = "SVB-DailyUsageDataSource";
+	private static final String TAG = "SVB-UsageDataSource";
 	private static LocalDailyUsageEntryDataSource instance;
 
 	private LocalDailyUsageEntryDbHelper mDbHelper;
@@ -176,10 +176,10 @@ public class LocalDailyUsageEntryDataSource extends BaseDataSource {
 	/**
 	 * Create and return a LocalDailyUsageEntry object from the given Cursor.
 	 */
-	private LocalDailyUsageEntry cursorToLocalDailyUsageEntry(Cursor cursor) {
-		if (cursor.getCount() != LocalDailyUsageEntryDbHelper.ALL_COLUMNS.length) {
-			Log.e(TAG, "Invalid cursor passed in");
-			return null;
+	private LocalDailyUsageEntry cursorToLocalDailyUsageEntry(Cursor cursor) throws SQLException {
+		if (cursor.getColumnCount() != LocalDailyUsageEntryDbHelper.ALL_COLUMNS.length) {
+			Log.e(TAG, "Invalid cursor passed in. Columns: " + cursor.getColumnCount());
+			throw new SQLException();
 		}
 
 		return new LocalDailyUsageEntry(
