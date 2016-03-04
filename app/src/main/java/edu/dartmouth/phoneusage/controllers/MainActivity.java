@@ -136,8 +136,17 @@ public class MainActivity extends Activity {
 		Log.d("MainActivity", "onResume");
 		super.onResume();
 
-		for (Fragment fragment : fragments) {
-			((UpdatableFragment) fragment).updateUI();
+        Handler delayedHandler = new Handler();
+        // delay UI call to ensure views are redrawn
+		for (final Fragment fragment : fragments) {
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    ((UpdatableFragment) fragment).updateUI();
+                }
+            };
+
+			delayedHandler.postDelayed(r, 1000);
 		}
 	}
 
