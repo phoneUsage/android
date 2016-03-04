@@ -19,9 +19,11 @@ public class VoiceVoter {
     }
 
     public int pollVoter(){
-        if(vote[1] > 2*vote[0]){
+        //speaking
+        if(vote[1] > 100*vote[0]){
             return 1;
         }
+        //noise
         else{
             return 0;
         }

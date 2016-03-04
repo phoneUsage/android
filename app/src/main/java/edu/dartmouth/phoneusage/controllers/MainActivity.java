@@ -165,13 +165,16 @@ public class MainActivity extends Activity {
 				case Context_Service.MSG_SPEECH_STATUS:
 				{
 					Integer speech = msg.getData().getInt("speech");
-					Log.d("Handler", "got speech data");
+
 					//Log.d("speech", "speech in main: "+speech);
 					if (speech==1.0) {
 						voiceVoter.incrementSpeech();
+						Log.d("Handler", "got speech data");
 					}
-					else
+					else {
 						voiceVoter.incrementNoise();
+						Log.d("Handler", "got noise data");
+					}
 
 					//statusSpeechView.setText(""+speech);
 					break;
@@ -324,8 +327,9 @@ public class MainActivity extends Activity {
 						}
 					});
 				}
+				voiceVoter.reset();
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(20000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
