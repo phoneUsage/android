@@ -7,42 +7,52 @@ package edu.dartmouth.phoneusage.models.classes;
  */
 public class UnlockLockEvent {
 
-	private Long id; // Not set explicitly. This is an auto-incremented field in the db
+	private long id; // Not set explicitly by consumer of this class. This is an auto-incremented field in the db
 
-	private Long unlockTimeMS; // Unlock (start) datetime in milliseconds
-	private Long lockTimeMS; // Lock (end) datetime in milliseconds
+	private long unlockTimeMS; // Unlock (start) datetime in milliseconds
+	private long lockTimeMS; // Lock (end) datetime in milliseconds
+	private long dateTimeMS; // The date for the event in milliseconds
 
 	/**
 	 * Constructor with all fields provided.
 	 */
-	public UnlockLockEvent(Long id, Long unlockTimeMS, Long lockTimeMS) {
+	public UnlockLockEvent(long id, long unlockTimeMS, long lockTimeMS, long dateTimeMS) {
 		this.id = id;
 		this.unlockTimeMS = unlockTimeMS;
 		this.lockTimeMS = lockTimeMS;
+		this.dateTimeMS = dateTimeMS;
 	}
 
 	// ********************************** Public Setters ***************************************//
 
-	public void setUnlockTimeMS(Long unlockTimeMS) {
+	public void setUnlockTimeMS(long unlockTimeMS) {
 		this.unlockTimeMS = unlockTimeMS;
 	}
 
-	public void setLockTimeMS(Long lockTimeMS) {
+	public void setLockTimeMS(long lockTimeMS) {
 		this.lockTimeMS = lockTimeMS;
+	}
+
+	public void setDateTimeMS(long dateTimeMS) {
+		this.dateTimeMS = dateTimeMS;
 	}
 
 	// ********************************** Public Getters ***************************************//
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public Long getUnlockTimeMS() {
+	public long getUnlockTimeMS() {
 		return unlockTimeMS;
 	}
 
-	public Long getLockTimeMS() {
+	public long getLockTimeMS() {
 		return lockTimeMS;
+	}
+
+	public long getDateTimeMS() {
+		return dateTimeMS;
 	}
 
 	// ****************************** Useful Instance Methods ************************************//
