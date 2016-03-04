@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <edu.dartmouth.phoneusage.views.SeekBarPreference
-        android:key="percentile"
+        android:key="PERCENTILE"
         android:title="Target Percentile"
         android:summary="50%"
         android:max="100"
         android:defaultValue="50" />
 
     <CheckBoxPreference
-        android:title="Antisocial Alerts"
+        android:title="ANTISOCIAL_ALERTS"
         android:summary="Reminders to get off your phone when in a conversaton"/>
 </PreferenceScreen>

@@ -8,41 +8,30 @@
  */
 package edu.dartmouth.phoneusage.controllers;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.IntentFilter;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.parse.FunctionCallback;
-import com.parse.ParseCloud;
-import com.parse.ParseException;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import edu.dartmouth.phoneusage.utils.MidnightScheduler;
-import edu.dartmouth.phoneusage.utils.UsageBroadcastReceiver;
+import edu.dartmouth.phoneusage.utils.Context_Service;
 import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
@@ -53,9 +42,26 @@ public class MainActivity extends Activity {
 	private ViewPager viewPager;
 	private ArrayList<Fragment> fragments;
 	private ActionTabsViewPagerAdapter myViewPageAdapter;
+	private SharedPreferences prefs;
 
 	int mPercentage;
 	int mUnlocks;
+
+	private boolean microphoneStarted = false;
+
+	/**
+	 * Messenger service for exchanging messages with the background service
+	 */
+	private Messenger mVoiceService = null;
+	/**
+	 * Variable indicating if this activity is connected to the service
+	 */
+	private boolean mIsBound;
+
+	/**
+	 * Messenger receiving messages from the background service to update UI
+	 */
+	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 
 	/**
 	 * Called when the activity is first created.
@@ -65,9 +71,30 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-    // launch background service that maintains broadcast rx
-    Intent usageIntent = new Intent(this, UsageService.class);
-    startService(usageIntent);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+    	// launch background service that maintains lock/unlock broadcast rx
+    	Intent usageIntent = new Intent(this, UsageService.class);
+    	startService(usageIntent);
+
+		// TODO replace with check for settings
+		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)){
+			//Start Background Service if not already started
+			if (!Context_Service.isRunning()) {
+				Intent cssBg = new Intent(this, Context_Service.class);
+				startService(cssBg);
+				Log.d("MainAccc","started service");
+			}
+			//Bind to the service if it is already running
+			bindToVoiceServiceIfIsRunning();
+			microphoneStarted = false;
+			if (Context_Service.isMicrophoneRunning()) {
+				Log.d("MainAcc", "microphone running");
+				microphoneStarted = true;
+			}
+			doBindService();
+
+		}
 
 		setupTabs();
 	}
@@ -106,6 +133,169 @@ public class MainActivity extends Activity {
 
 		for (Fragment fragment : fragments) {
 			((UpdatableFragment) fragment).updateUI();
+		}
+	}
+
+	/**
+	 * Handler to handle incoming messages
+	 */
+	@SuppressLint("HandlerLeak")
+	class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			Log.d("MainAcc", "gotMessage");
+			switch (msg.what) {
+				case Context_Service.MSG_MICROPHONE_STARTED:
+				{
+					Toast.makeText(getApplicationContext(), "microphone started", Toast.LENGTH_SHORT).show();
+					Log.d("Handler", "microphone started");
+					break;
+				}
+				case Context_Service.MSG_MICROPHONE_STOPPED:
+				{
+					Toast.makeText(getApplicationContext(), "microphone stopped", Toast.LENGTH_SHORT).show();
+					Log.d("Handler", "microphone started");
+					break;
+				}
+				case Context_Service.MSG_SPEECH_STATUS:
+				{
+					Integer speech = msg.getData().getInt("speech");
+					Log.d("Handler", "got speech data");
+					//Log.d("speech", "speech in main: "+speech);
+					if (speech==1.0) {
+						//Toast.makeText(getApplicationContext(), "Speech", Toast.LENGTH_SHORT).show();
+					}
+					else
+						//Toast.makeText(getApplicationContext(), "Noise", Toast.LENGTH_SHORT).show();
+
+					//statusSpeechView.setText(""+speech);
+					break;
+				}
+				default:
+					super.handleMessage(msg);
+			}
+		}
+	}
+
+	/**
+	 * Connection with the service
+	 */
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			mVoiceService = new Messenger(service);
+			Log.d("Tagg", "Attached to the Service");
+			mIsBound = true;
+			startMicrophone();
+			try {
+				Message msg = Message.obtain(null, Context_Service.MSG_REGISTER_CLIENT);
+				msg.replyTo = mMessenger;
+				mVoiceService.send(msg);
+			} catch (RemoteException e) {
+				// In this case the service has crashed before we could even do anything with it
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			// This is called when the connection with the service has been unexpectedly disconnected - process crashed.
+			mIsBound = false;
+			mVoiceService = null;
+			Log.d("tagg", "Disconnected from the Service");
+		}
+	};
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		try {
+			doUnbindService();
+		} catch (Throwable t) {
+			Log.e("MainActivity", "Failed to unbind from the service", t);
+		}
+	}
+
+	/**
+	 * Binds this activity to the service if the service is already running
+	 */
+	private void bindToVoiceServiceIfIsRunning() {
+		//If the service is running when the activity starts, we want to automatically bind to it.
+		if (Context_Service.isRunning()) {
+			doBindService();//
+			Log.d("tagg", "Request to bind service");
+		}
+	}
+
+	/**
+	 * This method is required to send a request to the background service.
+	 * In current application, we are not sending any message yet.
+	 * @param message
+	 */
+	private void sendMessageToService(int message) {
+		if (mIsBound) {
+			if (mVoiceService != null) {
+				try {
+					Message msg = Message.obtain(null, message);
+					msg.replyTo = mMessenger;
+					mVoiceService.send(msg);
+					Log.d("SendMessage", String.valueOf(message));
+				} catch (RemoteException e) {
+				}
+			}
+		}
+	}
+
+	/**
+	 * Binds the activity to the background service
+	 */
+	void doBindService() {
+		bindService(new Intent(this, Context_Service.class), mConnection, Context.BIND_AUTO_CREATE);
+		Log.d("tagg","Binding to Service");
+	}
+
+	/**
+	 * Unbind this activity from the background service
+	 */
+	void doUnbindService() {
+		if (mIsBound) {
+			// If we have received the service, and hence registered with it, then now is the time to unregister.
+			if (mVoiceService != null) {
+				try {
+					Message msg = Message.obtain(null, Context_Service.MSG_UNREGISTER_CLIENT);
+					msg.replyTo = mMessenger;
+					mVoiceService.send(msg);
+				} catch (RemoteException e) {
+					// There is nothing special we need to do if the service has crashed.
+				}
+			}
+			// Detach our existing connection.
+			unbindService(mConnection);
+			Log.d("tagg", "Unbinding from Service");
+		}
+	}
+
+	/**
+	 * Sends Microphone Start Request
+	 */
+	private void startMicrophone() {
+		Log.d("MainAcc", "StartMic called");
+		if(!mIsBound) {
+			Log.d("MainAcc", "StartMic isntBound");
+			doBindService();
+		}
+		if(mIsBound) {
+			Log.d("MainAcc", "StartMic isBound");
+			sendMessageToService(Context_Service.MSG_START_MICROPHONE);
+		}
+	}
+
+	/**
+	 * Sends Accelerometer Stop Request
+	 */
+	private void stopMicrophone() {
+		if(!mIsBound) {
+			doBindService();
+		}
+		if(mIsBound) {
+			sendMessageToService(Context_Service.MSG_STOP_MICROPHONE);
 		}
 	}
 }
