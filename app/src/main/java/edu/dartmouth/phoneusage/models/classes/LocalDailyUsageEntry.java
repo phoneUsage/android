@@ -18,6 +18,17 @@ public class LocalDailyUsageEntry {
 	private long goalHoursMS; // today's goal hours in milliseconds for the local user
 
 	/**
+	 * Default constructor with no fields given.
+	 * If you use this, you have to make sure all fields are set properly before saving to db!
+	 */
+	public LocalDailyUsageEntry() {
+		this.dateTimeMS = -1;
+		this.totalUnlocks = 0;
+		this.totalUsageMS = 0;
+		this.goalHoursMS = 0;
+	}
+
+	/**
 	 * Constructor with all fields provided.
 	 */
 	public LocalDailyUsageEntry(long id, long dateTimeMS, int totalUnlocks, long totalUsageMS,

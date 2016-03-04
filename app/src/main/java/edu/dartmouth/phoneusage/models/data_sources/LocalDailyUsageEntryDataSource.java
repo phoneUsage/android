@@ -6,9 +6,13 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
+import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.sql.LocalDailyUsageEntryDbHelper;
+import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
 
 /**
  * Created by SujayBusam on 3/2/16.
@@ -67,6 +71,18 @@ public class LocalDailyUsageEntryDataSource extends BaseDataSource {
 		task.execute(entry);
 	}
 
+	/**
+	 * Asynchronously fetch all LocalDailyUsageEntries between the two given date times in
+	 * milliseconds, inclusive. The completion handler will be called with the List of fetched
+	 * LocalDailyUsageEntries.
+	 */
+	public void fetchLocalDailyUsageEntriesBetweenDateTimes(
+			long startDateTimeMS, long endDateTimeMS,
+			CompletionHandler<List<LocalDailyUsageEntry>> completionHandler) {
+		FetchEntryTask task = new FetchEntryTask(startDateTimeMS, endDateTimeMS, completionHandler);
+		task.execute();
+	}
+
 	// ********************************** Private Async Tasks ************************************//
 
 	/**
@@ -114,9 +130,51 @@ public class LocalDailyUsageEntryDataSource extends BaseDataSource {
 		}
 	}
 
+	/**
+	 * Task to fetch all LocalDailyUsageEntries between the given datetime (milliseconds) asynchronously.
+	 */
+	private class FetchEntryTask extends BaseEntryAsyncTask<Void, List<LocalDailyUsageEntry>> {
+		long mStartDateTimeMS;
+		long mEndDateTimeMS;
+
+		public FetchEntryTask(long startDateTimeMS, long endDateTimeMS,
+							  CompletionHandler<List<LocalDailyUsageEntry>> completionHandler) {
+			super(completionHandler);
+			this.mStartDateTimeMS = startDateTimeMS;
+			this.mEndDateTimeMS = endDateTimeMS;
+		}
+
+		@Override
+		protected List<LocalDailyUsageEntry> doInBackground(Void... params) {
+			List<LocalDailyUsageEntry> queriedEntries = new ArrayList<>();
+
+			// Query the database for LocalDailyUsageEntries between the start and end datetime milliseconds.
+			try {
+				open();
+				Cursor cursor = mDb.query(LocalDailyUsageEntryDbHelper.TABLE_NAME,
+						LocalDailyUsageEntryDbHelper.ALL_COLUMNS,
+						LocalDailyUsageEntryDbHelper.COLUMN_DATE_TIME_MS + " BETWEEN ? AND ?",
+						new String[] {String.valueOf(mStartDateTimeMS), String.valueOf(mEndDateTimeMS)},
+						null, null, null, null);
+				cursor.moveToFirst();
+				while (!cursor.isAfterLast()) {
+					queriedEntries.add(cursorToLocalDailyUsageEntry(cursor));
+					cursor.moveToNext();
+				}
+				cursor.close();
+				return queriedEntries;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Log.d(TAG, String.format("Failed to fetch LocalDailyUsageEntries between dates %d and %d",
+						mStartDateTimeMS, mEndDateTimeMS));
+				return null;
+			}
+		}
+	}
+
 	// **************************** Private helper functions *************************************//
 	/**
-	 * Create and return an LocalDailyUsageEntry object from the given Cursor.
+	 * Create and return a LocalDailyUsageEntry object from the given Cursor.
 	 */
 	private LocalDailyUsageEntry cursorToLocalDailyUsageEntry(Cursor cursor) {
 		if (cursor.getCount() != LocalDailyUsageEntryDbHelper.ALL_COLUMNS.length) {

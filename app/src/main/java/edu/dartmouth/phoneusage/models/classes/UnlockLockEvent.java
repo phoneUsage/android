@@ -14,6 +14,16 @@ public class UnlockLockEvent {
 	private long dateTimeMS; // The date for the event in milliseconds
 
 	/**
+	 * Default constructor with no fields given.
+	 * If you use this, you have to make sure all fields are set properly before saving to db!
+	 */
+	public UnlockLockEvent() {
+		this.unlockTimeMS = -1;
+		this.lockTimeMS = -1;
+		this.dateTimeMS = -1;
+	}
+
+	/**
 	 * Constructor with all fields provided.
 	 */
 	public UnlockLockEvent(long id, long unlockTimeMS, long lockTimeMS, long dateTimeMS) {
