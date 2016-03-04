@@ -16,12 +16,14 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -40,6 +42,7 @@ public class MainActivity extends Activity {
 	private ViewPager viewPager;
 	private ArrayList<Fragment> fragments;
 	private ActionTabsViewPagerAdapter myViewPageAdapter;
+	private SharedPreferences prefs;
 
 	int mPercentage;
 	int mUnlocks;
@@ -68,12 +71,14 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
     	// launch background service that maintains lock/unlock broadcast rx
     	Intent usageIntent = new Intent(this, UsageService.class);
     	startService(usageIntent);
 
 		// TODO replace with check for settings
-		if(true){
+		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)){
 			//Start Background Service if not already started
 			if (!Context_Service.isRunning()) {
 				Intent cssBg = new Intent(this, Context_Service.class);
