@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
@@ -22,7 +24,7 @@ import edu.dartmouth.phoneusage.models.sql.UnlockLockEventDbHelper;
  */
 public class UnlockLockEventDataSource extends BaseDataSource {
 
-	private static String TAG = "SVB-UnlockLockDataSource";
+	private static final String TAG = "SVB-LockDataSource";
 	private static UnlockLockEventDataSource instance;
 
 	private UnlockLockEventDbHelper mDbHelper;
@@ -67,10 +69,20 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 		task.execute(event);
 	}
 
+	/**
+	 * Asynchronously fetch all UnlockLockEvents between the two given date times in milliseconds,
+	 * inclusive. The completion handler will be called with the List of fetched UnlockLockEvents.
+	 */
+	public void fetchUnlockLockEventsBetweenDateTimes(long startDateTimeMS, long endDateTimeMS,
+												  CompletionHandler<List<UnlockLockEvent>> completionHandler) {
+		FetchEntryTask task = new FetchEntryTask(startDateTimeMS, endDateTimeMS, completionHandler);
+		task.execute();
+	}
+
 	// ********************************** Private Async Tasks ************************************//
 
 	/**
-	 * Task to save an UnlockLockEvent in the database.
+	 * Task to save an UnlockLockEvent in the database asynchronously.
 	 */
 	private class SaveEntryTask extends BaseEntryAsyncTask<UnlockLockEvent, UnlockLockEvent> {
 
@@ -101,9 +113,54 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 				cursor.moveToFirst();
 				UnlockLockEvent newUnlockLockEvent = cursorToUnlockLockEvent(cursor);
 				cursor.close();
+
+				Log.d(TAG, "Saved and retrieved UnlockLockEvent: " + newUnlockLockEvent);
 				return newUnlockLockEvent;
 			} catch (SQLException e) {
+				e.printStackTrace();
 				Log.d(TAG, "Failed to insert UnlockLockEvent with id: " + unlockLockEvent.getId());
+				return null;
+			}
+		}
+	}
+
+	/**
+	 * Task to fetch all UnlockLockEvents between the given datetime (milliseconds) asynchronously.
+	 */
+	private class FetchEntryTask extends BaseEntryAsyncTask<Void, List<UnlockLockEvent>> {
+		long mStartDateTimeMS;
+		long mEndDateTimeMS;
+
+		public FetchEntryTask(long startDateTimeMS, long endDateTimeMS,
+							  CompletionHandler<List<UnlockLockEvent>> completionHandler) {
+			super(completionHandler);
+			this.mStartDateTimeMS = startDateTimeMS;
+			this.mEndDateTimeMS = endDateTimeMS;
+		}
+
+		@Override
+		protected List<UnlockLockEvent> doInBackground(Void... params) {
+			List<UnlockLockEvent> queriedEvents = new ArrayList<>();
+
+			// Query the database for UnlockLockEvents between the start and end datetime milliseconds.
+			try {
+				open();
+				Cursor cursor = mDb.query(UnlockLockEventDbHelper.TABLE_NAME,
+						UnlockLockEventDbHelper.ALL_COLUMNS,
+						UnlockLockEventDbHelper.COLUMN_LOCK_TIME_MS + " BETWEEN ? AND ?",
+						new String[] {String.valueOf(mStartDateTimeMS), String.valueOf(mEndDateTimeMS)},
+						null, null, null, null);
+				cursor.moveToFirst();
+				while (!cursor.isAfterLast()) {
+					queriedEvents.add(cursorToUnlockLockEvent(cursor));
+					cursor.moveToNext();
+				}
+				cursor.close();
+				return queriedEvents;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Log.d(TAG, String.format("Failed to fetch UnlockLockEvents between dates %d and %d",
+						mStartDateTimeMS, mEndDateTimeMS));
 				return null;
 			}
 		}
@@ -114,7 +171,12 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 	/**
 	 * Create and return an UnlockLockEvent object from the given Cursor.
 	 */
-	private UnlockLockEvent cursorToUnlockLockEvent(Cursor cursor) {
+	private UnlockLockEvent cursorToUnlockLockEvent(Cursor cursor) throws SQLException{
+		if (cursor.getColumnCount() != UnlockLockEventDbHelper.ALL_COLUMNS.length) {
+			Log.e(TAG, "Invalid cursor passed in. Columns: " + cursor.getColumnCount());
+			throw new SQLException();
+		}
+
 		return new UnlockLockEvent(
 			cursor.getLong(0), cursor.getLong(1), cursor.getLong(2)
 		);

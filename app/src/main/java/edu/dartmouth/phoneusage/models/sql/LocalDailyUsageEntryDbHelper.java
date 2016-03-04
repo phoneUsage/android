@@ -1,8 +1,15 @@
 package edu.dartmouth.phoneusage.models.sql;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.Calendar;
+
+import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
+import edu.dartmouth.phoneusage.utils.CalendarUtil;
 
 /**
  * Created by SujayBusam on 3/2/16.
@@ -16,6 +23,7 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	// Singleton instance
 	private static LocalDailyUsageEntryDbHelper mInstance;
 
+	private static final String TAG = "SVB-DailyUsageDbHelper";
 	public static final String DATABASE_NAME = "local_daily_usage_entry.db";
 	public static final int DATABASE_VERSION = 1;
 
@@ -66,12 +74,74 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// Execute SQL command on this new database to create our UnlockLockEvent table.
+		// Execute SQL command on this new database to create our LocalDailyUsageEntry table,
+		// and add some test data.
 		db.execSQL(DATABASE_CREATE_SQL);
+		populateTestData(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Nothing yet
+	}
+
+	// **************************** Private helper functions *************************************//
+
+	private void populateTestData(SQLiteDatabase db) {
+		// Create entries for Sun - Thurs of the week of Feb 28th
+
+		Calendar sunday = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 28, 2016);
+		LocalDailyUsageEntry sundayEntry = new LocalDailyUsageEntry();
+		sundayEntry.setDateTimeMS(sunday.getTimeInMillis());
+		sundayEntry.setTotalUnlocks(233);
+		sundayEntry.setTotalUsageInHours(5.65f);
+		sundayEntry.setGoalHoursInHours(3.44f);
+
+		Calendar monday = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 29, 2016);
+		LocalDailyUsageEntry mondayEntry = new LocalDailyUsageEntry();
+		mondayEntry.setDateTimeMS(monday.getTimeInMillis());
+		mondayEntry.setTotalUnlocks(124);
+		mondayEntry.setTotalUsageInHours(3.55f);
+		mondayEntry.setGoalHoursInHours(4.21f);
+
+		Calendar tuesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 1, 2016);
+		LocalDailyUsageEntry tuesdayEntry = new LocalDailyUsageEntry();
+		tuesdayEntry.setDateTimeMS(tuesday.getTimeInMillis());
+		tuesdayEntry.setTotalUnlocks(222);
+		tuesdayEntry.setTotalUsageInHours(3.18f);
+		tuesdayEntry.setGoalHoursInHours(4.90f);
+
+		Calendar wednesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 2, 2016);
+		LocalDailyUsageEntry wednesdayEntry = new LocalDailyUsageEntry();
+		wednesdayEntry.setDateTimeMS(wednesday.getTimeInMillis());
+		wednesdayEntry.setTotalUnlocks(88);
+		wednesdayEntry.setTotalUsageInHours(8.32f);
+		wednesdayEntry.setGoalHoursInHours(7.45f);
+
+		Calendar thursday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
+		LocalDailyUsageEntry thursdayEntry = new LocalDailyUsageEntry();
+		thursdayEntry.setDateTimeMS(thursday.getTimeInMillis());
+		thursdayEntry.setTotalUnlocks(124);
+		thursdayEntry.setTotalUsageInHours(8.00f);
+		thursdayEntry.setGoalHoursInHours(6.77f);
+
+		insert(db, sundayEntry);
+		insert(db, mondayEntry);
+		insert(db, tuesdayEntry);
+		insert(db, wednesdayEntry);
+		insert(db, thursdayEntry);
+	}
+
+	private void insert(SQLiteDatabase db, LocalDailyUsageEntry entry) {
+		// Populate the ContentValues
+		ContentValues values = new ContentValues();
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_DATE_TIME_MS, entry.getDateTimeMS());
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_TOTAL_UNLOCKS, entry.getTotalUnlocks());
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_TOTAL_USAGE_MS, entry.getTotalUsageMS());
+		values.put(LocalDailyUsageEntryDbHelper.COLUMN_GOAL_HOURS_MS, entry.getGoalHoursMS());
+
+		// Insert into db and get ID
+		long insertId = db.insert(LocalDailyUsageEntryDbHelper.TABLE_NAME, null, values);
+		Log.d(TAG, "Inserted LocalDailyUsageEntry into db. Id: " + insertId + " MS: " + entry.getDateTimeMS());
 	}
 }
