@@ -8,6 +8,7 @@
         android:defaultValue="50" />
 
     <CheckBoxPreference
-        android:title="ANTISOCIAL_ALERTS"
+        android:title="Antisocial Alerts"
+        android:key="ANTISOCIAL_ALERTS"
         android:summary="Reminders to get off your phone when in a conversaton"/>
 </PreferenceScreen>
