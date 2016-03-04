@@ -168,16 +168,16 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         LineDataSet set = new LineDataSet(entries, "Your Total Usage Hours");
         // set.setColor(Color.RED);
-        set.setColor(getResources().getColor(android.R.color.holo_red_dark));
+        set.setColor(getResources().getColor(android.R.color.holo_red_light));
         set.setLineWidth(2.5f);
         // set.setCircleColor(Color.RED);
-        set.setCircleColor(getResources().getColor(android.R.color.holo_red_dark));
+        set.setCircleColor(getResources().getColor(android.R.color.holo_red_light));
         set.setCircleRadius(5f);
         // set.setFillColor(Color.RED);
-        set.setFillColor(getResources().getColor(android.R.color.holo_red_dark));
+        set.setFillColor(getResources().getColor(android.R.color.holo_red_light));
         set.setDrawCubic(false);
         set.setDrawValues(true);
-        set.setValueTextSize(12f);
+        set.setValueTextSize(14f);
         // set.setValueTextColor(Color.RED);
         set.setValueTextColor(getResources().getColor(android.R.color.holo_red_dark));
 
@@ -195,7 +195,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         set.setColor(getResources().getColor(android.R.color.holo_green_light));
         //set.setValueTextColor(Color.rgb(60, 220, 78));
         set.setValueTextColor(getResources().getColor(android.R.color.holo_green_dark));
-        set.setValueTextSize(12f);
+        set.setValueTextSize(14f);
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         barData.addDataSet(set);
