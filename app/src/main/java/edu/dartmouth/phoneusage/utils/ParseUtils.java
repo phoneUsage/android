@@ -8,8 +8,10 @@ import android.util.Log;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -31,6 +33,14 @@ public class ParseUtils {
                 }
             }
         });
+    }
+
+    public static void addInfoToParse(long duration, long unlocks){
+        ParseObject entry = new ParseObject("PFDailyUsageEntry");
+        entry.put("date", new Date());
+        entry.put("totalUsage", duration);
+        entry.put("totalUnlocks", unlocks);
+        entry.saveInBackground();
     }
 
 }

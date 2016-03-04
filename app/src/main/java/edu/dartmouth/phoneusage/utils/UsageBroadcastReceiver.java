@@ -33,10 +33,13 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             // temporarily save before clearing preferences
             long dailyDuration = sharedPreferences.getLong(durationKey, 0);
             long dailyUnlocks = sharedPreferences.getLong(unlocksKey, 0);
+            ParseUtils.addInfoToParse(dailyDuration, dailyUnlocks);
 
             // clear preferences to prepare for next day
             refreshPreferences(sharedPreferences, durationKey, unlocksKey);
             unlockDateTime = 0;
+
+            ParseUtils.getStatsInfo(context);
 
             // TODO: add method to upload/reset data
 
