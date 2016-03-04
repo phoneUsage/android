@@ -42,9 +42,8 @@ public class TodayCircleView extends View {
         super.onDraw(canvas);
         mPaint.setTextSize(TEXT_SIZE);
         // stored information
-        // long duration = 8800001; // USE FOR TESTING
-        long duration = mSharedPreferences.getLong(mDurationKey, 6600000);
-        long limitation = mSharedPreferences.getLong(mLimitationKey, 8800000);
+        long duration = mSharedPreferences.getLong(mDurationKey, 0);
+        long limitation = mSharedPreferences.getLong(mLimitationKey, 21600000);
         double percentage = ((double) duration / (double) limitation) * 100;
 
         long hours = (duration / 3600000) % 24;
