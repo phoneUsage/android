@@ -12,20 +12,20 @@ public class LocalDailyUsageEntry {
 
 	private Long id; // Not set explicitly. This is an auto-incremented field in the db
 
+	private long dateTimeMS; // the date for the entry in milliseconds
 	private int totalUnlocks;
 	private long totalUsageMS; // in milliseconds
-	private long dateTimeMS; // the date for the entry in milliseconds
 	private long goalHoursMS; // today's goal hours in milliseconds for the local user
 
 	/**
 	 * Constructor with all fields provided.
 	 */
-	public LocalDailyUsageEntry(long id, int totalUnlocks, long totalUsageMS, long dateTimeMS,
+	public LocalDailyUsageEntry(long id, long dateTimeMS, int totalUnlocks, long totalUsageMS,
 								long goalHoursMS) {
 		this.id = id;
+		this.dateTimeMS = dateTimeMS;
 		this.totalUnlocks = totalUnlocks;
 		this.totalUsageMS = totalUsageMS;
-		this.dateTimeMS = dateTimeMS;
 		this.goalHoursMS = goalHoursMS;
 	}
 

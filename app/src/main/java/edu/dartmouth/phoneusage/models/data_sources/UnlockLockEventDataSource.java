@@ -114,6 +114,8 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 				cursor.moveToFirst();
 				UnlockLockEvent newUnlockLockEvent = cursorToUnlockLockEvent(cursor);
 				cursor.close();
+
+				Log.d(TAG, "Saved and retrieved UnlockLockEvent: " + newUnlockLockEvent);
 				return newUnlockLockEvent;
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -171,6 +173,11 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 	 * Create and return an UnlockLockEvent object from the given Cursor.
 	 */
 	private UnlockLockEvent cursorToUnlockLockEvent(Cursor cursor) {
+		if (cursor.getCount() != UnlockLockEventDbHelper.ALL_COLUMNS.length) {
+			Log.e(TAG, "Invalid cursor passed in");
+			return null;
+		}
+
 		return new UnlockLockEvent(
 			cursor.getLong(0), cursor.getLong(1), cursor.getLong(2), cursor.getLong(3)
 		);
