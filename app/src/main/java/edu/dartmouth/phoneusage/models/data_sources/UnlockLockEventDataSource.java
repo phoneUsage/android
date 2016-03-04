@@ -160,7 +160,7 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 				e.printStackTrace();
 				Log.d(TAG, String.format("Failed to fetch UnlockLockEvents between dates %d and %d",
 						mStartDateTimeMS, mEndDateTimeMS));
-				return queriedEvents;
+				return null;
 			}
 		}
 	}

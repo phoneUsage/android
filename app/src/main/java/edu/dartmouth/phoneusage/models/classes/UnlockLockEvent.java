@@ -23,6 +23,12 @@ public class UnlockLockEvent {
 		this.dateTimeMS = dateTimeMS;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("[ ID: %d, dateTimeMS: %d, unlockTimeMS: %d, lockTimeMS: %d ]",
+				getId(), getDateTimeMS(), getUnlockTimeMS(), getLockTimeMS());
+	}
+
 	// ********************************** Public Setters ***************************************//
 
 	public void setUnlockTimeMS(long unlockTimeMS) {

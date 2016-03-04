@@ -20,11 +20,20 @@ public class LocalDailyUsageEntry {
 	/**
 	 * Constructor with all fields provided.
 	 */
-	public LocalDailyUsageEntry(int totalUnlocks, long totalUsageMS, long dateTimeMS, long goalHoursMS) {
+	public LocalDailyUsageEntry(long id, int totalUnlocks, long totalUsageMS, long dateTimeMS,
+								long goalHoursMS) {
+		this.id = id;
 		this.totalUnlocks = totalUnlocks;
 		this.totalUsageMS = totalUsageMS;
 		this.dateTimeMS = dateTimeMS;
 		this.goalHoursMS = goalHoursMS;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[ ID: %d, totalUnlocks: %d, totalUsageMS: %d, dateTimeMS: %d, " +
+				"goalHoursMS: %d ]", getId(), getTotalUnlocks(), getTotalUsageMS(), getDateTimeMS(),
+				getGoalHoursMS());
 	}
 
 	// ********************************** Public Setters ***************************************//
