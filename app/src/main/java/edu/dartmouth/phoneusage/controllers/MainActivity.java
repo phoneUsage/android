@@ -157,10 +157,11 @@ public class MainActivity extends Activity {
 					Integer speech = msg.getData().getInt("speech");
 					Log.d("Handler", "got speech data");
 					//Log.d("speech", "speech in main: "+speech);
-					if (speech==1.0)
-						Toast.makeText(getApplicationContext(), "Speech", Toast.LENGTH_SHORT).show();
+					if (speech==1.0) {
+						//Toast.makeText(getApplicationContext(), "Speech", Toast.LENGTH_SHORT).show();
+					}
 					else
-						Toast.makeText(getApplicationContext(), "Noise", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getApplicationContext(), "Noise", Toast.LENGTH_SHORT).show();
 
 					//statusSpeechView.setText(""+speech);
 					break;
