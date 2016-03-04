@@ -39,7 +39,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             refreshPreferences(sharedPreferences, durationKey, unlocksKey);
             unlockDateTime = 0;
 
-            ParseUtils.getStatsInfo(context);
+//            ParseUtils.getStatsInfo(context);
 
             // TODO: add method to upload/reset data
 
