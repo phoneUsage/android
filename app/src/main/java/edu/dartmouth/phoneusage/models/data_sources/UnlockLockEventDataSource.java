@@ -99,7 +99,6 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 				ContentValues values = new ContentValues();
 				values.put(UnlockLockEventDbHelper.COLUMN_UNLOCK_TIME_MS, unlockLockEvent.getUnlockTimeMS());
 				values.put(UnlockLockEventDbHelper.COLUMN_LOCK_TIME_MS, unlockLockEvent.getLockTimeMS());
-				values.put(UnlockLockEventDbHelper.COLUMN_DATE_TIME_MS, unlockLockEvent.getDateTimeMS());
 
 				// Insert into db and get ID
 				open();
@@ -148,7 +147,7 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 				open();
 				Cursor cursor = mDb.query(UnlockLockEventDbHelper.TABLE_NAME,
 						UnlockLockEventDbHelper.ALL_COLUMNS,
-						UnlockLockEventDbHelper.COLUMN_DATE_TIME_MS + " BETWEEN ? AND ?",
+						UnlockLockEventDbHelper.COLUMN_LOCK_TIME_MS + " BETWEEN ? AND ?",
 						new String[] {String.valueOf(mStartDateTimeMS), String.valueOf(mEndDateTimeMS)},
 						null, null, null, null);
 				cursor.moveToFirst();
@@ -173,13 +172,13 @@ public class UnlockLockEventDataSource extends BaseDataSource {
 	 * Create and return an UnlockLockEvent object from the given Cursor.
 	 */
 	private UnlockLockEvent cursorToUnlockLockEvent(Cursor cursor) throws SQLException{
-		if (cursor.getCount() != UnlockLockEventDbHelper.ALL_COLUMNS.length) {
+		if (cursor.getColumnCount() != UnlockLockEventDbHelper.ALL_COLUMNS.length) {
 			Log.e(TAG, "Invalid cursor passed in. Columns: " + cursor.getColumnCount());
 			throw new SQLException();
 		}
 
 		return new UnlockLockEvent(
-			cursor.getLong(0), cursor.getLong(1), cursor.getLong(2), cursor.getLong(3)
+			cursor.getLong(0), cursor.getLong(1), cursor.getLong(2)
 		);
 	}
 

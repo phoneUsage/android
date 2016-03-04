@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
 import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 
 /**
@@ -29,13 +28,11 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_UNLOCK_TIME_MS = "unlock_time_ms";
 	public static final String COLUMN_LOCK_TIME_MS = "lock_time_ms";
-	public static final String COLUMN_DATE_TIME_MS = "date_time_ms";
 
 	public static final String[] ALL_COLUMNS = {
 			COLUMN_ID,
 			COLUMN_UNLOCK_TIME_MS,
 			COLUMN_LOCK_TIME_MS,
-			COLUMN_DATE_TIME_MS
 	};
 
 	// SQL statement for the initial database creation.
@@ -43,8 +40,7 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 			"CREATE TABLE IF NOT EXISTS " + TABLE_NAME
 					+ " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ COLUMN_UNLOCK_TIME_MS + " DATETIME NOT NULL, "
-					+ COLUMN_LOCK_TIME_MS + " DATETIME NOT NULL, "
-					+ COLUMN_DATE_TIME_MS + " DATETIME NOT NULL "
+					+ COLUMN_LOCK_TIME_MS + " DATETIME NOT NULL "
 					+ ");";
 
 
@@ -72,7 +68,6 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 		// Execute SQL command on this new database to create our UnlockLockEvent table, and add
 		// some test data.
 		db.execSQL(DATABASE_CREATE_SQL);
-		populateTestData(db);
 	}
 
 	@Override
@@ -83,7 +78,7 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 	// **************************** Private helper functions *************************************//
 
 	private void populateTestData(SQLiteDatabase db) {
-		UnlockLockEvent entry = new UnlockLockEvent(-1, 1457060781463L, 1457060781499L, 1457060781462L);
+		UnlockLockEvent entry = new UnlockLockEvent(-1, 1457060781463L, 1457060781499L);
 		insert(db, entry);
 	}
 
@@ -92,7 +87,6 @@ public class UnlockLockEventDbHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(UnlockLockEventDbHelper.COLUMN_UNLOCK_TIME_MS, entry.getUnlockTimeMS());
 		values.put(UnlockLockEventDbHelper.COLUMN_LOCK_TIME_MS, entry.getLockTimeMS());
-		values.put(UnlockLockEventDbHelper.COLUMN_DATE_TIME_MS, entry.getDateTimeMS());
 
 		// Insert into db and get ID
 		long insertId = db.insert(UnlockLockEventDbHelper.TABLE_NAME, null, values);

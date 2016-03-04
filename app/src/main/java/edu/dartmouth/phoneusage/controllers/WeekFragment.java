@@ -20,12 +20,16 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
+import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
 import edu.dartmouth.phoneusage.models.data_sources.LocalDailyUsageEntryDataSource;
+import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
+import edu.dartmouth.phoneusage.utils.CalendarUtil;
 
 /**
  * Created by SujayBusam on 2/27/16.
@@ -81,8 +85,15 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         super.onCreate(savedInstanceState);
 
         // JUST TESTING
+        Calendar sundayStart = CalendarUtil.calendarForDateStart(Calendar.FEBRUARY, 28, 2016);
+        Calendar thursdayEnd = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
+
+        Log.d(TAG, "Sunday start MS: " + sundayStart.getTimeInMillis());
+        Log.d(TAG, "Thursday end MS: " + thursdayEnd.getTimeInMillis());
+
         LocalDailyUsageEntryDataSource.getInstance(getActivity())
-                .fetchLocalDailyUsageEntriesBetweenDateTimes(1457060781462L, 1457060781464L,
+                .fetchLocalDailyUsageEntriesBetweenDateTimes(
+                        sundayStart.getTimeInMillis(), thursdayEnd.getTimeInMillis(),
                         new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
                             @Override
                             public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
@@ -91,6 +102,17 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
                                 }
                             }
                         });
+
+//        UnlockLockEventDataSource.getInstance(getActivity())
+//                .fetchUnlockLockEventsBetweenDateTimes(1457060781462L, 1457060781500L,
+//                        new BaseDataSource.CompletionHandler<List<UnlockLockEvent>>() {
+//                            @Override
+//                            public void onDbTaskCompleted(List<UnlockLockEvent> result) {
+//                                for (UnlockLockEvent event : result) {
+//                                    Log.d(TAG, event.toString());
+//                                }
+//                            }
+//                        });
     }
 
 

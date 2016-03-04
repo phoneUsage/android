@@ -11,7 +11,6 @@ public class UnlockLockEvent {
 
 	private long unlockTimeMS; // Unlock (start) datetime in milliseconds
 	private long lockTimeMS; // Lock (end) datetime in milliseconds
-	private long dateTimeMS; // The date for the event in milliseconds
 
 	/**
 	 * Default constructor with no fields given.
@@ -20,23 +19,21 @@ public class UnlockLockEvent {
 	public UnlockLockEvent() {
 		this.unlockTimeMS = -1;
 		this.lockTimeMS = -1;
-		this.dateTimeMS = -1;
 	}
 
 	/**
 	 * Constructor with all fields provided.
 	 */
-	public UnlockLockEvent(long id, long unlockTimeMS, long lockTimeMS, long dateTimeMS) {
+	public UnlockLockEvent(long id, long unlockTimeMS, long lockTimeMS) {
 		this.id = id;
 		this.unlockTimeMS = unlockTimeMS;
 		this.lockTimeMS = lockTimeMS;
-		this.dateTimeMS = dateTimeMS;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("{ ID: %d, dateTimeMS: %d, unlockTimeMS: %d, lockTimeMS: %d }",
-				getId(), getDateTimeMS(), getUnlockTimeMS(), getLockTimeMS());
+		return String.format("{ ID: %d, unlockTimeMS: %d, lockTimeMS: %d }",
+				getId(), getUnlockTimeMS(), getLockTimeMS());
 	}
 
 	// ********************************** Public Setters ***************************************//
@@ -47,10 +44,6 @@ public class UnlockLockEvent {
 
 	public void setLockTimeMS(long lockTimeMS) {
 		this.lockTimeMS = lockTimeMS;
-	}
-
-	public void setDateTimeMS(long dateTimeMS) {
-		this.dateTimeMS = dateTimeMS;
 	}
 
 	// ********************************** Public Getters ***************************************//
@@ -65,10 +58,6 @@ public class UnlockLockEvent {
 
 	public long getLockTimeMS() {
 		return lockTimeMS;
-	}
-
-	public long getDateTimeMS() {
-		return dateTimeMS;
 	}
 
 	// ****************************** Useful Instance Methods ************************************//

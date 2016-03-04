@@ -2,15 +2,14 @@ package edu.dartmouth.phoneusage.models.sql;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
-import edu.dartmouth.phoneusage.models.data_sources.LocalDailyUsageEntryDataSource;
+import edu.dartmouth.phoneusage.utils.CalendarUtil;
 
 /**
  * Created by SujayBusam on 3/2/16.
@@ -89,13 +88,48 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	// **************************** Private helper functions *************************************//
 
 	private void populateTestData(SQLiteDatabase db) {
-		LocalDailyUsageEntry entry = new LocalDailyUsageEntry();
-		entry.setDateTimeMS(1457060781463L);
-		entry.setTotalUnlocks(65);
-		entry.setTotalUsageInHours(4.559f);
-		entry.setGoalHoursInHours(3.655f);
+		// Create entries for Sun - Thurs of the week of Feb 28th
 
-		insert(db, entry);
+		Calendar sunday = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 28, 2016);
+		LocalDailyUsageEntry sundayEntry = new LocalDailyUsageEntry();
+		sundayEntry.setDateTimeMS(sunday.getTimeInMillis());
+		sundayEntry.setTotalUnlocks(233);
+		sundayEntry.setTotalUsageInHours(5.65f);
+		sundayEntry.setGoalHoursInHours(3.44f);
+
+		Calendar monday = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 29, 2016);
+		LocalDailyUsageEntry mondayEntry = new LocalDailyUsageEntry();
+		mondayEntry.setDateTimeMS(monday.getTimeInMillis());
+		mondayEntry.setTotalUnlocks(124);
+		mondayEntry.setTotalUsageInHours(3.55f);
+		mondayEntry.setGoalHoursInHours(5.55f);
+
+		Calendar tuesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 1, 2016);
+		LocalDailyUsageEntry tuesdayEntry = new LocalDailyUsageEntry();
+		tuesdayEntry.setDateTimeMS(tuesday.getTimeInMillis());
+		tuesdayEntry.setTotalUnlocks(222);
+		tuesdayEntry.setTotalUsageInHours(4.55f);
+		tuesdayEntry.setGoalHoursInHours(5.55f);
+
+		Calendar wednesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 2, 2016);
+		LocalDailyUsageEntry wednesdayEntry = new LocalDailyUsageEntry();
+		wednesdayEntry.setDateTimeMS(wednesday.getTimeInMillis());
+		wednesdayEntry.setTotalUnlocks(88);
+		wednesdayEntry.setTotalUsageInHours(5.55f);
+		wednesdayEntry.setGoalHoursInHours(5.55f);
+
+		Calendar thursday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
+		LocalDailyUsageEntry thursdayEntry = new LocalDailyUsageEntry();
+		thursdayEntry.setDateTimeMS(thursday.getTimeInMillis());
+		thursdayEntry.setTotalUnlocks(124);
+		thursdayEntry.setTotalUsageInHours(3.55f);
+		thursdayEntry.setGoalHoursInHours(5.55f);
+
+		insert(db, sundayEntry);
+		insert(db, mondayEntry);
+		insert(db, tuesdayEntry);
+		insert(db, wednesdayEntry);
+		insert(db, thursdayEntry);
 	}
 
 	private void insert(SQLiteDatabase db, LocalDailyUsageEntry entry) {
@@ -108,6 +142,6 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 
 		// Insert into db and get ID
 		long insertId = db.insert(LocalDailyUsageEntryDbHelper.TABLE_NAME, null, values);
-		Log.d(TAG, "Inserted LocalDailyUsageEntry into db. Id: " + insertId);
+		Log.d(TAG, "Inserted LocalDailyUsageEntry into db. Id: " + insertId + " MS: " + entry.getDateTimeMS());
 	}
 }
