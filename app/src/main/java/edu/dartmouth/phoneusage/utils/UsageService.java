@@ -8,12 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
 
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.controllers.MainActivity;
@@ -22,11 +27,16 @@ import edu.dartmouth.phoneusage.controllers.MainActivity;
  * Created by hunterestrada on 3/2/16.
  */
 public class UsageService extends Service {
+    private static String TAG = "SB-UsageService";
+
     UsageBroadcastReceiver mUBC;
+    GoogleApiClient mGoogleApiClient; // For watch
 
     @Override
     public void onCreate() {
+        Log.d(getClass().getName(), "onCreate");
         super.onCreate();
+        setupWatchDataAPI();
         setupReceiver();
         setupNotification();
     }
@@ -34,6 +44,7 @@ public class UsageService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(getClass().getName(), "onBind");
         return null;
     }
 
@@ -115,6 +126,32 @@ public class UsageService extends Service {
             }
         }).start();
     }
+
+    private void setupWatchDataAPI() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        Log.d(TAG, "onConnected. Bundle: " + bundle);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.d(TAG, "onConnectionSuspended " + i);
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(ConnectionResult connectionResult) {
+                        Log.d(TAG, "onConnectionFailed: " + connectionResult);
+                    }
+                })
+                .addApi(Wearable.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    
 
     /* CONSTANTS */
 
