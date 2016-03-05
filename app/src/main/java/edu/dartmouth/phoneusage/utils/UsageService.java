@@ -8,17 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.RemoteViews;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Wearable;
 
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.controllers.MainActivity;
@@ -27,16 +22,14 @@ import edu.dartmouth.phoneusage.controllers.MainActivity;
  * Created by hunterestrada on 3/2/16.
  */
 public class UsageService extends Service {
-    private static String TAG = "SB-UsageService";
+    private static String TAG = "SVB-UsageService";
 
     UsageBroadcastReceiver mUBC;
-    GoogleApiClient mGoogleApiClient; // For watch
 
     @Override
     public void onCreate() {
-        Log.d(getClass().getName(), "onCreate");
+        Log.d(TAG, "onCreate");
         super.onCreate();
-        setupWatchDataAPI();
         setupReceiver();
         setupNotification();
     }
@@ -44,7 +37,7 @@ public class UsageService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(getClass().getName(), "onBind");
+        Log.d(TAG, "onBind");
         return null;
     }
 
@@ -57,7 +50,7 @@ public class UsageService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
 
-        Log.d(getClass().getName(), "removing");
+        Log.d(TAG, "removing");
         unregisterReceiver(mUBC);
         stopSelf();
     }
@@ -67,7 +60,7 @@ public class UsageService extends Service {
 
     // register broadcast receiver to intercept usage events
     private void setupReceiver() {
-        Log.d(getClass().getName(), "setupReceiver");
+        Log.d(TAG, "setupReceiver");
         mUBC = new UsageBroadcastReceiver();
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_USER_PRESENT));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SCREEN_OFF));
@@ -79,7 +72,7 @@ public class UsageService extends Service {
 
     // displays usage on the lock screen with a notification
     private void setupNotification(){
-        Log.d(getClass().getName(), "setupNotification");
+        Log.d(TAG, "setupNotification");
         final NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         CharSequence tickerText = "hello";
         long when = System.currentTimeMillis();
@@ -126,32 +119,6 @@ public class UsageService extends Service {
             }
         }).start();
     }
-
-    private void setupWatchDataAPI() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        Log.d(TAG, "onConnected. Bundle: " + bundle);
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        Log.d(TAG, "onConnectionSuspended " + i);
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
-                        Log.d(TAG, "onConnectionFailed: " + connectionResult);
-                    }
-                })
-                .addApi(Wearable.API)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-    
 
     /* CONSTANTS */
 

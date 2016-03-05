@@ -5,8 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.Calendar;
 
@@ -20,7 +26,10 @@ import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
  * Created by hunterestrada on 2/28/16.
  */
 public class UsageBroadcastReceiver extends BroadcastReceiver {
+    private static String TAG = "SVB-UsageBR";
+
     private long unlockDateTime = -1;
+    private GoogleApiClient mGoogleApiClient; // For watch
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -71,11 +80,11 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             UnlockLockEvent event = new UnlockLockEvent(-1, unlockDateTime, lockDateTime);
             UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
                     new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
-                @Override
-                public void onDbTaskCompleted(UnlockLockEvent result) {
-                    Log.d(getClass().getName(), "saved: " + result.toString());
-                }
-            });
+                        @Override
+                        public void onDbTaskCompleted(UnlockLockEvent result) {
+                            Log.d(getClass().getName(), "saved: " + result.toString());
+                        }
+                    });
 
             unlockDateTime = -1; // prepare for next duration
 
@@ -92,20 +101,57 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             UnlockLockEvent event = new UnlockLockEvent(-1, unlockDateTime, lockDateTime);
             UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
                     new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
-                @Override
-                public void onDbTaskCompleted(UnlockLockEvent result) {
-                    Log.d(getClass().getName(), "saved: " + result.toString());
-                }
-            });
+                        @Override
+                        public void onDbTaskCompleted(UnlockLockEvent result) {
+                            Log.d(getClass().getName(), "saved: " + result.toString());
+                        }
+                    });
 
             unlockDateTime = -1; // prepare for next duration
         }
-    }
 
+        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
+            Log.d(TAG, "Setting up watch API client.");
+            setupWatchDataAPI(context.getApplicationContext());
+        } else {
+            Log.d("SVB-UsageBR", "Updating watch data");
+            WatchUtil.createDataMap(mGoogleApiClient, sharedPreferences.getLong(unlocksKey, 0),
+                    sharedPreferences.getLong(durationKey, 0));
+        }
+    }
 
     // restores default values to shared preferences
     private void refreshPreferences(SharedPreferences preferences, String durationKey, String unlocksKey) {
         preferences.edit().putLong(durationKey, 0).apply();
         preferences.edit().putLong(unlocksKey, 0).apply();
+    }
+
+    private void setupWatchDataAPI(final Context context) {
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        Log.d(TAG, "onConnected. Bundle: " + bundle);
+                        // Send usage and unlocks immediately after connecting.
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                        long usage = prefs.getLong(context.getString(R.string.key_for_daily_duration), 0);
+                        long unlocks = prefs.getLong(context.getString(R.string.key_for_daily_unlocks), 0);
+                        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.d(TAG, "onConnectionSuspended " + i);
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(ConnectionResult connectionResult) {
+                        Log.d(TAG, "onConnectionFailed: " + connectionResult);
+                    }
+                })
+                .addApi(Wearable.API)
+                .build();
+        mGoogleApiClient.connect();
     }
 }
