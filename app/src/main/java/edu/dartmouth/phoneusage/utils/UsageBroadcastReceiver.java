@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.Calendar;
 
 import edu.dartmouth.phoneusage.R;
@@ -21,6 +23,11 @@ import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
  */
 public class UsageBroadcastReceiver extends BroadcastReceiver {
     private long unlockDateTime = -1;
+    private GoogleApiClient mGoogleApiClient; // For watch
+
+    public UsageBroadcastReceiver(GoogleApiClient apiClient) {
+        mGoogleApiClient = apiClient;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -71,11 +78,11 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             UnlockLockEvent event = new UnlockLockEvent(-1, unlockDateTime, lockDateTime);
             UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
                     new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
-                @Override
-                public void onDbTaskCompleted(UnlockLockEvent result) {
-                    Log.d(getClass().getName(), "saved: " + result.toString());
-                }
-            });
+                        @Override
+                        public void onDbTaskCompleted(UnlockLockEvent result) {
+                            Log.d(getClass().getName(), "saved: " + result.toString());
+                        }
+                    });
 
             unlockDateTime = -1; // prepare for next duration
 
@@ -92,13 +99,19 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             UnlockLockEvent event = new UnlockLockEvent(-1, unlockDateTime, lockDateTime);
             UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
                     new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
-                @Override
-                public void onDbTaskCompleted(UnlockLockEvent result) {
-                    Log.d(getClass().getName(), "saved: " + result.toString());
-                }
-            });
+                        @Override
+                        public void onDbTaskCompleted(UnlockLockEvent result) {
+                            Log.d(getClass().getName(), "saved: " + result.toString());
+                        }
+                    });
 
             unlockDateTime = -1; // prepare for next duration
+        }
+
+        if (mGoogleApiClient.isConnected()) {
+            Log.d("SVB-UsageBR", "Updating watch data");
+            WatchUtil.createDataMap(mGoogleApiClient, sharedPreferences.getLong(unlocksKey, 0),
+                    sharedPreferences.getLong(durationKey, 0));
         }
     }
 

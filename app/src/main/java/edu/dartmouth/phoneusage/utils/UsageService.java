@@ -36,7 +36,7 @@ public class UsageService extends Service {
     public void onCreate() {
         Log.d(getClass().getName(), "onCreate");
         super.onCreate();
-        setupWatchDataAPI();
+        setupWatchDataAPI(this);
         setupReceiver();
         setupNotification();
     }
@@ -68,7 +68,7 @@ public class UsageService extends Service {
     // register broadcast receiver to intercept usage events
     private void setupReceiver() {
         Log.d(getClass().getName(), "setupReceiver");
-        mUBC = new UsageBroadcastReceiver();
+        mUBC = new UsageBroadcastReceiver(mGoogleApiClient);
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_USER_PRESENT));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SHUTDOWN));
@@ -127,12 +127,17 @@ public class UsageService extends Service {
         }).start();
     }
 
-    private void setupWatchDataAPI() {
+    private void setupWatchDataAPI(final Context context) {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         Log.d(TAG, "onConnected. Bundle: " + bundle);
+                        // Send usage and unlocks immediately after connecting.
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                        long usage = prefs.getLong(getString(R.string.key_for_daily_duration), 0);
+                        long unlocks = prefs.getLong(getString(R.string.key_for_daily_unlocks), 0);
+                        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage);
                     }
 
                     @Override
@@ -150,8 +155,6 @@ public class UsageService extends Service {
                 .build();
         mGoogleApiClient.connect();
     }
-
-    
 
     /* CONSTANTS */
 
