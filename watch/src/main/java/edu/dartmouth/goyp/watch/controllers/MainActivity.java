@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 
 	private void updateUnlocks(long unlocks) {
 		String unlocksString = String.valueOf(unlocks);
-		mUnlocksText.setText("Unlocks: " + unlocksString);
+		mUnlocksText.setText(unlocksString + " Unlocks");
 	}
 
 	private void updateUsage(long usage, long limit) {
