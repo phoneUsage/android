@@ -12,6 +12,8 @@ import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.github.lzyzsd.circleprogress.ArcProgress;
+
 import java.util.concurrent.TimeUnit;
 
 import edu.dartmouth.goyp.watch.R;
@@ -28,10 +30,12 @@ public class MainActivity extends Activity {
 
 	private TextView mUnlocksText;
 	private TextView mUsageText;
+	private ArcProgress mUsageProgessArc;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
@@ -39,6 +43,8 @@ public class MainActivity extends Activity {
 		stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
 			@Override
 			public void onLayoutInflated(WatchViewStub watchViewStub) {
+				initDataUpdateReceiver();
+				mUsageProgessArc = (ArcProgress) stub.findViewById(R.id.usage_progress);
 				mUnlocksText = (TextView) stub.findViewById(R.id.unlocks_text);
 				mUsageText = (TextView) stub.findViewById(R.id.usage_text);
 				updateUI();
@@ -48,6 +54,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onStart() {
+		Log.d(TAG, "onStart");
 		super.onStart();
 	}
 
@@ -55,13 +62,18 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		Log.d(TAG, "onResume");
 		super.onResume();
-		initDataUpdateReceiver();
 	}
 
 	@Override
 	protected void onStop() {
 		Log.d(TAG, "onStop");
 		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		Log.d(TAG, "onDestroy");
+		super.onDestroy();
 		unregisterReceiver(mDataUpdateReceiver);
 	}
 
@@ -99,7 +111,7 @@ public class MainActivity extends Activity {
 
 	private void updateUnlocks(long unlocks) {
 		String unlocksString = String.valueOf(unlocks);
-		mUnlocksText.setText(unlocksString);
+		mUnlocksText.setText("Unlocks: " + unlocksString);
 	}
 
 	private void updateUsage(long usage) {

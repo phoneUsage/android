@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".controllers.MainActivity"
                 tools:deviceIds="wear_round"
-    android:gravity="center">
+                android:gravity="center">
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
@@ -15,19 +16,30 @@
         <!-- -->
     <!--</LinearLayout>-->
 
-    <TextView
-        android:id="@+id/unlocks_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nothing Yet"
-        android:gravity="center"/>
+    <com.github.lzyzsd.circleprogress.ArcProgress
+        android:id="@+id/usage_progress"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:arc_progress="40"
+        app:arc_bottom_text="Usage"/>
+
     <TextView
         android:id="@+id/usage_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nothing Yet"
         android:gravity="center"
-        android:layout_below="@id/unlocks_text"/>
+        android:layout_below="@id/usage_progress"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/unlocks_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nothing Yet"
+        android:gravity="center"
+        android:layout_below="@id/usage_text"
+        android:textColor="@color/white"/>
 
 
 

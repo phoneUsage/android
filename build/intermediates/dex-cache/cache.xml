@@ -2,46 +2,67 @@
 <items version="2" >
 
     <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.0.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.1"
+        revision="23.0.2"
+        sha1="c6d79137693d494dee16372d3921f919eb724ced">
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-c6ab3eadc8ca84db0a9a8a4c80c357f49ea1add0.jar" />
+    </item>
+    <item
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
         sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-2ac15d600915cff0505535cbf1ec0e7db4e7074f.jar" />
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-f0d93e42b63762907304dc524de894970bafeb6a.jar" />
     </item>
     <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.1"
-        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-36e60aec582daa2e6690b469eec0f802e65a09f6.jar" />
-    </item>
-    <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
+        revision="23.0.2"
         sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-fe15c0ce5f6af6c358689313367874a5a24e9556.jar" />
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-e47e8648650fc2a2345f9ebb9e89661b8cd6216c.jar" />
     </item>
     <item
-        jar="/Users/benribovich/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.github.lzyzsd/circleprogress/1.1.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.1"
+        revision="23.0.2"
+        sha1="e6f9fb0d2ea982d656d6dca785a9097659395874">
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-a8f1dbdf253a98e127a96f17035d63abfccf67d4.jar" />
+    </item>
+    <item
+        jar="/Users/SujayBusam/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
         sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-f2907a5ed9dd56b4128ed08265e34c4e9df0ee12.jar" />
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-799aa57964b140e3af90eecee5bebe92b7647483.jar" />
     </item>
     <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.google.android.support/wearable/1.3.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.1"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-342ad3e4db93e2d5499e9983ca490b616e7818f5.jar" />
+        revision="23.0.2"
+        sha1="58b928ccbaf9090c632f278d6bd31e1ae42f2457">
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-4165aec7c0a9dde1568564dce78eb2cd45c3e631.jar" />
     </item>
     <item
-        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
         jumboMode="false"
-        revision="23.0.1"
+        revision="23.0.2"
         sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
-        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-a923f64d1867ec3a05ac770412cabf51940a1268.jar" />
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-b1d7178e422335fff41545c8283916090801c49e.jar" />
+    </item>
+    <item
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-1484c04045119cb2751d8fc739aba6471046456a.jar" />
+    </item>
+    <item
+        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
+        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/watch/build/intermediates/pre-dexed/debug/classes-3b20ef0f9fe26acd57b37088e12ed81996ebcfbc.jar" />
     </item>
 
 </items>
