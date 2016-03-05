@@ -116,9 +116,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             setupWatchDataAPI(context.getApplicationContext());
         } else {
             Log.d("SVB-UsageBR", "Updating watch data");
-            WatchUtil.createDataMap(mGoogleApiClient, sharedPreferences.getLong(unlocksKey, 0),
-                    sharedPreferences.getLong(durationKey, 0),
-                    sharedPreferences.getLong(limitKey, 8800000));
+            sendWatchData(context);
         }
     }
 
@@ -134,14 +132,8 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         Log.d(TAG, "onConnected. Bundle: " + bundle);
-                        // Send usage and unlocks immediately after connecting.
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                        long usage = prefs.getLong(context.getString(R.string.key_for_daily_duration), 0);
-                        long unlocks = prefs.getLong(context.getString(R.string.key_for_daily_unlocks), 0);
-                        // TODO: actually set and get the set limit.
-                        long limit = prefs.getLong(context.getString(R.string.key_for_daily_limitation), 8800000);
-                        Log.d(TAG, "Limit: " + limit);
-                        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage, limit);
+                        // Send data immediately after connecting.
+                        sendWatchData(context);
                     }
 
                     @Override
@@ -158,5 +150,14 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
                 .addApi(Wearable.API)
                 .build();
         mGoogleApiClient.connect();
+    }
+
+    private void sendWatchData(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long usage = prefs.getLong(context.getString(R.string.key_for_daily_duration), 0);
+        long unlocks = prefs.getLong(context.getString(R.string.key_for_daily_unlocks), 0);
+        // TODO: actually set and get the set limit.
+        long limit = prefs.getLong(context.getString(R.string.key_for_daily_limitation), 8800000);
+        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage, limit);
     }
 }
