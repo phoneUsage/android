@@ -27,14 +27,10 @@ public class VoiceVoter {
         else{
             return 0;
         }
-
     }
 
     public void reset(){
         vote[0]=0;
         vote[1]=0;
     }
-
-
-
 }

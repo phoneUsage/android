@@ -39,6 +39,7 @@ import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.views.ActionTabsViewPagerAdapter;
+import edu.dartmouth.phoneusage.views.VoiceDialogFragment;
 
 public class MainActivity extends Activity {
 	private SlidingTabLayout slidingTabLayout;
@@ -67,6 +68,8 @@ public class MainActivity extends Activity {
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 
 	private VoiceVoter voiceVoter = new VoiceVoter();
+
+	Thread mVoiceThread;
 
 	/**
 	 * Called when the activity is first created.
@@ -98,36 +101,6 @@ public class MainActivity extends Activity {
 				microphoneStarted = true;
 			}
 			doBindService();
-			Thread thread = new Thread(){
-				@Override
-				public void run() {
-					while(true) {
-						if (voiceVoter.pollVoter() == 1) {
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(getApplicationContext(), "speaking", Toast.LENGTH_SHORT).show();
-								}
-							});
-						} else {
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(getApplicationContext(), "noise", Toast.LENGTH_SHORT).show();
-								}
-							});
-						}
-						voiceVoter.reset();
-						try {
-							sleep(3000);
-						}
-						catch(InterruptedException e){
-							e.printStackTrace();
-						}
-					}
-				}
-			};
-			thread.start();
 		}
 		setupTabs();
 	}
@@ -176,6 +149,37 @@ public class MainActivity extends Activity {
 
 			delayedHandler.postDelayed(r, 1000);
 		}
+		mVoiceThread = new Thread(){
+			@Override
+			public void run() {
+				while(!isInterrupted()) {
+					if (voiceVoter.pollVoter() == 1) {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
+								//Toast.makeText(getApplicationContext(), "speaking", Toast.LENGTH_SHORT).show();
+							}
+						});
+					} else {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								//Toast.makeText(getApplicationContext(), "noise", Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
+					voiceVoter.reset();
+					try {
+						sleep(5000);
+					}
+					catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		mVoiceThread.start();
 	}
 
 	/**
@@ -257,6 +261,15 @@ public class MainActivity extends Activity {
 			Log.e("MainActivity", "Failed to unbind from the service", t);
 		}
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(mVoiceThread.isAlive()){
+			mVoiceThread.interrupt();
+		}
+	}
+
 
 	/**
 	 * Binds this activity to the service if the service is already running
