@@ -8,17 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.RemoteViews;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Wearable;
 
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.controllers.MainActivity;
@@ -30,13 +25,11 @@ public class UsageService extends Service {
     private static String TAG = "SVB-UsageService";
 
     UsageBroadcastReceiver mUBC;
-    GoogleApiClient mGoogleApiClient; // For watch
 
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate");
         super.onCreate();
-        setupWatchDataAPI(this);
         setupReceiver();
         setupNotification();
     }
@@ -68,7 +61,7 @@ public class UsageService extends Service {
     // register broadcast receiver to intercept usage events
     private void setupReceiver() {
         Log.d(TAG, "setupReceiver");
-        mUBC = new UsageBroadcastReceiver(mGoogleApiClient);
+        mUBC = new UsageBroadcastReceiver();
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_USER_PRESENT));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SHUTDOWN));
@@ -125,35 +118,6 @@ public class UsageService extends Service {
                 }
             }
         }).start();
-    }
-
-    private void setupWatchDataAPI(final Context context) {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        Log.d(TAG, "onConnected. Bundle: " + bundle);
-                        // Send usage and unlocks immediately after connecting.
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                        long usage = prefs.getLong(getString(R.string.key_for_daily_duration), 0);
-                        long unlocks = prefs.getLong(getString(R.string.key_for_daily_unlocks), 0);
-                        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage);
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        Log.d(TAG, "onConnectionSuspended " + i);
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
-                        Log.d(TAG, "onConnectionFailed: " + connectionResult);
-                    }
-                })
-                .addApi(Wearable.API)
-                .build();
-        mGoogleApiClient.connect();
     }
 
     /* CONSTANTS */
