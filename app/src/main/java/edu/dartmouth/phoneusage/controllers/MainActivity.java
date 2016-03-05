@@ -98,10 +98,37 @@ public class MainActivity extends Activity {
 				microphoneStarted = true;
 			}
 			doBindService();
-			new PollTask().execute();
-
+			Thread thread = new Thread(){
+				@Override
+				public void run() {
+					while(true) {
+						if (voiceVoter.pollVoter() == 1) {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(getApplicationContext(), "speaking", Toast.LENGTH_SHORT).show();
+								}
+							});
+						} else {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(getApplicationContext(), "noise", Toast.LENGTH_SHORT).show();
+								}
+							});
+						}
+						voiceVoter.reset();
+						try {
+							sleep(3000);
+						}
+						catch(InterruptedException e){
+							e.printStackTrace();
+						}
+					}
+				}
+			};
+			thread.start();
 		}
-
 		setupTabs();
 	}
 
@@ -305,36 +332,6 @@ public class MainActivity extends Activity {
 		}
 		if(mIsBound) {
 			sendMessageToService(Context_Service.MSG_STOP_MICROPHONE);
-		}
-	}
-
-	private class PollTask extends AsyncTask<Void,Void,Void>{
-		@Override
-		protected Void doInBackground(Void... params) {
-			while(true){
-				if(voiceVoter.pollVoter()==1){
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(getApplicationContext(), "speaking", Toast.LENGTH_SHORT).show();
-						}
-					});
-				}
-				else{
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(getApplicationContext(), "noise", Toast.LENGTH_SHORT).show();
-						}
-					});
-				}
-				voiceVoter.reset();
-				try {
-					Thread.sleep(20000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 }

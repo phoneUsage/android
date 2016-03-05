@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-89e97360071fe308cb1d4a7326abe8d1c6c6668d.jar" />
+        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-2ac15d600915cff0505535cbf1ec0e7db4e7074f.jar" />
     </item>
     <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
+        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-48fbb2fce7e38db67d1e04cbf5abc8f81cf35c31.jar" />
+        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-36e60aec582daa2e6690b469eec0f802e65a09f6.jar" />
     </item>
     <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-f88bdd980cdd16dc2be266bb6fbc1d642f4dadd3.jar" />
+        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-fe15c0ce5f6af6c358689313367874a5a24e9556.jar" />
     </item>
     <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-f3d8bf7d643b69130d064485b178f3ee14f6b86c.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jar="/Users/benribovich/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-799aa57964b140e3af90eecee5bebe92b7647483.jar" />
+        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-f2907a5ed9dd56b4128ed08265e34c4e9df0ee12.jar" />
     </item>
     <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-d10950dcee2498d5a0b79f964fe92a3afe732337.jar" />
+        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-342ad3e4db93e2d5499e9983ca490b616e7818f5.jar" />
+    </item>
+    <item
+        jar="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="/Users/benribovich/AndroidStudioProjects/PhoneUsage/app/build/intermediates/pre-dexed/debug/classes-a923f64d1867ec3a05ac770412cabf51940a1268.jar" />
     </item>
 
 </items>
