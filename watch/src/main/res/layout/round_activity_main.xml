@@ -4,13 +4,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context="edu.dartmouth.goyp.watch.MainActivity"
-                tools:deviceIds="wear_round">
+                tools:deviceIds="wear_round"
+    android:gravity="center">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="center">-->
+
+        <!-- -->
+    <!--</LinearLayout>-->
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/unlocks_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_round"/>
+        android:text="Nothing Yet"
+        android:gravity="center"/>
+    <TextView
+        android:id="@+id/usage_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nothing Yet"
+        android:gravity="center"
+        android:layout_below="@id/unlocks_text"/>
+
+
+
 </RelativeLayout>

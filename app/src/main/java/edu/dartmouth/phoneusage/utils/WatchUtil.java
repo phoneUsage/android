@@ -1,5 +1,7 @@
 package edu.dartmouth.phoneusage.utils;
 
+import android.util.Log;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.wearable.DataApi;
@@ -13,6 +15,7 @@ import com.google.android.gms.wearable.Wearable;
  * Utility functions to interface with watch app.
  */
 public class WatchUtil {
+	private static final String TAG = "SVB-WatchUtil";
 	private static final String UNLOCKS_KEY = "phoneusage.key.unlocks";
 	private static final String USAGE_KEY = "phoneusage.key.usage";
 
@@ -29,6 +32,7 @@ public class WatchUtil {
 		putDataReq.setUrgent();
 		PendingResult<DataApi.DataItemResult> pendingResult =
 				Wearable.DataApi.putDataItem(apiClient, putDataReq);
+		Log.d(TAG, "createDataMap. Unlocks: " + unlocks + " Usage: " + usageMS);
 	}
 
 }
