@@ -37,6 +37,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String durationKey = context.getString(R.string.key_for_daily_duration);
         String unlocksKey = context.getString(R.string.key_for_daily_unlocks);
+        String limitKey = context.getString(R.string.key_for_daily_limitation);
 
         // MIDNIGHT SCHEDULER
         if (intent.getAction() == null) {
@@ -116,7 +117,8 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
         } else {
             Log.d("SVB-UsageBR", "Updating watch data");
             WatchUtil.createDataMap(mGoogleApiClient, sharedPreferences.getLong(unlocksKey, 0),
-                    sharedPreferences.getLong(durationKey, 0));
+                    sharedPreferences.getLong(durationKey, 0),
+                    sharedPreferences.getLong(limitKey, 8800000));
         }
     }
 
@@ -136,7 +138,10 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                         long usage = prefs.getLong(context.getString(R.string.key_for_daily_duration), 0);
                         long unlocks = prefs.getLong(context.getString(R.string.key_for_daily_unlocks), 0);
-                        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage);
+                        // TODO: actually set and get the set limit.
+                        long limit = prefs.getLong(context.getString(R.string.key_for_daily_limitation), 8800000);
+                        Log.d(TAG, "Limit: " + limit);
+                        WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage, limit);
                     }
 
                     @Override

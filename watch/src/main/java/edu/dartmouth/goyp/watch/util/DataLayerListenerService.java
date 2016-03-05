@@ -21,8 +21,6 @@ import edu.dartmouth.goyp.watch.controllers.MainActivity;
  */
 public class DataLayerListenerService extends WearableListenerService {
 	private static final String TAG = "SVB-DataLayerLS";
-	private static final String UNLOCKS_KEY = "phoneusage.key.unlocks";
-	private static final String USAGE_KEY = "phoneusage.key.usage";
 
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents) {
@@ -39,12 +37,14 @@ public class DataLayerListenerService extends WearableListenerService {
 				if (dataItem.getUri().getPath().compareTo("/watchData") == 0) {
 					DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
 
-					long unlocks = dataMap.getLong(UNLOCKS_KEY);
-					long usage = dataMap.getLong(USAGE_KEY);
+					long unlocks = dataMap.getLong(Globals.UNLOCKS_KEY);
+					long usage = dataMap.getLong(Globals.USAGE_KEY);
+					long limit = dataMap.getLong(Globals.LIMIT_KEY);
 
 					// Write to shared prefs and broadcast change.
-					sharedPreferences.edit().putLong(UNLOCKS_KEY, unlocks).commit();
-					sharedPreferences.edit().putLong(USAGE_KEY, usage).commit();
+					sharedPreferences.edit().putLong(Globals.UNLOCKS_KEY, unlocks).commit();
+					sharedPreferences.edit().putLong(Globals.USAGE_KEY, usage).commit();
+					sharedPreferences.edit().putLong(Globals.LIMIT_KEY, limit).commit();
 					broadcastDataChange();
 				}
 			}

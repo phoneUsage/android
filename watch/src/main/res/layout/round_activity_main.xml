@@ -7,40 +7,22 @@
                 tools:context=".controllers.MainActivity"
                 tools:deviceIds="wear_round"
                 android:gravity="center">
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical"-->
-        <!--android:gravity="center">-->
-
-        <!-- -->
-    <!--</LinearLayout>-->
 
     <com.github.lzyzsd.circleprogress.ArcProgress
         android:id="@+id/usage_progress"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:arc_progress="40"
-        app:arc_bottom_text="Usage"/>
-
-    <TextView
-        android:id="@+id/usage_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nothing Yet"
-        android:gravity="center"
-        android:layout_below="@id/usage_progress"
-        android:textColor="@color/white"/>
+        android:layout_width="145dp"
+        android:layout_height="145dp"
+        app:arc_progress="0"
+        app:arc_bottom_text="Usage"
+        app:arc_bottom_text_size="12dp"/>
 
     <TextView
         android:id="@+id/unlocks_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nothing Yet"
+        android:text="Loading..."
+        android:layout_below="@id/usage_progress"
         android:gravity="center"
-        android:layout_below="@id/usage_text"
         android:textColor="@color/white"/>
-
-
 
 </RelativeLayout>

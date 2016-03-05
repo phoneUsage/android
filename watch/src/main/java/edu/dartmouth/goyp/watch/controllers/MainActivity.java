@@ -14,22 +14,18 @@ import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
-import java.util.concurrent.TimeUnit;
-
 import edu.dartmouth.goyp.watch.R;
+import edu.dartmouth.goyp.watch.util.Globals;
 
 public class MainActivity extends Activity {
 
 	private static final String TAG = "SVB-WatchMain";
-	private static final String UNLOCKS_KEY = "phoneusage.key.unlocks";
-	private static final String USAGE_KEY = "phoneusage.key.usage";
 
 	public static final String DATA_UPDATE_ACTION = "data_update_action";
 
 	private DataUpdateReceiver mDataUpdateReceiver;
 
 	private TextView mUnlocksText;
-	private TextView mUsageText;
 	private ArcProgress mUsageProgessArc;
 
 
@@ -46,7 +42,6 @@ public class MainActivity extends Activity {
 				initDataUpdateReceiver();
 				mUsageProgessArc = (ArcProgress) stub.findViewById(R.id.usage_progress);
 				mUnlocksText = (TextView) stub.findViewById(R.id.unlocks_text);
-				mUsageText = (TextView) stub.findViewById(R.id.usage_text);
 				updateUI();
 			}
 		});
@@ -103,10 +98,11 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "Updating Values");
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		long unlocks = sharedPreferences.getLong(UNLOCKS_KEY, 0);
-		long usage = sharedPreferences.getLong(USAGE_KEY, 0);
+		long unlocks = sharedPreferences.getLong(Globals.UNLOCKS_KEY, 0);
+		long usage = sharedPreferences.getLong(Globals.USAGE_KEY, 0);
+		long limit = sharedPreferences.getLong(Globals.LIMIT_KEY, 0);
+		updateUsage(usage, limit);
 		updateUnlocks(unlocks);
-		updateUsage(usage);
 	}
 
 	private void updateUnlocks(long unlocks) {
@@ -114,18 +110,32 @@ public class MainActivity extends Activity {
 		mUnlocksText.setText("Unlocks: " + unlocksString);
 	}
 
-	private void updateUsage(long usage) {
-		float hours = getHoursFromMillis(usage);
-		mUsageText.setText(String.valueOf(hours));
+	private void updateUsage(long usage, long limit) {
+		mUsageProgessArc.setProgress(getUsagePercentage(usage, limit));
+		mUsageProgessArc.setBottomText(getUsageStringFromMillis(usage));
 	}
 
 	/**
-	 * Return milliseconds converted to hours rounded to 2 decimal places.
+	 * Return milliseconds converted to hours and minutes.
+	 * Returns a String in the format XX Hr XX Min
 	 */
-	private float getHoursFromMillis(long millis) {
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
-		float hours = minutes / 60.0f;
-		return Math.round(hours * 100.0f) / 100.0f;
+	private String getUsageStringFromMillis(long millis) {
+		long hours = (millis / 3600000) % 24;
+		long minutes = (millis / 60000) % 60;
+		return String.format("%d Hr %d Min", hours, minutes);
+	}
+
+	/**
+	 * Return percentage usage rounded to nearest whole number given usage and limit in millis.
+	 */
+	private int getUsagePercentage(long usage, long limit) {
+		Log.d(TAG, "Usage: " + usage + " Limit: " + limit);
+		int percentage =  (int) Math.round(((double) usage / (double) limit) * 100);
+		if (percentage < 0 || percentage > 100) {
+			Log.e(TAG, "Percentage determined by watch was: " + percentage);
+			return 0;
+		}
+		return percentage;
 	}
 }
 
