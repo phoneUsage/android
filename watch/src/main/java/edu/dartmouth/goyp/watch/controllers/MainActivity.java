@@ -1,7 +1,8 @@
-package edu.dartmouth.goyp.watch;
+package edu.dartmouth.goyp.watch.controllers;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.concurrent.TimeUnit;
+
+import edu.dartmouth.goyp.watch.R;
 
 public class MainActivity extends Activity implements
 		DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
