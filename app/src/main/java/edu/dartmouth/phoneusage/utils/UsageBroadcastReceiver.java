@@ -61,13 +61,13 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             localUsageEntry.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
             // TODO: set the goal hours for this entry using mean, std dev, and user's percentile
             //localUsageEntry.setGoalHoursMS();
-            LocalDailyUsageEntryDataSource.getInstance(context).saveLocalDailyUsageEntry(
-                    localUsageEntry, new BaseDataSource.CompletionHandler<LocalDailyUsageEntry>() {
-                        @Override
-                        public void onDbTaskCompleted(LocalDailyUsageEntry result) {
-                            Log.d(TAG, "Saved local entry: " + result);
-                        }
-                    });
+//            LocalDailyUsageEntryDataSource.getInstance(context).saveLocalDailyUsageEntry(
+//                    localUsageEntry, new BaseDataSource.CompletionHandler<LocalDailyUsageEntry>() {
+//                        @Override
+//                        public void onDbTaskCompleted(LocalDailyUsageEntry result) {
+//                            Log.d(TAG, "Saved local entry: " + result);
+//                        }
+//                    });
 
 
 //            ParseUtils.getStatsInfo(context);
