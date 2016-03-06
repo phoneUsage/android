@@ -20,6 +20,7 @@ import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
 import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
+import edu.dartmouth.phoneusage.models.data_sources.LocalDailyUsageEntryDataSource;
 import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
 
 /**
@@ -49,11 +50,25 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             long dailyUnlocks = sharedPreferences.getLong(unlocksKey, 0);
             ParseUtils.addInfoToParse(dailyDuration, dailyUnlocks);
 
-
-
             // clear preferences to prepare for next day
             refreshPreferences(sharedPreferences, durationKey, unlocksKey);
             unlockDateTime = -1;
+
+            // Save the LocalDailyUsageEntry for today to the local db.
+            LocalDailyUsageEntry localUsageEntry = new LocalDailyUsageEntry();
+            localUsageEntry.setTotalUnlocks((int) dailyUnlocks);
+            localUsageEntry.setTotalUsageMS(dailyDuration);
+            localUsageEntry.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
+            // TODO: set the goal hours for this entry using mean, std dev, and user's percentile
+            //localUsageEntry.setGoalHoursMS();
+            LocalDailyUsageEntryDataSource.getInstance(context).saveLocalDailyUsageEntry(
+                    localUsageEntry, new BaseDataSource.CompletionHandler<LocalDailyUsageEntry>() {
+                        @Override
+                        public void onDbTaskCompleted(LocalDailyUsageEntry result) {
+                            Log.d(TAG, "Saved local entry: " + result);
+                        }
+                    });
+
 
 //            ParseUtils.getStatsInfo(context);
 
