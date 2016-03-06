@@ -5,7 +5,7 @@
         android:title="Target Percentile"
         android:summary="50%"
         android:max="100"
-        android:defaultValue="50" />
+        android:defaultValue="50"/>
 
     <CheckBoxPreference
         android:title="Antisocial Alerts"
