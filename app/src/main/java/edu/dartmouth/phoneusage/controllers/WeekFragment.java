@@ -1,16 +1,16 @@
 package edu.dartmouth.phoneusage.controllers;
 
 import android.app.Fragment;
-import android.graphics.Color;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -49,7 +49,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
     // Chart specific
     private CombinedChart mChart;
-    private Map<String, List<LocalDailyUsageEntry>> mUsageDataMap;
+    private Map<String, LocalDailyUsageEntry> mUsageDataMap;
     private String[] mDays = new String[] {
             "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
     };
@@ -60,6 +60,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private TextView mWeekDateText;
     private ImageButton mPrevWeekBtn;
     private ImageButton mNextWeekBtn;
+    private int mWeeksAwayFromCurrent;
 
     /**
      * Update UI elements when tab selected.
@@ -81,10 +82,10 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
                             new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
                                 @Override
                                 public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                                    updateTodayUsageIfNecessary(result);
                                     populateWeeklyUsageChart(result);
                                 }
                             });
-
         }
 
     @Override
@@ -124,6 +125,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         // Setup initial start and end days of this week
         mStartOfWeek = CalendarUtil.calendarForLastSundayStart();
         mEndOfWeek = CalendarUtil.calendarForThisSaturdayEnd();
+        mWeeksAwayFromCurrent = 0;
     }
 
     @Override
@@ -141,6 +143,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     public void prevWeekClicked(View view) {
         mStartOfWeek.add(Calendar.DAY_OF_WEEK, -7);
         mEndOfWeek.add(Calendar.DAY_OF_WEEK, -7);
+        mWeeksAwayFromCurrent--;
         updateUI();
     }
 
@@ -150,6 +153,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     public void nextWeekClicked(View view) {
         mStartOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mEndOfWeek.add(Calendar.DAY_OF_WEEK, 7);
+        mWeeksAwayFromCurrent++;
         updateUI();
     }
 
@@ -179,19 +183,17 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     }
 
     private void populateWeeklyUsageChart(List<LocalDailyUsageEntry> usageEntries) {
-        // Rebuild the hash map that maps days to lists of entries
+        // Rebuild the hash map that maps day to a LocalDailyUsageEntry
         mUsageDataMap = new HashMap<>();
         for (LocalDailyUsageEntry usageEntry : usageEntries) {
             Calendar calForEntry = CalendarUtil.calendarFromMillis(usageEntry.getDateTimeMS());
             String abbreviatedDay = abbreviatedDayFormatter.format(calForEntry.getTime());
             if (mUsageDataMap.get(abbreviatedDay) == null) {
-                // No entries for this day yet, so create a new list.
-                List<LocalDailyUsageEntry> entryList = new ArrayList<>();
-                entryList.add(usageEntry);
-                mUsageDataMap.put(abbreviatedDay, entryList);
+                // No entry for this day yet, so add it
+                mUsageDataMap.put(abbreviatedDay, usageEntry);
             } else {
-                // Entries already exist for this day. Append the current one.
-                mUsageDataMap.get(abbreviatedDay).add(usageEntry);
+                // Entry already exist for this day. This should not happen!
+                Log.e(TAG, "Trying to add a second LocalDailyUsage entry for the same day: " + abbreviatedDay);
             }
         }
 
@@ -199,12 +201,10 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         List<Entry> lineEntries = new ArrayList<>();
         List<BarEntry> barEntries = new ArrayList<>();
         for (int dayIndex = 0; dayIndex < mDays.length; dayIndex++) {
-            List<LocalDailyUsageEntry> dailyEntries = mUsageDataMap.get(mDays[dayIndex]);
-            if (dailyEntries != null) {
-                for (LocalDailyUsageEntry dailyEntry : dailyEntries) {
-                    lineEntries.add(new Entry(dailyEntry.getTotalUsageInHours(), dayIndex));
-                    barEntries.add(new BarEntry(dailyEntry.getGoalHoursInHours(), dayIndex));
-                }
+            LocalDailyUsageEntry dailyEntry = mUsageDataMap.get(mDays[dayIndex]);
+            if (dailyEntry != null) {
+                lineEntries.add(new Entry(dailyEntry.getTotalUsageInHours(), dayIndex));
+                barEntries.add(new BarEntry(dailyEntry.getGoalHoursInHours(), dayIndex));
             }
         }
 
@@ -264,5 +264,23 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         int endDay = mEndOfWeek.get(Calendar.DAY_OF_MONTH);
         mWeekDateText.setText(String.format("Week of %d/%d to %d/%d",
                 startMonth, startDay, endMonth, endDay));
+    }
+
+    /**
+     * Get the goal hours for today and the total usage so far from
+     * SharedPrefs and create a new entry for it. This allows us to
+     * show current data for today so far on the weekly chart.
+     **/
+    private void updateTodayUsageIfNecessary(List<LocalDailyUsageEntry> dbQueryResult) {
+        if (mWeeksAwayFromCurrent == 0) {
+            Context context = getActivity();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String durationKey = context.getString(R.string.key_for_daily_duration);
+            LocalDailyUsageEntry todayUsage = new LocalDailyUsageEntry();
+            todayUsage.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
+            todayUsage.setTotalUsageMS(prefs.getLong(durationKey, 0));
+            todayUsage.setGoalHoursInHours(0.5f); // TODO: set real goal hours once key for it is defined.
+            dbQueryResult.add(todayUsage);
+        }
     }
 }
