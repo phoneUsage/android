@@ -1,12 +1,16 @@
 package edu.dartmouth.phoneusage.controllers;
 
 import android.app.Fragment;
-import android.graphics.Color;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -41,24 +45,37 @@ import edu.dartmouth.phoneusage.utils.CalendarUtil;
  */
 public class WeekFragment extends Fragment implements UpdatableFragment {
     private static String TAG = "SVB-WeekFragment";
-    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE", Locale.US);
+    private static SimpleDateFormat abbreviatedDayFormatter = new SimpleDateFormat("EEE", Locale.US);
 
+    // Chart specific
     private CombinedChart mChart;
+    private Map<String, LocalDailyUsageEntry> mUsageDataMap;
     private String[] mDays = new String[] {
             "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
     };
-    private Map<String, List<LocalDailyUsageEntry>> mUsageDataMap;
+
+    // Relevant to week display on top
+    private Calendar mStartOfWeek;
+    private Calendar mEndOfWeek;
+    private TextView mWeekDateText;
+    private ImageButton mPrevWeekBtn;
+    private ImageButton mNextWeekBtn;
+    private int mWeeksAwayFromCurrent;
 
     /**
-     * Update UI elements when tab selected
+     * Update UI elements when tab selected.
      */
     @Override
     public void updateUI() {
         if (getActivity() == null) { return; }
+        Log.d(TAG, "updateUI");
 
-        // Get the start time in millis for the past Sunday
-        long sundayStartMS = CalendarUtil.calendarForLastSundayStart().getTimeInMillis();
-        long endDateTimeMS = Calendar.getInstance().getTimeInMillis();
+        // Get relevant datetime millis
+        long sundayStartMS = mStartOfWeek.getTimeInMillis();
+        long endDateTimeMS = mEndOfWeek.getTimeInMillis();
+
+        // Set the text for the current week
+        updateWeekDateText();
 
         // Get all LocalDailyUsageEntry objects from the past week and populate the weekly chart.
         LocalDailyUsageEntryDataSource.getInstance(getActivity())
@@ -66,11 +83,11 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
                         new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
                             @Override
                             public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                                updateTodayUsageIfNecessary(result);
                                 populateWeeklyUsageChart(result);
                             }
                         });
-
-    }
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -78,6 +95,21 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         // Inflate the layout for this fragment;
         View view = inflater.inflate(R.layout.fragment_week, container, false);
+
+        // Init UI elements
+        mWeekDateText = (TextView) view.findViewById(R.id.week_date_text);
+        mPrevWeekBtn = (ImageButton) view.findViewById(R.id.prev_week_button);
+        mNextWeekBtn = (ImageButton) view.findViewById(R.id.next_week_button);
+
+        // Add button onClick handlers
+        mPrevWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { prevWeekClicked(v); }
+        });
+        mNextWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { nextWeekClicked(v); }
+        });
 
         initWeeklyUsageChart(view);
         updateUI();
@@ -90,6 +122,11 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         mUsageDataMap = new HashMap<>();
+
+        // Setup initial start and end days of this week
+        mStartOfWeek = CalendarUtil.calendarForLastSundayStart();
+        mEndOfWeek = CalendarUtil.calendarForThisSaturdayEnd();
+        mWeeksAwayFromCurrent = 0;
     }
 
     @Override
@@ -99,12 +136,33 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         updateUI();
     }
 
+    // ********************************* Button onClick Handlers ******************************** //
+
+    /**
+     * Set the start and end dates to the previous week, and update the UI.
+     */
+    public void prevWeekClicked(View view) {
+        mStartOfWeek.add(Calendar.DAY_OF_WEEK, -7);
+        mEndOfWeek.add(Calendar.DAY_OF_WEEK, -7);
+        mWeeksAwayFromCurrent--;
+        updateUI();
+    }
+
+    /**
+     * Set the start and end dates to the next week, and update the UI.
+     */
+    public void nextWeekClicked(View view) {
+        mStartOfWeek.add(Calendar.DAY_OF_WEEK, 7);
+        mEndOfWeek.add(Calendar.DAY_OF_WEEK, 7);
+        mWeeksAwayFromCurrent++;
+        updateUI();
+    }
+
     // **************************** Private Chart Helper Functions ****************************** //
 
     private void initWeeklyUsageChart(View view) {
         mChart = (CombinedChart) view.findViewById(R.id.weekly_usage_chart);
         mChart.setDescription("");
-        mChart.setBackgroundColor(Color.WHITE);
         mChart.setDrawGridBackground(false);
         mChart.setDrawBarShadow(false);
 
@@ -126,19 +184,17 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     }
 
     private void populateWeeklyUsageChart(List<LocalDailyUsageEntry> usageEntries) {
-        // Rebuild the hash map that maps days to lists of entries
+        // Rebuild the hash map that maps day to a LocalDailyUsageEntry
         mUsageDataMap = new HashMap<>();
         for (LocalDailyUsageEntry usageEntry : usageEntries) {
             Calendar calForEntry = CalendarUtil.calendarFromMillis(usageEntry.getDateTimeMS());
-            String abbreviatedDay = dateFormatter.format(calForEntry.getTime());
+            String abbreviatedDay = abbreviatedDayFormatter.format(calForEntry.getTime());
             if (mUsageDataMap.get(abbreviatedDay) == null) {
-                // No entries for this day yet, so create a new list.
-                List<LocalDailyUsageEntry> entryList = new ArrayList<>();
-                entryList.add(usageEntry);
-                mUsageDataMap.put(abbreviatedDay, entryList);
+                // No entry for this day yet, so add it
+                mUsageDataMap.put(abbreviatedDay, usageEntry);
             } else {
-                // Entries already exist for this day. Append the current one.
-                mUsageDataMap.get(abbreviatedDay).add(usageEntry);
+                // Entry already exist for this day. This should not happen!
+                Log.e(TAG, "Trying to add a second LocalDailyUsage entry for the same day: " + abbreviatedDay);
             }
         }
 
@@ -146,12 +202,14 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         List<Entry> lineEntries = new ArrayList<>();
         List<BarEntry> barEntries = new ArrayList<>();
         for (int dayIndex = 0; dayIndex < mDays.length; dayIndex++) {
-            List<LocalDailyUsageEntry> dailyEntries = mUsageDataMap.get(mDays[dayIndex]);
-            if (dailyEntries != null) {
-                for (LocalDailyUsageEntry dailyEntry : dailyEntries) {
-                    lineEntries.add(new Entry(dailyEntry.getTotalUsageInHours(), dayIndex));
-                    barEntries.add(new BarEntry(dailyEntry.getGoalHoursInHours(), dayIndex));
-                }
+            LocalDailyUsageEntry dailyEntry = mUsageDataMap.get(mDays[dayIndex]);
+            if (dailyEntry != null) {
+                float usageHours = dailyEntry.getTotalUsageInHours();
+                float goalHours = dailyEntry.getGoalHoursInHours();
+                lineEntries.add(new Entry(usageHours, dayIndex));
+                barEntries.add(new BarEntry(goalHours, dayIndex));
+                Log.d(TAG, "Added daily entry to chart. Usage: " + dailyEntry.getTotalUsageInHours()
+                        + " Goal: " + dailyEntry.getGoalHoursInHours());
             }
         }
 
@@ -200,5 +258,34 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         barData.addDataSet(set);
         return barData;
+    }
+
+    // ******************************** Other Helper Functions ********************************** //
+
+    private void updateWeekDateText() {
+        int startMonth = mStartOfWeek.get(Calendar.MONTH) + 1; // Since it starts at 0
+        int startDay = mStartOfWeek.get(Calendar.DAY_OF_MONTH);
+        int endMonth = mEndOfWeek.get(Calendar.MONTH) + 1;
+        int endDay = mEndOfWeek.get(Calendar.DAY_OF_MONTH);
+        mWeekDateText.setText(String.format("Week of %d/%d to %d/%d",
+                startMonth, startDay, endMonth, endDay));
+    }
+
+    /**
+     * Get the goal hours for today and the total usage so far from
+     * SharedPrefs and create a new entry for it. This allows us to
+     * show current data for today so far on the weekly chart.
+     **/
+    private void updateTodayUsageIfNecessary(List<LocalDailyUsageEntry> dbQueryResult) {
+        if (mWeeksAwayFromCurrent == 0) {
+            Context context = getActivity();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String durationKey = context.getString(R.string.key_for_daily_duration);
+            LocalDailyUsageEntry todayUsage = new LocalDailyUsageEntry();
+            todayUsage.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
+            todayUsage.setTotalUsageMS(prefs.getLong(durationKey, 0));
+            todayUsage.setGoalHoursInHours(1.1f); // TODO: set real goal hours once key for it is defined.
+            dbQueryResult.add(todayUsage);
+        }
     }
 }

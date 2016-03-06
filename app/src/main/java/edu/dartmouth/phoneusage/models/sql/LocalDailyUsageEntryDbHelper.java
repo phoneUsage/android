@@ -88,48 +88,67 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	// **************************** Private helper functions *************************************//
 
 	private void populateTestData(SQLiteDatabase db) {
+		// Create a couple entries for the week of Feb 21st
+
+		Calendar sunday21 = CalendarUtil.calendarForDateStart(Calendar.FEBRUARY, 21, 2016);
+		LocalDailyUsageEntry sunday21Entry = new LocalDailyUsageEntry();
+		sunday21Entry.setDateTimeMS(sunday21.getTimeInMillis());
+		sunday21Entry.setTotalUnlocks(100);
+		sunday21Entry.setTotalUsageInHours(2.21f);
+		sunday21Entry.setGoalHoursInHours(1.88f);
+
+		Calendar saturday27 = CalendarUtil.calendarForDateStart(Calendar.FEBRUARY, 27, 2016);
+		LocalDailyUsageEntry saturday27Entry = new LocalDailyUsageEntry();
+		saturday27Entry.setDateTimeMS(saturday27.getTimeInMillis());
+		saturday27Entry.setTotalUnlocks(144);
+		saturday27Entry.setTotalUsageInHours(5.50f);
+		saturday27Entry.setGoalHoursInHours(2.35f);
+
+
 		// Create entries for Sun - Thurs of the week of Feb 28th
 
-		Calendar sunday = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 28, 2016);
-		LocalDailyUsageEntry sundayEntry = new LocalDailyUsageEntry();
-		sundayEntry.setDateTimeMS(sunday.getTimeInMillis());
-		sundayEntry.setTotalUnlocks(233);
-		sundayEntry.setTotalUsageInHours(5.65f);
-		sundayEntry.setGoalHoursInHours(3.44f);
+		Calendar sunday28 = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 28, 2016);
+		LocalDailyUsageEntry sunday28Entry = new LocalDailyUsageEntry();
+		sunday28Entry.setDateTimeMS(sunday28.getTimeInMillis());
+		sunday28Entry.setTotalUnlocks(233);
+		sunday28Entry.setTotalUsageInHours(5.65f);
+		sunday28Entry.setGoalHoursInHours(3.44f);
 
-		Calendar monday = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 29, 2016);
-		LocalDailyUsageEntry mondayEntry = new LocalDailyUsageEntry();
-		mondayEntry.setDateTimeMS(monday.getTimeInMillis());
-		mondayEntry.setTotalUnlocks(124);
-		mondayEntry.setTotalUsageInHours(3.55f);
-		mondayEntry.setGoalHoursInHours(4.21f);
+		Calendar monday29 = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 29, 2016);
+		LocalDailyUsageEntry monday29Entry = new LocalDailyUsageEntry();
+		monday29Entry.setDateTimeMS(monday29.getTimeInMillis());
+		monday29Entry.setTotalUnlocks(124);
+		monday29Entry.setTotalUsageInHours(3.55f);
+		monday29Entry.setGoalHoursInHours(4.21f);
 
-		Calendar tuesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 1, 2016);
-		LocalDailyUsageEntry tuesdayEntry = new LocalDailyUsageEntry();
-		tuesdayEntry.setDateTimeMS(tuesday.getTimeInMillis());
-		tuesdayEntry.setTotalUnlocks(222);
-		tuesdayEntry.setTotalUsageInHours(3.18f);
-		tuesdayEntry.setGoalHoursInHours(4.90f);
+		Calendar tuesday1 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 1, 2016);
+		LocalDailyUsageEntry tuesday1Entry = new LocalDailyUsageEntry();
+		tuesday1Entry.setDateTimeMS(tuesday1.getTimeInMillis());
+		tuesday1Entry.setTotalUnlocks(222);
+		tuesday1Entry.setTotalUsageInHours(3.18f);
+		tuesday1Entry.setGoalHoursInHours(4.90f);
 
-		Calendar wednesday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 2, 2016);
-		LocalDailyUsageEntry wednesdayEntry = new LocalDailyUsageEntry();
-		wednesdayEntry.setDateTimeMS(wednesday.getTimeInMillis());
-		wednesdayEntry.setTotalUnlocks(88);
-		wednesdayEntry.setTotalUsageInHours(8.32f);
-		wednesdayEntry.setGoalHoursInHours(7.45f);
+		Calendar wednesday2 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 2, 2016);
+		LocalDailyUsageEntry wednesday2Entry = new LocalDailyUsageEntry();
+		wednesday2Entry.setDateTimeMS(wednesday2.getTimeInMillis());
+		wednesday2Entry.setTotalUnlocks(88);
+		wednesday2Entry.setTotalUsageInHours(8.32f);
+		wednesday2Entry.setGoalHoursInHours(7.45f);
 
-		Calendar thursday = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
-		LocalDailyUsageEntry thursdayEntry = new LocalDailyUsageEntry();
-		thursdayEntry.setDateTimeMS(thursday.getTimeInMillis());
-		thursdayEntry.setTotalUnlocks(124);
-		thursdayEntry.setTotalUsageInHours(8.00f);
-		thursdayEntry.setGoalHoursInHours(6.77f);
+		Calendar thursday3 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 3, 2016);
+		LocalDailyUsageEntry thursday3Entry = new LocalDailyUsageEntry();
+		thursday3Entry.setDateTimeMS(thursday3.getTimeInMillis());
+		thursday3Entry.setTotalUnlocks(124);
+		thursday3Entry.setTotalUsageInHours(8.00f);
+		thursday3Entry.setGoalHoursInHours(6.77f);
 
-		insert(db, sundayEntry);
-		insert(db, mondayEntry);
-		insert(db, tuesdayEntry);
-		insert(db, wednesdayEntry);
-		insert(db, thursdayEntry);
+		insert(db, sunday21Entry);
+		insert(db, saturday27Entry);
+		insert(db, sunday28Entry);
+		insert(db, monday29Entry);
+		insert(db, tuesday1Entry);
+		insert(db, wednesday2Entry);
+		insert(db, thursday3Entry);
 	}
 
 	private void insert(SQLiteDatabase db, LocalDailyUsageEntry entry) {

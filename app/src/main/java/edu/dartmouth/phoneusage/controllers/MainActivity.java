@@ -28,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -103,7 +104,10 @@ public class MainActivity extends Activity {
 			doBindService();
 		}
 		setupTabs();
+		ParseUtils.getStatsInfo(this);
+
 	}
+
 
 	/*helper functions*/
 

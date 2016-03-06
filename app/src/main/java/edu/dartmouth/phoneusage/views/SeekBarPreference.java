@@ -5,7 +5,9 @@ https://github.com/afarber/android-newbie/blob/q19/MyPrefs/src/de/afarber/mypref
  */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import edu.dartmouth.phoneusage.R;
+import edu.dartmouth.phoneusage.utils.ParseUtils;
 
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
     private SeekBar mSeekBar;
@@ -48,7 +51,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             return;
 
         setValue(progress);
-        setSummary(progress+"%");
+        setSummary(progress + "%");
+        ParseUtils.recalculatePercentile(getContext(), progress);
     }
 
     @Override
@@ -63,7 +67,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        setValue(restoreValue ? getPersistedInt(mProgress) : (Integer) defaultValue);
+        setValue(restoreValue ? getPersistedInt(mProgress) : (Integer) defaultValue);;
     }
 
     public void setValue(int value) {
@@ -76,4 +80,5 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             notifyChanged();
         }
     }
+
 }
