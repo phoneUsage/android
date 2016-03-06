@@ -122,8 +122,6 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         // Setup initial start and end days of this week
         mStartOfWeek = CalendarUtil.calendarForLastSundayStart();
         mEndOfWeek = CalendarUtil.calendarForThisSaturdayEnd();
-        Log.d(TAG, "startOfWeek: " + mStartOfWeek.getTimeInMillis());
-        Log.d(TAG, "endOfWeek: " + mEndOfWeek.getTimeInMillis());
     }
 
     @Override
@@ -158,7 +156,6 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private void initWeeklyUsageChart(View view) {
         mChart = (CombinedChart) view.findViewById(R.id.weekly_usage_chart);
         mChart.setDescription("");
-        mChart.setBackgroundColor(Color.WHITE);
         mChart.setDrawGridBackground(false);
         mChart.setDrawBarShadow(false);
 
