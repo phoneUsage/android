@@ -21,6 +21,6 @@
 
 
     <!-- Week View Strings -->
-    <string name="week_usage_chart_title">Weekly Phone Usage (Hours)</string>
+    <string name="week_usage_chart_title">Phone Usage (Hours)</string>
     <string name="key_for_daily_unlocks">key_for_daily_unlocks</string>
 </resources>

@@ -97,6 +97,16 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         mPrevWeekBtn = (Button) view.findViewById(R.id.prev_week_button);
         mNextWeekBtn = (Button) view.findViewById(R.id.next_week_button);
 
+        // Add button onClick handlers
+        mPrevWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { prevWeekClicked(v); }
+        });
+        mNextWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { nextWeekClicked(v); }
+        });
+
         initWeeklyUsageChart(view);
         updateUI();
 
@@ -118,6 +128,26 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
+        updateUI();
+    }
+
+    // ********************************* Button onClick Handlers ******************************** //
+
+    /**
+     * Set the start and end dates to the previous week, and update the UI.
+     */
+    public void prevWeekClicked(View view) {
+        mStartOfWeek.add(Calendar.DAY_OF_WEEK, -7);
+        mEndOfWeek.add(Calendar.DAY_OF_WEEK, -7);
+        updateUI();
+    }
+
+    /**
+     * Set the start and end dates to the next week, and update the UI.
+     */
+    public void nextWeekClicked(View view) {
+        mStartOfWeek.add(Calendar.DAY_OF_WEEK, 7);
+        mEndOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         updateUI();
     }
 
@@ -229,5 +259,9 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private void updateWeekDateText() {
         int startMonth = mStartOfWeek.get(Calendar.MONTH);
         int startDay = mStartOfWeek.get(Calendar.DAY_OF_MONTH);
+        int endMonth = mEndOfWeek.get(Calendar.MONTH);
+        int endDay = mEndOfWeek.get(Calendar.DAY_OF_MONTH);
+        mWeekDateText.setText(String.format("Week of %d/%d to %d/%d",
+                startMonth, startDay, endMonth, endDay));
     }
 }
