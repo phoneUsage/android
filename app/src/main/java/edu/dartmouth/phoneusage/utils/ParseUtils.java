@@ -10,7 +10,8 @@ import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.ArrayList;
+import org.apache.commons.math3.special.Erf;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,15 @@ public class ParseUtils {
             public void done(Map<String,String> objects, ParseException e) {
                 if (e == null) {
                     Log.d("ParseUtils", "" + objects);
-                    prefs.edit().putFloat("AVERAGE", Float.parseFloat(objects.get("average"))).apply();
-                    prefs.edit().putFloat("STDDEV", Float.parseFloat(objects.get("stdDev"))).apply();
+                    Float average = Float.parseFloat(objects.get("average"));
+                    Float stdDev = Float.parseFloat(objects.get("stdDev"));
+                    prefs.edit().putFloat("AVERAGE", average).apply();
+                    prefs.edit().putFloat("STDDEV", stdDev).apply();
+                    prefs.edit().putFloat("LIMIT", percentileFromStats(average, stdDev, prefs.getInt("PERCENTILE", 50))).apply();
 
+                    Log.d("ParseResults Average", prefs.getFloat("AVERAGE", 0) + "");
+                    Log.d("ParseResults SD", prefs.getFloat("STDDEV", 0) + "");
+                    Log.d("ParseResults Limit", prefs.getFloat("LIMIT", 0) + "");
                 }
             }
         });
@@ -42,6 +49,23 @@ public class ParseUtils {
         entry.put("totalUsage", duration);
         entry.put("totalUnlocks", unlocks);
         entry.saveInBackground();
+    }
+
+    public static void recalculatePercentile(Context prefsContext,Integer percentile){
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(prefsContext);
+        Float limit = percentileFromStats(prefs.getFloat("AVERAGE", 0),prefs.getFloat("STDDEV", 0),percentile);
+        Log.d("ParseUtils Limit", limit+"");
+        prefs.edit().putFloat("LIMIT", limit).apply();
+    }
+
+
+    public static Float percentileFromStats(Float mean, Float stdDev, Integer percentile){
+        return mean + (stdDev*pToZ(percentile/100.0));
+    }
+
+    public static Float pToZ(double p) {
+        double z = -Math.sqrt(2) * Erf.erfcInv(2*p);
+        return(Float.parseFloat(z+""));
     }
 
 }

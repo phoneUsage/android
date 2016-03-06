@@ -3,8 +3,8 @@
     <edu.dartmouth.phoneusage.views.SeekBarPreference
         android:key="PERCENTILE"
         android:title="Target Percentile"
-        android:summary="50%"
-        android:max="100"
+        android:summary="50"
+        android:max="99"
         android:defaultValue="50" />
 
     <CheckBoxPreference

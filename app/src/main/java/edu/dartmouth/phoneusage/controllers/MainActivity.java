@@ -104,7 +104,10 @@ public class MainActivity extends Activity {
 			doBindService();
 		}
 		setupTabs();
+		ParseUtils.getStatsInfo(this);
+
 	}
+
 
 	/*helper functions*/
 

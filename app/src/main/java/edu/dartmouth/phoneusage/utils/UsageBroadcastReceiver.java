@@ -22,6 +22,7 @@ import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
 import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
 
+
 /**
  * Created by hunterestrada on 2/28/16.
  */
@@ -55,7 +56,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             refreshPreferences(sharedPreferences, durationKey, unlocksKey);
             unlockDateTime = -1;
 
-//            ParseUtils.getStatsInfo(context);
+            ParseUtils.getStatsInfo(context);
 
             // TODO: add method to upload/reset data
 
