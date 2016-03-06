@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -41,36 +43,47 @@ import edu.dartmouth.phoneusage.utils.CalendarUtil;
  */
 public class WeekFragment extends Fragment implements UpdatableFragment {
     private static String TAG = "SVB-WeekFragment";
-    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE", Locale.US);
+    private static SimpleDateFormat abbreviatedDayFormatter = new SimpleDateFormat("EEE", Locale.US);
 
+    // Chart specific
     private CombinedChart mChart;
+    private Map<String, List<LocalDailyUsageEntry>> mUsageDataMap;
     private String[] mDays = new String[] {
             "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
     };
-    private Map<String, List<LocalDailyUsageEntry>> mUsageDataMap;
+
+    // Relevant to week display on top
+    private Calendar mStartOfWeek;
+    private Calendar mEndOfWeek;
+    private TextView mWeekDateText;
+    private Button mPrevWeekBtn;
+    private Button mNextWeekBtn;
 
     /**
-     * Update UI elements when tab selected
+     * Update UI elements when tab selected.
      */
     @Override
-    public void updateUI() {
-        if (getActivity() == null) { return; }
+        public void updateUI() {
+            if (getActivity() == null) { return; }
 
-        // Get the start time in millis for the past Sunday
-        long sundayStartMS = CalendarUtil.calendarForLastSundayStart().getTimeInMillis();
-        long endDateTimeMS = Calendar.getInstance().getTimeInMillis();
+            // Get relevant datetime millis
+            long sundayStartMS = mStartOfWeek.getTimeInMillis();
+            long endDateTimeMS = mEndOfWeek.getTimeInMillis();
 
-        // Get all LocalDailyUsageEntry objects from the past week and populate the weekly chart.
-        LocalDailyUsageEntryDataSource.getInstance(getActivity())
-                .fetchLocalDailyUsageEntriesBetweenDateTimes(sundayStartMS, endDateTimeMS,
-                        new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
-                            @Override
-                            public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
-                                populateWeeklyUsageChart(result);
-                            }
-                        });
+            // Set the text for the current week
+            updateWeekDateText();
 
-    }
+            // Get all LocalDailyUsageEntry objects from the past week and populate the weekly chart.
+            LocalDailyUsageEntryDataSource.getInstance(getActivity())
+                    .fetchLocalDailyUsageEntriesBetweenDateTimes(sundayStartMS, endDateTimeMS,
+                            new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
+                                @Override
+                                public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                                    populateWeeklyUsageChart(result);
+                                }
+                            });
+
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -78,6 +91,11 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         // Inflate the layout for this fragment;
         View view = inflater.inflate(R.layout.fragment_week, container, false);
+
+        // Init UI elements
+        mWeekDateText = (TextView) view.findViewById(R.id.week_date_text);
+        mPrevWeekBtn = (Button) view.findViewById(R.id.prev_week_button);
+        mNextWeekBtn = (Button) view.findViewById(R.id.next_week_button);
 
         initWeeklyUsageChart(view);
         updateUI();
@@ -90,6 +108,10 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         mUsageDataMap = new HashMap<>();
+
+        // Setup initial start and end days of this week
+        mStartOfWeek = CalendarUtil.calendarForLastSundayStart();
+        mEndOfWeek = CalendarUtil.calendarForThisSaturdayEnd();
     }
 
     @Override
@@ -130,7 +152,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         mUsageDataMap = new HashMap<>();
         for (LocalDailyUsageEntry usageEntry : usageEntries) {
             Calendar calForEntry = CalendarUtil.calendarFromMillis(usageEntry.getDateTimeMS());
-            String abbreviatedDay = dateFormatter.format(calForEntry.getTime());
+            String abbreviatedDay = abbreviatedDayFormatter.format(calForEntry.getTime());
             if (mUsageDataMap.get(abbreviatedDay) == null) {
                 // No entries for this day yet, so create a new list.
                 List<LocalDailyUsageEntry> entryList = new ArrayList<>();
@@ -200,5 +222,12 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         barData.addDataSet(set);
         return barData;
+    }
+
+    // ******************************** Other Helper Functions ********************************** //
+
+    private void updateWeekDateText() {
+        int startMonth = mStartOfWeek.get(Calendar.MONTH);
+        int startDay = mStartOfWeek.get(Calendar.DAY_OF_MONTH);
     }
 }
