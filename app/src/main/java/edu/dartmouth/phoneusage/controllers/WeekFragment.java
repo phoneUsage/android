@@ -66,26 +66,27 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
      * Update UI elements when tab selected.
      */
     @Override
-        public void updateUI() {
-            if (getActivity() == null) { return; }
+    public void updateUI() {
+        if (getActivity() == null) { return; }
+        Log.d(TAG, "updateUI");
 
-            // Get relevant datetime millis
-            long sundayStartMS = mStartOfWeek.getTimeInMillis();
-            long endDateTimeMS = mEndOfWeek.getTimeInMillis();
+        // Get relevant datetime millis
+        long sundayStartMS = mStartOfWeek.getTimeInMillis();
+        long endDateTimeMS = mEndOfWeek.getTimeInMillis();
 
-            // Set the text for the current week
-            updateWeekDateText();
+        // Set the text for the current week
+        updateWeekDateText();
 
-            // Get all LocalDailyUsageEntry objects from the past week and populate the weekly chart.
-            LocalDailyUsageEntryDataSource.getInstance(getActivity())
-                    .fetchLocalDailyUsageEntriesBetweenDateTimes(sundayStartMS, endDateTimeMS,
-                            new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
-                                @Override
-                                public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
-                                    updateTodayUsageIfNecessary(result);
-                                    populateWeeklyUsageChart(result);
-                                }
-                            });
+        // Get all LocalDailyUsageEntry objects from the past week and populate the weekly chart.
+        LocalDailyUsageEntryDataSource.getInstance(getActivity())
+                .fetchLocalDailyUsageEntriesBetweenDateTimes(sundayStartMS, endDateTimeMS,
+                        new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
+                            @Override
+                            public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                                updateTodayUsageIfNecessary(result);
+                                populateWeeklyUsageChart(result);
+                            }
+                        });
         }
 
     @Override
@@ -203,8 +204,12 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         for (int dayIndex = 0; dayIndex < mDays.length; dayIndex++) {
             LocalDailyUsageEntry dailyEntry = mUsageDataMap.get(mDays[dayIndex]);
             if (dailyEntry != null) {
-                lineEntries.add(new Entry(dailyEntry.getTotalUsageInHours(), dayIndex));
-                barEntries.add(new BarEntry(dailyEntry.getGoalHoursInHours(), dayIndex));
+                float usageHours = dailyEntry.getTotalUsageInHours();
+                float goalHours = dailyEntry.getGoalHoursInHours();
+                lineEntries.add(new Entry(usageHours, dayIndex));
+                barEntries.add(new BarEntry(goalHours, dayIndex));
+                Log.d(TAG, "Added daily entry to chart. Usage: " + dailyEntry.getTotalUsageInHours()
+                        + " Goal: " + dailyEntry.getGoalHoursInHours());
             }
         }
 
@@ -279,7 +284,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
             LocalDailyUsageEntry todayUsage = new LocalDailyUsageEntry();
             todayUsage.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
             todayUsage.setTotalUsageMS(prefs.getLong(durationKey, 0));
-            todayUsage.setGoalHoursInHours(0.5f); // TODO: set real goal hours once key for it is defined.
+            todayUsage.setGoalHoursInHours(1.1f); // TODO: set real goal hours once key for it is defined.
             dbQueryResult.add(todayUsage);
         }
     }
