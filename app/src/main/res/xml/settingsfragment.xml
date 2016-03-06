@@ -3,15 +3,9 @@
     <edu.dartmouth.phoneusage.views.SeekBarPreference
         android:key="PERCENTILE"
         android:title="Target Percentile"
-<<<<<<< HEAD
         android:summary="50"
         android:max="99"
         android:defaultValue="50" />
-=======
-        android:summary="50%"
-        android:max="100"
-        android:defaultValue="50"/>
->>>>>>> 0c411b43d59138a9c9b58591c33c51f7df039d8b
 
     <CheckBoxPreference
         android:title="Antisocial Alerts"
