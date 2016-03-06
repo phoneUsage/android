@@ -18,6 +18,11 @@
             android:layout_height="match_parent"
             android:id="@+id/progressBar" />
         <ProgressBar
+            style="@style/CustomProgressBarHorizontalMedium"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/medium_progressBar" />
+        <ProgressBar
             style="@style/CustomProgressBarHorizontalFull"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

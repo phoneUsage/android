@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.opengl.Visibility;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import edu.dartmouth.phoneusage.R;
@@ -104,13 +106,30 @@ public class UsageService extends Service {
                     long unlocks = sharedPreferences.getLong(getString(R.string.key_for_daily_unlocks), 0);
 
 
-                    String usageText = String.format("Usage: %.2f%% @ %d h %02d m\nUnlocks: %d", percentage, hours, minutes, unlocks);
+                    String usageText = String.format("Usage: %.0f%% @ %d h %02d m\nUnlocks: %d", percentage, hours, minutes, unlocks);
                     // CharSequence title =  mPercentage +  "%, 60 unlocks";
                     noti.contentView.setTextViewText(R.id.status_text, usageText);
-                    noti.contentView.setProgressBar(R.id.progressBar, 100, (int) (percentage), false);
 
-                    if(percentage>=100){
+                    if(percentage <50) {
+                        noti.contentView.setViewVisibility(R.id.progressBar, View.VISIBLE);
+                        noti.contentView.setProgressBar(R.id.progressBar, 100, (int) (percentage), false);
+                        noti.contentView.setViewVisibility(R.id.medium_progressBar, View.INVISIBLE);
+                        noti.contentView.setViewVisibility(R.id.full_progressBar, View.INVISIBLE);
+                    }
+
+                    else if(percentage <100){
+                        noti.contentView.setViewVisibility(R.id.medium_progressBar, View.VISIBLE);
+                        noti.contentView.setProgressBar(R.id.medium_progressBar,100, (int) percentage, false);
+                        noti.contentView.setViewVisibility(R.id.progressBar, View.INVISIBLE);
+                        noti.contentView.setViewVisibility(R.id.full_progressBar, View.INVISIBLE);
+                    }
+
+                    else if(percentage>=100){
+                        noti.contentView.setViewVisibility(R.id.full_progressBar, View.VISIBLE);
                         noti.contentView.setProgressBar(R.id.full_progressBar, 100, 100, false);
+                        noti.contentView.setViewVisibility(R.id.medium_progressBar, View.INVISIBLE);
+                        noti.contentView.setViewVisibility(R.id.progressBar, View.INVISIBLE);
+
                     }
 
                     nm.notify(STATUS_BAR_NOTIFICATION, noti);

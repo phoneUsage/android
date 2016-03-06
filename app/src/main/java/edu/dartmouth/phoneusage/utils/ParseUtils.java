@@ -33,11 +33,11 @@ public class ParseUtils {
                     Float stdDev = Float.parseFloat(objects.get("stdDev"));
                     prefs.edit().putFloat("AVERAGE", average).apply();
                     prefs.edit().putFloat("STDDEV", stdDev).apply();
-                    prefs.edit().putFloat("LIMIT", percentileFromStats(average, stdDev, prefs.getInt("PERCENTILE", 50))).apply();
+                    prefs.edit().putInt("LIMIT", Math.round(percentileFromStats(average, stdDev, prefs.getInt("PERCENTILE", 50)))).apply();
 
                     Log.d("ParseResults Average", prefs.getFloat("AVERAGE", 0) + "");
                     Log.d("ParseResults SD", prefs.getFloat("STDDEV", 0) + "");
-                    Log.d("ParseResults Limit", prefs.getFloat("LIMIT", 0) + "");
+                    Log.d("ParseResults Limit", prefs.getInt("LIMIT", 0) + "");
                 }
             }
         });
@@ -55,7 +55,7 @@ public class ParseUtils {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(prefsContext);
         Float limit = percentileFromStats(prefs.getFloat("AVERAGE", 0),prefs.getFloat("STDDEV", 0),percentile);
         Log.d("ParseUtils Limit", limit+"");
-        prefs.edit().putFloat("LIMIT", limit).apply();
+        prefs.edit().putInt("LIMIT", Math.round(limit)).apply();
     }
 
 
