@@ -41,6 +41,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         View view = inflater.inflate(R.layout.preference_seekbar, parent, false);
         mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
         mSeekBar.setProgress(mProgress);
+        mSeekBar.setMax(99);
         mSeekBar.setOnSeekBarChangeListener(this);
         return view;
     }
@@ -49,7 +50,9 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (!fromUser)
             return;
-
+        if(progress==0){
+            progress =1;
+        }
         setValue(progress);
         setSummary(progress + "%");
         ParseUtils.recalculatePercentile(getContext(), progress);

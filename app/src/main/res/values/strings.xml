@@ -17,7 +17,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="key_for_daily_duration">key_for_daily_duration</string>
-    <string name="key_for_daily_limitation">key_for_daily_limitation</string>
+    <string name="key_for_daily_limitation">LIMIT</string>
 
 
     <!-- Week View Strings -->

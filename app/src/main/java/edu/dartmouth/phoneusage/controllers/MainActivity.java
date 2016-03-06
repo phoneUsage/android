@@ -17,7 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,7 +27,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -104,6 +102,7 @@ public class MainActivity extends Activity {
 			doBindService();
 		}
 		setupTabs();
+		//TODO remove this next line
 		ParseUtils.getStatsInfo(this);
 
 	}
