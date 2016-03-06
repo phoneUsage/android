@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -56,8 +58,8 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private Calendar mStartOfWeek;
     private Calendar mEndOfWeek;
     private TextView mWeekDateText;
-    private Button mPrevWeekBtn;
-    private Button mNextWeekBtn;
+    private ImageButton mPrevWeekBtn;
+    private ImageButton mNextWeekBtn;
 
     /**
      * Update UI elements when tab selected.
@@ -94,8 +96,8 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         // Init UI elements
         mWeekDateText = (TextView) view.findViewById(R.id.week_date_text);
-        mPrevWeekBtn = (Button) view.findViewById(R.id.prev_week_button);
-        mNextWeekBtn = (Button) view.findViewById(R.id.next_week_button);
+        mPrevWeekBtn = (ImageButton) view.findViewById(R.id.prev_week_button);
+        mNextWeekBtn = (ImageButton) view.findViewById(R.id.next_week_button);
 
         // Add button onClick handlers
         mPrevWeekBtn.setOnClickListener(new View.OnClickListener() {
