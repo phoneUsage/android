@@ -114,8 +114,8 @@ public class LocalDailyUsageEntry {
 	 */
 	public float getGoalHoursInHours() {
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(getGoalHoursMS());
-		float hours = minutes / 60.0f;
-		return Math.round(hours * 100.0f) / 100.0f;
+		float hours = minutes / 60.00f;
+		return Math.round(hours * 100.00f) / 100.00f;
 	}
 
 	// ****************************** Useful Instance Methods ************************************//
