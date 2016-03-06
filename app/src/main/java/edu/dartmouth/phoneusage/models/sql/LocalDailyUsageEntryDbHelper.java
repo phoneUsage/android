@@ -142,6 +142,22 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 		thursday3Entry.setTotalUsageInHours(8.00f);
 		thursday3Entry.setGoalHoursInHours(6.77f);
 
+		// Create a couple  entries for the week of Mar 6th
+
+		Calendar sunday6 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 6, 2016);
+		LocalDailyUsageEntry sunday6Entry = new LocalDailyUsageEntry();
+		sunday6Entry.setDateTimeMS(sunday6.getTimeInMillis());
+		sunday6Entry.setTotalUnlocks(111);
+		sunday6Entry.setTotalUsageInHours(4.33f);
+		sunday6Entry.setGoalHoursInHours(5.77f);
+
+		Calendar monday7 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 7, 2016);
+		LocalDailyUsageEntry monday7Entry = new LocalDailyUsageEntry();
+		monday7Entry.setDateTimeMS(monday7.getTimeInMillis());
+		monday7Entry.setTotalUnlocks(46);
+		monday7Entry.setTotalUsageInHours(2.50f);
+		monday7Entry.setGoalHoursInHours(4.95f);
+
 		insert(db, sunday21Entry);
 		insert(db, saturday27Entry);
 		insert(db, sunday28Entry);
@@ -149,6 +165,8 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 		insert(db, tuesday1Entry);
 		insert(db, wednesday2Entry);
 		insert(db, thursday3Entry);
+		insert(db, sunday6Entry);
+		insert(db, monday7Entry);
 	}
 
 	private void insert(SQLiteDatabase db, LocalDailyUsageEntry entry) {

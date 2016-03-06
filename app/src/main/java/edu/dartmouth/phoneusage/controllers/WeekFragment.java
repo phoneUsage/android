@@ -122,6 +122,8 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         // Setup initial start and end days of this week
         mStartOfWeek = CalendarUtil.calendarForLastSundayStart();
         mEndOfWeek = CalendarUtil.calendarForThisSaturdayEnd();
+        Log.d(TAG, "startOfWeek: " + mStartOfWeek.getTimeInMillis());
+        Log.d(TAG, "endOfWeek: " + mEndOfWeek.getTimeInMillis());
     }
 
     @Override
@@ -257,9 +259,9 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     // ******************************** Other Helper Functions ********************************** //
 
     private void updateWeekDateText() {
-        int startMonth = mStartOfWeek.get(Calendar.MONTH);
+        int startMonth = mStartOfWeek.get(Calendar.MONTH) + 1; // Since it starts at 0
         int startDay = mStartOfWeek.get(Calendar.DAY_OF_MONTH);
-        int endMonth = mEndOfWeek.get(Calendar.MONTH);
+        int endMonth = mEndOfWeek.get(Calendar.MONTH) + 1;
         int endDay = mEndOfWeek.get(Calendar.DAY_OF_MONTH);
         mWeekDateText.setText(String.format("Week of %d/%d to %d/%d",
                 startMonth, startDay, endMonth, endDay));

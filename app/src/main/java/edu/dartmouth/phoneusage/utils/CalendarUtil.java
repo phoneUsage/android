@@ -63,7 +63,7 @@ public class CalendarUtil {
 	 */
 	public static Calendar calendarForThisSaturdayEnd() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK) - Calendar.SATURDAY);
+		calendar.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK));
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
