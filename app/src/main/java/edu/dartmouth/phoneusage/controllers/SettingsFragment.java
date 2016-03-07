@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.dartmouth.phoneusage.R;
+import edu.dartmouth.phoneusage.views.SeekBarPreference;
 
 /**
  * Created by benribovich on 2/27/16.
@@ -23,7 +24,7 @@ public class SettingsFragment extends PreferenceFragment implements UpdatableFra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settingsfragment);
-        Preference seekBar = findPreference("PERCENTILE");
+        SeekBarPreference seekBar = (SeekBarPreference) findPreference("PERCENTILE");
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         seekBar.setSummary(prefs.getInt("PERCENTILE",50)+"%");
         CheckBoxPreference check = (CheckBoxPreference)getPreferenceManager().findPreference("ANTISOCIAL_ALERTS");
