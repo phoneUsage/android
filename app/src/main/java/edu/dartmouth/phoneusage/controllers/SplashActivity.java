@@ -28,7 +28,7 @@ import edu.dartmouth.phoneusage.utils.ParseUtils;
  * Created by hunterestrada on 3/6/16.
  */
 public class SplashActivity extends Activity {
-    SharedPreferences mSharePreferences;
+    SharedPreferences mSharedPreferences;
     TextView mMessageTextView;
     ProgressBar mProgressSpinner;
     Button mReloadButton;
@@ -37,6 +37,8 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mMessageTextView = (TextView) findViewById(R.id.splashMessage);
         mProgressSpinner = (ProgressBar) findViewById(R.id.splashProgress);
@@ -65,7 +67,7 @@ public class SplashActivity extends Activity {
 
                 if (success) {
                     Log.d(getClass().getName(), "SPLASH SUCCESS");
-                    mSharePreferences.edit().putBoolean(getString(R.string.key_for_first_launch), true).commit();
+                    mSharedPreferences.edit().putBoolean(getString(R.string.key_for_first_launch), true).commit();
 
                     transitionToMainActivity();
 
