@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.PowerManager;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -371,7 +372,11 @@ public class MainActivity extends Activity {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							mNotificationManager.notify(0,notif.build());
+							PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+							if(pm.isInteractive()) {
+								mNotificationManager.notify(7, notif.build());
+							}
 						}
 					});
 				}

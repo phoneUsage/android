@@ -1,5 +1,6 @@
 package edu.dartmouth.phoneusage.utils;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import edu.dartmouth.phoneusage.models.data_sources.UnlockLockEventDataSource;
  * Created by hunterestrada on 2/28/16.
  */
 public class UsageBroadcastReceiver extends BroadcastReceiver {
+    private static final int SPEECH_NOTIFICATION = 7;
     private static String TAG = "SVB-UsageBR";
 
     private long unlockDateTime = -1;
@@ -118,6 +120,8 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
                     });
 
             unlockDateTime = -1; // prepare for next duration
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(SPEECH_NOTIFICATION);
 
         // PHONE SHUTDOWN
         } else if (intent.getAction().equals(Intent.ACTION_SHUTDOWN) && unlockDateTime > 0) {

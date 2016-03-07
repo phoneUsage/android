@@ -108,7 +108,7 @@ public class UsageService extends Service {
                     long unlocks = sharedPreferences.getLong(getString(R.string.key_for_daily_unlocks), 0);
 
 
-                    String usageText = String.format("Usage: %.0f%% @ %d h %02d m\nUnlocks: %d", percentage, hours, minutes, unlocks);
+                    String usageText = String.format("Usage: %.0f%% , %d hr %02d min\nUnlocks: %d", percentage, hours, minutes, unlocks);
                     // CharSequence title =  mPercentage +  "%, 60 unlocks";
                     noti.contentView.setTextViewText(R.id.status_text, usageText);
 
