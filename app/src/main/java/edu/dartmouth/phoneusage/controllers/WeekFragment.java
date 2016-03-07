@@ -118,6 +118,14 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            updateUI();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
@@ -281,10 +289,12 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
             Context context = getActivity();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             String durationKey = context.getString(R.string.key_for_daily_duration);
+            String limitKey = context.getString(R.string.key_for_daily_limitation);
+
             LocalDailyUsageEntry todayUsage = new LocalDailyUsageEntry();
             todayUsage.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
             todayUsage.setTotalUsageMS(prefs.getLong(durationKey, 0));
-            todayUsage.setGoalHoursInHours(1.1f); // TODO: set real goal hours once key for it is defined.
+            todayUsage.setGoalHoursMS(prefs.getLong(limitKey, 0));
             dbQueryResult.add(todayUsage);
         }
     }

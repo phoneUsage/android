@@ -61,15 +61,14 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             localUsageEntry.setTotalUnlocks((int) dailyUnlocks);
             localUsageEntry.setTotalUsageMS(dailyDuration);
             localUsageEntry.setDateTimeMS(Calendar.getInstance().getTimeInMillis());
-            // TODO: set the goal hours for this entry using mean, std dev, and user's percentile
-            //localUsageEntry.setGoalHoursMS();
-//            LocalDailyUsageEntryDataSource.getInstance(context).saveLocalDailyUsageEntry(
-//                    localUsageEntry, new BaseDataSource.CompletionHandler<LocalDailyUsageEntry>() {
-//                        @Override
-//                        public void onDbTaskCompleted(LocalDailyUsageEntry result) {
-//                            Log.d(TAG, "Saved local entry: " + result);
-//                        }
-//                    });
+            localUsageEntry.setGoalHoursMS(sharedPreferences.getLong(limitKey, 0));
+            LocalDailyUsageEntryDataSource.getInstance(context).saveLocalDailyUsageEntry(
+                    localUsageEntry, new BaseDataSource.CompletionHandler<LocalDailyUsageEntry>() {
+                        @Override
+                        public void onDbTaskCompleted(LocalDailyUsageEntry result) {
+                            Log.d(TAG, "Saved local entry: " + result);
+                        }
+                    });
 
 
             ParseUtils.getStatsInfo(context);
@@ -173,8 +172,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long usage = prefs.getLong(context.getString(R.string.key_for_daily_duration), 0);
         long unlocks = prefs.getLong(context.getString(R.string.key_for_daily_unlocks), 0);
-        // TODO: actually set and get the set limit.
-        long limit = prefs.getLong(context.getString(R.string.key_for_daily_limitation), 8800000);
+        long limit = prefs.getLong(context.getString(R.string.key_for_daily_limitation), 0);
         WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage, limit);
     }
 }
