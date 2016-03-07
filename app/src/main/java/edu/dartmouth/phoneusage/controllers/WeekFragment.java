@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -162,6 +163,12 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
      * Set the start and end dates to the next week, and update the UI.
      */
     public void nextWeekClicked() {
+        // Prevent navigation to future
+        if (mWeeksAwayFromCurrent == 0) {
+            Toast.makeText(getActivity(), "Cannot go to future week!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mStartOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mEndOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mWeeksAwayFromCurrent++;
