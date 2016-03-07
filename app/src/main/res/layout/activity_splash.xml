@@ -23,17 +23,29 @@
         android:gravity="center_vertical|center_horizontal" />
     <ProgressBar android:indeterminate="true"
         android:layout_width="50dp" android:layout_height="50dp"
-        android:id="@+id/marker_progress" style="?android:attr/progressBarStyle"
-        android:layout_gravity="center_vertical|center_horizontal"/>
+        android:id="@+id/splashProgress" style="?android:attr/progressBarStyle"
+        android:layout_gravity="center_vertical|center_horizontal" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="loading phone usage information"
-        android:id="@+id/textView3"
+        android:id="@+id/splashMessage"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="1" />
+        android:layout_weight="0"
+        android:padding="5dp"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reload"
+        android:id="@+id/splashRetryButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0"
+        android:padding="5dp"
+        android:onClick="onClickReload" />
 
     <LinearLayout
         android:orientation="horizontal"
