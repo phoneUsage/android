@@ -108,11 +108,11 @@ public class MainActivity extends Activity {
 		}
 		//Bind to the service if it is already running
 		bindToVoiceServiceIfIsRunning();
-		microphoneStarted = false;
+		/*microphoneStarted = false;
 		if (Context_Service.isMicrophoneRunning()) {
 			Log.d("MainAcc", "microphone running");
 			microphoneStarted = true;
-		}
+		}*/
 		//doBindService();
 	}
 
@@ -190,6 +190,7 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 				case Context_Service.MSG_MICROPHONE_STARTED:
 				{
+					microphoneStarted=true;
 					Toast.makeText(getApplicationContext(), "microphone started", Toast.LENGTH_SHORT).show();
 					Log.d("Handler", "microphone started");
 					break;
@@ -272,7 +273,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		stopMicrophone();
+		if(microphoneStarted){
+			stopMicrophone();
+		}
+
 		if(mVoiceThread!=null && mVoiceThread.isAlive()){
 			mVoiceThread.interrupt();
 		}
