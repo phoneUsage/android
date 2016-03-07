@@ -70,7 +70,6 @@ public class TodayCircleView extends View {
         long limitation = mSharedPreferences.getLong(mLimitationKey, 21600000);
         int percentile = mSharedPreferences.getInt(mPercentileKey, 50);
         float percentage = ((float) duration / (float) limitation) * 100;
-        // float percentage = (float) 101;
         long unlocks = mSharedPreferences.getLong(mUnlocksKey, 0);
 
         String day = mDateFormatter.format(Calendar.getInstance().getTimeInMillis());
@@ -124,21 +123,20 @@ public class TodayCircleView extends View {
         canvas.drawText(String.format("%d hr %02d min", hoursLimit, minutesLimit),
                 centerX, mCircularProgress.getBounds().bottom + OFFSET * 4, mPaint);
 
-
         // DRAW SMALL TEXT
 
         mPaint.setTextSize(SMALL_TEXT_SIZE);
+
+        // unlocks text
+        canvas.drawText(String.format("%d", unlocks), centerX, getHeight() - OFFSET * 2, mPaint);
+        canvas.drawText("unlocks", centerX, getHeight() - OFFSET, mPaint);
+
         // limit separator text
         canvas.drawText("of", centerX, mCircularProgress.getBounds().bottom + OFFSET * 2, mPaint);
         // limit detail text
         canvas.drawText(String.format("Limit based on the %d%s percentile of usage on %s.",
                 percentile, percentileSuffix[percentile % 10], day),
                 centerX, mCircularProgress.getBounds().bottom + OFFSET * 6, mPaint);
-
-
-        // unlocks text
-        canvas.drawText(String.format("%d", unlocks), centerX, getHeight() - OFFSET * 2, mPaint);
-        canvas.drawText("unlocks", centerX, getHeight() - OFFSET, mPaint);
     }
 
     static final String[] percentileSuffix = {"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"};

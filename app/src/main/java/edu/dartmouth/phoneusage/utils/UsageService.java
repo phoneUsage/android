@@ -68,6 +68,7 @@ public class UsageService extends Service {
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(mUBC, new IntentFilter(Intent.ACTION_SHUTDOWN));
 
+
         // schedule uploading/resetting of data at midnight
         MidnightScheduler.prepare(this);
     }

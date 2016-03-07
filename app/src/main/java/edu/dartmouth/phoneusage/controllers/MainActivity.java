@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d("SVB-MainActivity", "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -89,9 +90,9 @@ public class MainActivity extends Activity {
 
 		startContextService();
 		setupTabs();
-		//TODO remove this next line
-		ParseUtils.getStatsInfo(this);
 
+		//TODO remove this!
+		ParseUtils.getStatsInfo(this);
 	}
 
 	private void startContextService() {
