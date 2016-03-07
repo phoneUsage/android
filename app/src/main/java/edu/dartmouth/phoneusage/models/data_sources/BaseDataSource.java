@@ -27,7 +27,7 @@ public abstract class BaseDataSource {
 	 * using the abstract result.
 	 */
 	public interface CompletionHandler<T> {
-		void onDbTaskCompleted(T result);
+		void onTaskCompleted(T result);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public abstract class BaseDataSource {
 			super.onPostExecute(result);
 
 			if (this.completionHandler != null) {
-				this.completionHandler.onDbTaskCompleted(result);
+				this.completionHandler.onTaskCompleted(result);
 			}
 		}
 	}
