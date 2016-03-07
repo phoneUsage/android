@@ -3,6 +3,7 @@ package edu.dartmouth.phoneusage.controllers;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -162,6 +165,12 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
      * Set the start and end dates to the next week, and update the UI.
      */
     public void nextWeekClicked() {
+        // Prevent navigation to future
+        if (mWeeksAwayFromCurrent == 0) {
+            Toast.makeText(getActivity(), "Cannot go to future week!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mStartOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mEndOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mWeeksAwayFromCurrent++;
@@ -184,13 +193,23 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        rightAxis.setTextColor(Color.LTGRAY);
+        rightAxis.setTextSize(13f);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        leftAxis.setTextColor(Color.LTGRAY);
+        leftAxis.setTextSize(13f);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(Color.LTGRAY);
+        xAxis.setTextSize(13f);
+
+        Legend legend =  mChart.getLegend();
+        legend.setTextColor(Color.LTGRAY);
+        legend.setTextSize(13f);
     }
 
     private void populateWeeklyUsageChart(List<LocalDailyUsageEntry> usageEntries) {
