@@ -372,13 +372,15 @@ public class MainActivity extends Activity {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
+							if(getFragmentManager().findFragmentByTag("voiceDialog")==null) {
+								new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
+							}
 						}
 					});
 				}
 				voiceVoter.reset();
 				try {
-					sleep(5000);
+					sleep(7000);
 				}
 				catch(InterruptedException e){
 					e.printStackTrace();
