@@ -104,6 +104,6 @@ public class SplashActivity extends Activity {
         loadUsageInformation();
     }
 
-    private static final String LOADING_MESSAGE = "Loading phone usage information.";
+    private static final String LOADING_MESSAGE = "Loading phone usage data from other users.";
     private static final String ERROR_MESSAGE = "Could not load phone usage information.\nConnect to the internet and try again.";
 }
