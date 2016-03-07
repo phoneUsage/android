@@ -66,13 +66,21 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             LocalDailyUsageEntryDataSource.getInstance(context).saveLocalDailyUsageEntry(
                     localUsageEntry, new BaseDataSource.CompletionHandler<LocalDailyUsageEntry>() {
                         @Override
-                        public void onDbTaskCompleted(LocalDailyUsageEntry result) {
+                        public void onTaskCompleted(LocalDailyUsageEntry result) {
                             Log.d(TAG, "Saved local entry: " + result);
                         }
                     });
 
 
-            ParseUtils.getStatsInfo(context);
+            ParseUtils.getStatsInfo(context, new BaseDataSource.CompletionHandler<Boolean>() {
+                @Override
+                public void onTaskCompleted(Boolean result) {
+                    if (result) {
+                        // Succeeded
+                        Log.d(TAG, "getStatsInfo succeeded");
+                    }
+                }
+            });
 
 
 
@@ -102,7 +110,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
                     new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
                         @Override
-                        public void onDbTaskCompleted(UnlockLockEvent result) {
+                        public void onTaskCompleted(UnlockLockEvent result) {
                             Log.d(getClass().getName(), "saved: " + result.toString());
                         }
                     });
@@ -123,7 +131,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
             UnlockLockEventDataSource.getInstance(context).saveUnlockLockEvent(event,
                     new BaseDataSource.CompletionHandler<UnlockLockEvent>() {
                         @Override
-                        public void onDbTaskCompleted(UnlockLockEvent result) {
+                        public void onTaskCompleted(UnlockLockEvent result) {
                             Log.d(getClass().getName(), "saved: " + result.toString());
                         }
                     });
