@@ -114,7 +114,10 @@ public class MainActivity extends Activity {
 
 	private void stopContextService(){
 		if(Context_Service.isRunning()){
-			unbindService(mConnection);
+			if(mIsBound){
+				unbindService(mConnection);
+			}
+
 		}
 	}
 
@@ -162,6 +165,7 @@ public class MainActivity extends Activity {
 			delayedHandler.postDelayed(r, 1000);
 		}
 		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)) {
+			startMicrophone();
 			mVoiceThread = new VoiceThread();
 			mVoiceThread.start();
 		}
@@ -264,7 +268,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(mVoiceThread.isAlive()){
+		if(mVoiceThread!=null && mVoiceThread.isAlive()){
 			mVoiceThread.interrupt();
 		}
 	}

@@ -160,7 +160,7 @@ public class Context_Service extends Service implements MicrophoneListener{
 	private void sendMessageToUI(int message) {
 		for (int i=mClients.size()-1; i>=0; i--) {
 			try {
-				Log.d(TAG,"sendingMessage" + message);
+				Log.d(TAG, "sendingMessage" + message);
 				// Send message value
 				mClients.get(i).send(Message.obtain(null, message));
 			} catch (RemoteException e) {
@@ -199,10 +199,6 @@ public class Context_Service extends Service implements MicrophoneListener{
 		return mMessenger.getBinder();
 	}
 
-
-	
-	
-
 	//Start service automatically if we reboot the phone
 	public static class Context_BGReceiver extends BroadcastReceiver {
 		@Override
@@ -211,40 +207,6 @@ public class Context_Service extends Service implements MicrophoneListener{
 			context.startService(bootUp);
 		}		
 	}
-
-	@SuppressWarnings("deprecation")
-	private void showNotification() {
-		//Cancel previous notification
-		if(nm!=null)
-			nm.cancel(NOTIFICATION_ID);
-		else
-			nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-
-		// The PendingIntent to launch our activity if the user selects this notification
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-
-		// Use the commented block of code if your target environment is Android-16 or higher 
-		/*Notification notification = new Notification.Builder(this)
-		.setContentTitle("Context Service")
-		.setContentText("Running").setSmallIcon(R.drawable.icon)
-		.setContentIntent(contentIntent)
-		.build();
-		
-		nm.notify(NOTIFICATION_ID, notification); */
-		
-		//For lower versions of Android, the following code should work
-		Notification notification = new Notification();
-		//notification.icon = R.drawable.icon;
-		notification.tickerText = getString(R.string.app_name);
-		notification.contentIntent = contentIntent;
-        notification.when = System.currentTimeMillis();
-        notification.setLatestEventInfo(getApplicationContext(), getString(R.string.app_name), "Microphone running?", contentIntent);
-        
-        // Send the notification.
-        nm.notify(NOTIFICATION_ID, notification);
-	}
-
-
 
 
 	/* getInstance() and isRunning() are required by the */
@@ -265,7 +227,6 @@ public class Context_Service extends Service implements MicrophoneListener{
 	public void onCreate() {
 		Log.d(TAG, "onCreateCalled");
 		super.onCreate();
-		showNotification();
 		isRunning = true;
 		sInstance = this;
 	}
@@ -273,11 +234,7 @@ public class Context_Service extends Service implements MicrophoneListener{
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		nm.cancel(NOTIFICATION_ID); // Cancel the persistent notification.
         isRunning = false;
-		//Don't let Context_Service die!
-		Intent mobilityIntent = new Intent(this,Context_Service.class);
-		startService(mobilityIntent);
 	}
 	
 	
@@ -288,4 +245,9 @@ public class Context_Service extends Service implements MicrophoneListener{
         return START_STICKY; // run until explicitly stopped.
     }
 
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		super.onTaskRemoved(rootIntent);
+		stopSelf();
+	}
 }
