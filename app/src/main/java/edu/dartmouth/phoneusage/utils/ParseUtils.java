@@ -78,27 +78,6 @@ public class ParseUtils {
         return(Float.parseFloat(z+""));
     }
 
-    /**
-     * Populate usage entries on parse from Mar 2 - 6
-     */
-    public static void populateBackend() {
-        for (int i = 2; i <= 6; i++) {
-            Calendar cal = CalendarUtil.calendarForDateNoon(Calendar.MARCH, i, 2016);
-            Date current = cal.getTime();
-            for (int j = 0; j < 5; j++) {
-                ParseObject entry = new ParseObject("PFDailyUsageEntry");
-                int usage = Math.round(getRandom(28800000, 12500000));
-                int unlocks = Math.round(getRandom(100, 20));
-                entry.put("date", current);
-                entry.put("totalUsage",  usage);
-                entry.put("totalUnlocks", unlocks);
-                entry.saveInBackground();
-                Log.d("SVB-ParseUtils", String.format("Wrote to parse. Date: %s, usage: %d, unlocks %d.",
-                        current.toString(), usage, unlocks));
-            }
-        }
-    }
-
     private static float getRandom(float range, float startsfrom) {
         return (float) (Math.random() * range) + startsfrom;
     }
