@@ -38,6 +38,7 @@
 
         <service android:name=".utils.UsageService" />
         <receiver android:name=".utils.UsageBroadcastReceiver"/>
+        <receiver android:name=".controllers.TodayFragment$UnlockReceiver"/>
         <service android:name=".utils.Context_Service"/>
     </application>
 
