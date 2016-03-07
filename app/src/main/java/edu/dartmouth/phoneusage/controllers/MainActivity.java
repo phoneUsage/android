@@ -81,33 +81,42 @@ public class MainActivity extends Activity {
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-    	// launch background service that maintains lock/unlock broadcast rx
-    	Intent usageIntent = new Intent(this, UsageService.class);
-    	startService(usageIntent);
 
-		// TODO replace with check for settings
-		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)){
-			//Start Background Service if not already started
-			if (!Context_Service.isRunning()) {
-				Intent cssBg = new Intent(this, Context_Service.class);
-				startService(cssBg);
-				Log.d("MainAccc","started service");
-			}
-			//Bind to the service if it is already running
-			bindToVoiceServiceIfIsRunning();
-			microphoneStarted = false;
-			if (Context_Service.isMicrophoneRunning()) {
-				Log.d("MainAcc", "microphone running");
-				microphoneStarted = true;
-			}
-			doBindService();
-		}
+		// launch background service that maintains lock/unlock broadcast rx
+		Intent usageIntent = new Intent(this, UsageService.class);
+		startService(usageIntent);
+
+
+
+		startContextService();
 		setupTabs();
 
 		//TODO remove this!
 		ParseUtils.getStatsInfo(this);
 	}
 
+	private void startContextService() {
+		//Start Background Service if not already started
+		if (!Context_Service.isRunning()) {
+			Intent cssBg = new Intent(this, Context_Service.class);
+			startService(cssBg);
+			Log.d("MainAccc","started service");
+		}
+		//Bind to the service if it is already running
+		bindToVoiceServiceIfIsRunning();
+		microphoneStarted = false;
+		if (Context_Service.isMicrophoneRunning()) {
+			Log.d("MainAcc", "microphone running");
+			microphoneStarted = true;
+		}
+		//doBindService();
+	}
+
+	private void stopContextService(){
+		if(Context_Service.isRunning()){
+			unbindService(mConnection);
+		}
+	}
 
 	/*helper functions*/
 
@@ -150,40 +159,12 @@ public class MainActivity extends Activity {
                     ((UpdatableFragment) fragment).updateUI();
                 }
             };
-
 			delayedHandler.postDelayed(r, 1000);
 		}
-		mVoiceThread = new Thread(){
-			@Override
-			public void run() {
-				while(!isInterrupted()) {
-					if (voiceVoter.pollVoter() == 1) {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
-								//Toast.makeText(getApplicationContext(), "speaking", Toast.LENGTH_SHORT).show();
-							}
-						});
-					} else {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								//Toast.makeText(getApplicationContext(), "noise", Toast.LENGTH_SHORT).show();
-							}
-						});
-					}
-					voiceVoter.reset();
-					try {
-						sleep(5000);
-					}
-					catch(InterruptedException e){
-						e.printStackTrace();
-					}
-				}
-			}
-		};
-		mVoiceThread.start();
+		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)) {
+			mVoiceThread = new VoiceThread();
+			mVoiceThread.start();
+		}
 	}
 
 	/**
@@ -204,7 +185,7 @@ public class MainActivity extends Activity {
 				case Context_Service.MSG_MICROPHONE_STOPPED:
 				{
 					Toast.makeText(getApplicationContext(), "microphone stopped", Toast.LENGTH_SHORT).show();
-					Log.d("Handler", "microphone started");
+					Log.d("Handler", "microphone stopped");
 					break;
 				}
 				case Context_Service.MSG_SPEECH_STATUS:
@@ -238,7 +219,10 @@ public class MainActivity extends Activity {
 			mVoiceService = new Messenger(service);
 			Log.d("Tagg", "Attached to the Service");
 			mIsBound = true;
-			startMicrophone();
+			if(!Context_Service.isMicrophoneRunning()){
+				startMicrophone();
+			}
+
 			try {
 				Message msg = Message.obtain(null, Context_Service.MSG_REGISTER_CLIENT);
 				msg.replyTo = mMessenger;
@@ -259,10 +243,21 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		stopContextService();
+		stopMicrophone();
 		try {
 			doUnbindService();
 		} catch (Throwable t) {
 			Log.e("MainActivity", "Failed to unbind from the service", t);
+		}
+		if (mVoiceService != null) {
+			try {
+				Message msg = Message.obtain(null, Context_Service.MSG_UNREGISTER_CLIENT);
+				msg.replyTo = mMessenger;
+				mVoiceService.send(msg);
+			} catch (RemoteException e) {
+				// There is nothing special we need to do if the service has crashed.
+			}
 		}
 	}
 
@@ -318,16 +313,6 @@ public class MainActivity extends Activity {
 	 */
 	void doUnbindService() {
 		if (mIsBound) {
-			// If we have received the service, and hence registered with it, then now is the time to unregister.
-			if (mVoiceService != null) {
-				try {
-					Message msg = Message.obtain(null, Context_Service.MSG_UNREGISTER_CLIENT);
-					msg.replyTo = mMessenger;
-					mVoiceService.send(msg);
-				} catch (RemoteException e) {
-					// There is nothing special we need to do if the service has crashed.
-				}
-			}
 			// Detach our existing connection.
 			unbindService(mConnection);
 			Log.d("tagg", "Unbinding from Service");
@@ -350,14 +335,49 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Sends Accelerometer Stop Request
+	 * Sends Microphone Stop Request
 	 */
 	private void stopMicrophone() {
-		if(!mIsBound) {
-			doBindService();
-		}
 		if(mIsBound) {
 			sendMessageToService(Context_Service.MSG_STOP_MICROPHONE);
 		}
 	}
+	public void restartVoiceThread(){
+		startMicrophone();
+		mVoiceThread = new VoiceThread();
+		mVoiceThread.start();
+	}
+
+	public void stopVoiceThread(){
+		mVoiceThread.interrupt();
+		stopMicrophone();
+	}
+
+	public class VoiceThread extends Thread {
+
+		@Override
+		public void run() {
+			voiceVoter.reset();
+			Log.d("VoiceThread", "started");
+			while(!isInterrupted()) {
+				if (voiceVoter.pollVoter() == 1) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
+						}
+					});
+				}
+				voiceVoter.reset();
+				try {
+					sleep(5000);
+				}
+				catch(InterruptedException e){
+					e.printStackTrace();
+					interrupt();
+				}
+			}
+		}
+	}
+
 }
