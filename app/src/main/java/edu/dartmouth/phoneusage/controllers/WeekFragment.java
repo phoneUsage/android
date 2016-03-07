@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -58,8 +59,6 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private Calendar mStartOfWeek;
     private Calendar mEndOfWeek;
     private TextView mWeekDateText;
-    private ImageButton mPrevWeekBtn;
-    private ImageButton mNextWeekBtn;
     private int mWeeksAwayFromCurrent;
 
     /**
@@ -98,17 +97,21 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         // Init UI elements
         mWeekDateText = (TextView) view.findViewById(R.id.week_date_text);
-        mPrevWeekBtn = (ImageButton) view.findViewById(R.id.prev_week_button);
-        mNextWeekBtn = (ImageButton) view.findViewById(R.id.next_week_button);
+        ImageView mPrevWeekViewBtn = (ImageView) view.findViewById(R.id.prev_week_view_btn);
+        ImageView mNextWeekViewBtn = (ImageView) view.findViewById(R.id.next_week_view_btn);
 
         // Add button onClick handlers
-        mPrevWeekBtn.setOnClickListener(new View.OnClickListener() {
+        mPrevWeekViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { prevWeekClicked(v); }
+            public void onClick(View v) {
+                prevWeekClicked(v);
+            }
         });
-        mNextWeekBtn.setOnClickListener(new View.OnClickListener() {
+        mNextWeekViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { nextWeekClicked(v); }
+            public void onClick(View v) {
+                nextWeekClicked(v);
+            }
         });
 
         initWeeklyUsageChart(view);
