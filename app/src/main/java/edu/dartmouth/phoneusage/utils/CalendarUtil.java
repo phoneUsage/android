@@ -44,6 +44,23 @@ public class CalendarUtil {
 	}
 
 	/**
+	 * Return a Calendar instance set to the end of day (23:59:59:999) of the given month, day, year.
+	 *
+	 * IMPORTANT: For the month parameter use something like Calendar.MARCH (not the int 3)!!
+	 */
+	public static Calendar calendarForDateNoon(int month, int day, int year) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 12);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.DAY_OF_MONTH, day);
+		calendar.set(Calendar.YEAR, year);
+		return calendar;
+	}
+
+	/**
 	 * Return a Calendar instance set to the start of day (00:00:00:000) of last Sunday, which may
 	 * be today.
 	 */
