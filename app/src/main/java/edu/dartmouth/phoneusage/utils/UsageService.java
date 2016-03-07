@@ -82,7 +82,7 @@ public class UsageService extends Service {
         final Notification noti = new Notification(R.mipmap.ic_launcher, tickerText, when);
         Context context = this.getApplicationContext();
         Intent notiIntent = new Intent(context, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, 0);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         noti.flags |= Notification.FLAG_ONGOING_EVENT;
         final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
         contentView.setImageViewResource(R.id.status_icon, R.mipmap.ic_launcher);
