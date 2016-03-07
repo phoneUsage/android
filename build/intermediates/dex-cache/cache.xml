@@ -2,95 +2,11 @@
 <items version="2" >
 
     <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-f3d8bf7d643b69130d064485b178f3ee14f6b86c.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-48fbb2fce7e38db67d1e04cbf5abc8f81cf35c31.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/bolts-tasks-1.4.0-5f9c5e303a67f2f75416031910f26eb0c0e15311.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/.gradle/caches/modules-2/files-2.1/com.github.PhilJay/MPAndroidChart/v2.2.2/52bb5e2c528180a3d670d5f9daeb2018f1a7c899/MPAndroidChart-v2.2.2.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="52bb5e2c528180a3d670d5f9daeb2018f1a7c899">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/MPAndroidChart-v2.2.2-7f4985133d60c8901275b5e39ed67eb35b08b74c.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-d10950dcee2498d5a0b79f964fe92a3afe732337.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-89e97360071fe308cb1d4a7326abe8d1c6c6668d.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-d36e34c9f66b065041521e84fbfc6b3b301e4800.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-799aa57964b140e3af90eecee5bebe92b7647483.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-math3/3.2/ec2544ab27e110d2d431bdad7d538ed509b21e62/commons-math3-3.2.jar"
+        jar="/Users/hunterestrada/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-math3/3.2/ec2544ab27e110d2d431bdad7d538ed509b21e62/commons-math3-3.2.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="ec2544ab27e110d2d431bdad7d538ed509b21e62">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/commons-math3-3.2-4471dfcd42847f2d258641fe25c6dd80f275b36c.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-f88bdd980cdd16dc2be266bb6fbc1d642f4dadd3.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="9aa93835393824b436f366120c9ba8a0260ce75d">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/classes-9190e0b1e9d9ba9c63d474cf46fe4fc45ed0aea0.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.13.0/58a7d54b6a4f28be11f0cecec93097eddf473e6f/parse-android-1.13.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="58a7d54b6a4f28be11f0cecec93097eddf473e6f">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/parse-android-1.13.0-7d84a22eb5535bd30d16f25daa59e716c5691543.jar" />
-    </item>
-    <item
-        jar="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/exploded-aar/com.android.support/support-v13/22.2.0/jars/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="79a5b6d9fbab3b5fb4c6f86a1ed7a17722fd937b">
-        <dex dex="/Users/SujayBusam/Dropbox/Programming/CS_65/android/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-0f12cf8f7ccd224d3368df53778cc6312a8a08ab.jar" />
+        <dex dex="/Users/hunterestrada/Developer/android/app/build/intermediates/pre-dexed/debug/commons-math3-3.2-d1595500671fbacb40714bdb55a56a322a1c0cdd.jar" />
     </item>
 
 </items>

@@ -17,6 +17,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.Calendar;
 
 import edu.dartmouth.phoneusage.R;
+import edu.dartmouth.phoneusage.controllers.TodayFragment;
 import edu.dartmouth.phoneusage.models.classes.LocalDailyUsageEntry;
 import edu.dartmouth.phoneusage.models.classes.UnlockLockEvent;
 import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
@@ -79,10 +80,13 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
         } else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
             // start duration and increment unlocks when screen unlock
             long totalUnlocks = sharedPreferences.getLong(unlocksKey, 0);
-            sharedPreferences.edit().putLong(unlocksKey, ++totalUnlocks).apply();
+            sharedPreferences.edit().putLong(unlocksKey, ++totalUnlocks).commit();
             Log.d(getClass().getName(), "unlocked: " + String.valueOf(totalUnlocks));
 
             unlockDateTime = Calendar.getInstance().getTimeInMillis();
+
+            sendBroadcastToUpdateUI(context);
+
 
         // SCREEN OFF
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF) && unlockDateTime > 0) {
@@ -174,5 +178,11 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
         long unlocks = prefs.getLong(context.getString(R.string.key_for_daily_unlocks), 0);
         long limit = prefs.getLong(context.getString(R.string.key_for_daily_limitation), 0);
         WatchUtil.createDataMap(mGoogleApiClient, unlocks, usage, limit);
+    }
+
+    private void sendBroadcastToUpdateUI(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(TodayFragment.ACTION_UPDATE_UI);
+        context.sendBroadcast(intent);
     }
 }
