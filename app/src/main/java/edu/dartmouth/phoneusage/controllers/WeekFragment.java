@@ -283,9 +283,9 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         BarDataSet set = new BarDataSet(entries, "Your Goal Usage Hours");
         // set.setColor(Color.rgb(60, 220, 78));
-        set.setColor(getResources().getColor(android.R.color.holo_green_light));
+        set.setColor(getResources().getColor(android.R.color.holo_green_dark));
         //set.setValueTextColor(Color.rgb(60, 220, 78));
-        set.setValueTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        set.setValueTextColor(getResources().getColor(android.R.color.holo_green_light));
         set.setValueTextSize(14f);
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
 
