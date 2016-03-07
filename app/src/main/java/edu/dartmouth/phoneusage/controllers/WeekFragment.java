@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -104,13 +103,13 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         mPrevWeekViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prevWeekClicked(v);
+                prevWeekClicked();
             }
         });
         mNextWeekViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextWeekClicked(v);
+                nextWeekClicked();
             }
         });
 
@@ -152,7 +151,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     /**
      * Set the start and end dates to the previous week, and update the UI.
      */
-    public void prevWeekClicked(View view) {
+    public void prevWeekClicked() {
         mStartOfWeek.add(Calendar.DAY_OF_WEEK, -7);
         mEndOfWeek.add(Calendar.DAY_OF_WEEK, -7);
         mWeeksAwayFromCurrent--;
@@ -162,7 +161,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     /**
      * Set the start and end dates to the next week, and update the UI.
      */
-    public void nextWeekClicked(View view) {
+    public void nextWeekClicked() {
         mStartOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mEndOfWeek.add(Calendar.DAY_OF_WEEK, 7);
         mWeeksAwayFromCurrent++;
