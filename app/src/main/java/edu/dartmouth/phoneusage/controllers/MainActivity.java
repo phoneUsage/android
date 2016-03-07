@@ -32,6 +32,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import edu.dartmouth.phoneusage.models.classes.VoiceVoter;
+import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
 import edu.dartmouth.phoneusage.utils.Context_Service;
 import edu.dartmouth.phoneusage.utils.ParseUtils;
 import edu.dartmouth.phoneusage.utils.UsageService;
@@ -92,7 +93,12 @@ public class MainActivity extends Activity {
 		setupTabs();
 
 		//TODO remove this!
-		ParseUtils.getStatsInfo(this);
+		ParseUtils.getStatsInfo(this, new BaseDataSource.CompletionHandler<Boolean>() {
+			@Override
+			public void onTaskCompleted(Boolean result) {
+				Log.d("SVB-MainActivity", "getStatsInfo succeeded? " + result.toString());
+			}
+		});
 	}
 
 	private void startContextService() {

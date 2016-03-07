@@ -16,12 +16,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.dartmouth.phoneusage.models.data_sources.BaseDataSource;
+
 /**
  * Created by benribovich on 3/4/16.
  */
 public class ParseUtils {
 
-    public static void getStatsInfo(Context prefsContext){
+    public static void getStatsInfo(Context prefsContext,
+                                    final BaseDataSource.CompletionHandler<Boolean> completionHandler){
         HashMap<String, Object> params = new HashMap<String, Object>();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(prefsContext);
         ParseCloud.callFunctionInBackground("getStatistics", params, new FunctionCallback<Map<String,String>>() {
@@ -38,6 +41,9 @@ public class ParseUtils {
                     Log.d("ParseResults Average", prefs.getFloat("AVERAGE", 0) + "");
                     Log.d("ParseResults SD", prefs.getFloat("STDDEV", 0) + "");
                     Log.d("ParseResults Limit", prefs.getLong("LIMIT", 0) + "");
+                    completionHandler.onTaskCompleted(true /*suceeded*/);
+                } else {
+                    completionHandler.onTaskCompleted(false /*failed*/);
                 }
             }
         });

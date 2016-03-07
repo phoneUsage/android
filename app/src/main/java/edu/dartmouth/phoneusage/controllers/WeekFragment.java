@@ -80,7 +80,7 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
                 .fetchLocalDailyUsageEntriesBetweenDateTimes(sundayStartMS, endDateTimeMS,
                         new BaseDataSource.CompletionHandler<List<LocalDailyUsageEntry>>() {
                             @Override
-                            public void onDbTaskCompleted(List<LocalDailyUsageEntry> result) {
+                            public void onTaskCompleted(List<LocalDailyUsageEntry> result) {
                                 updateTodayUsageIfNecessary(result);
                                 populateWeeklyUsageChart(result);
                             }
