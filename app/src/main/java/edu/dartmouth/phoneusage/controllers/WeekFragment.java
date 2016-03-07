@@ -226,8 +226,12 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
                 // No entry for this day yet, so add it
                 mUsageDataMap.put(abbreviatedDay, usageEntry);
             } else {
-                // Entry already exist for this day. This should not happen!
-                Log.e(TAG, "Trying to add a second LocalDailyUsage entry for the same day: " + abbreviatedDay);
+                // Entry already exist for this day. Update with newest one.
+                Log.d(TAG, "Trying to add a second LocalDailyUsage entry for the same day: " + abbreviatedDay);
+                if (mUsageDataMap.get(abbreviatedDay).getDateTimeMS() < usageEntry.getDateTimeMS()) {
+                    mUsageDataMap.remove(abbreviatedDay);
+                    mUsageDataMap.put(abbreviatedDay, usageEntry);
+                }
             }
         }
 

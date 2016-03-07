@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,7 +36,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
     private GoogleApiClient mGoogleApiClient; // For watch
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String durationKey = context.getString(R.string.key_for_daily_duration);
@@ -78,6 +79,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
                     if (result) {
                         // Succeeded
                         Log.d(TAG, "getStatsInfo succeeded");
+                        Toast.makeText(context, "Updated data from backend!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
