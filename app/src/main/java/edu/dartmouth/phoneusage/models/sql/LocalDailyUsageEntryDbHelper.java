@@ -74,10 +74,8 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// Execute SQL command on this new database to create our LocalDailyUsageEntry table,
-		// and add some test data.
+		// Execute SQL command on this new database to create our LocalDailyUsageEntry table.
 		db.execSQL(DATABASE_CREATE_SQL);
-		populateTestData(db);
 	}
 
 	@Override
@@ -85,7 +83,7 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 		// Nothing yet
 	}
 
-	// **************************** Private helper functions *************************************//
+	// ******************** Population of Dummy Data Not Used Anymore! ***************************//
 
 	private void populateTestData(SQLiteDatabase db) {
 		// Create a couple entries for the week of Feb 21st
