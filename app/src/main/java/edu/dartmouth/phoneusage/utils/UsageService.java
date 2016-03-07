@@ -19,6 +19,7 @@ import android.widget.RemoteViews;
 
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.controllers.MainActivity;
+import edu.dartmouth.phoneusage.controllers.SplashActivity;
 
 /**
  * Created by hunterestrada on 3/2/16.
@@ -81,7 +82,7 @@ public class UsageService extends Service {
         long when = System.currentTimeMillis();
         final Notification noti = new Notification(R.mipmap.ic_launcher, tickerText, when);
         Context context = this.getApplicationContext();
-        Intent notiIntent = new Intent(context, MainActivity.class);
+        Intent notiIntent = new Intent(context, SplashActivity.class);
         PendingIntent pi = PendingIntent.getActivity(context, 0, notiIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         noti.flags |= Notification.FLAG_ONGOING_EVENT;
         final RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification);
