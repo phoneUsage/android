@@ -18,7 +18,7 @@
             android:id="@+id/prev_week_view_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/back_arrow_50"
+            android:src="@drawable/prev_arrow_gray"
             android:layout_weight="1"
             android:layout_gravity="center"/>
 
@@ -37,7 +37,7 @@
             android:id="@+id/next_week_view_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/forward_arrow_50"
+            android:src="@drawable/next_arrow_gray"
             android:layout_weight="1"
             android:layout_gravity="center"/>
 
