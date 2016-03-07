@@ -20,7 +20,7 @@ import edu.dartmouth.phoneusage.utils.ParseUtils;
 
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
     private SeekBar mSeekBar;
-    private int mProgress;
+    private int mProgress =50; //default progress value
 
     public SeekBarPreference(Context context) {
         super(context);
@@ -70,7 +70,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        setValue(restoreValue ? getPersistedInt(mProgress) : (Integer) defaultValue);;
+        setValue(restoreValue ? getPersistedInt(mProgress) : (Integer) 50);
+
     }
 
     public void setValue(int value) {
