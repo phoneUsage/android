@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -193,15 +194,22 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
         rightAxis.setTextColor(Color.LTGRAY);
+        rightAxis.setTextSize(13f);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
         leftAxis.setTextColor(Color.LTGRAY);
+        leftAxis.setTextSize(13f);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.LTGRAY);
+        xAxis.setTextSize(13f);
+
+        Legend legend =  mChart.getLegend();
+        legend.setTextColor(Color.LTGRAY);
+        legend.setTextSize(13f);
     }
 
     private void populateWeeklyUsageChart(List<LocalDailyUsageEntry> usageEntries) {
