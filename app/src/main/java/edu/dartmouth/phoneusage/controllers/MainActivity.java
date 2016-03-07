@@ -231,9 +231,6 @@ public class MainActivity extends Activity {
 			mVoiceService = new Messenger(service);
 			Log.d("Tagg", "Attached to the Service");
 			mIsBound = true;
-			/*if(!Context_Service.isMicrophoneRunning()){
-				startMicrophone();
-			}*/
 
 			try {
 				Message msg = Message.obtain(null, Context_Service.MSG_REGISTER_CLIENT);
@@ -256,7 +253,6 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		stopContextService();
-		stopMicrophone();
 		try {
 			doUnbindService();
 		} catch (Throwable t) {
@@ -276,6 +272,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		stopMicrophone();
 		if(mVoiceThread!=null && mVoiceThread.isAlive()){
 			mVoiceThread.interrupt();
 		}
