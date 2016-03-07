@@ -45,10 +45,13 @@ public class ParseUtils {
 
     public static void addInfoToParse(long duration, long unlocks){
         ParseObject entry = new ParseObject("PFDailyUsageEntry");
-        entry.put("date", new Date());
+        Date now = new Date();
+        entry.put("date", now);
         entry.put("totalUsage", duration);
         entry.put("totalUnlocks", unlocks);
         entry.saveInBackground();
+        Log.d("SVB-ParseUtils", String.format("addInfoToParse. Duration: %d, Unlocks: %d, Date: %s",
+                duration, unlocks, now.toString()));
     }
 
     public static void recalculatePercentile(Context prefsContext,Integer percentile){
