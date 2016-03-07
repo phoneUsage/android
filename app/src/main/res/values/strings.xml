@@ -24,4 +24,5 @@
     <string name="week_usage_chart_title">Phone Usage (Hours)</string>
     <string name="key_for_daily_unlocks">key_for_daily_unlocks</string>
     <string name="key_for_percentile">PERCENTILE</string>
+    <string name="key_for_first_launch">key_for_first_launch</string>
 </resources>
