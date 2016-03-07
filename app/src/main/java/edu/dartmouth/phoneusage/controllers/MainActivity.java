@@ -89,14 +89,6 @@ public class MainActivity extends Activity {
 
 		startContextService();
 		setupTabs();
-
-		//TODO remove this!
-//		ParseUtils.getStatsInfo(this, new BaseDataSource.CompletionHandler<Boolean>() {
-//			@Override
-//			public void onTaskCompleted(Boolean result) {
-//				Log.d("SVB-MainActivity", "getStatsInfo succeeded? " + result.toString());
-//			}
-//		});
 	}
 
 	private void startContextService() {
