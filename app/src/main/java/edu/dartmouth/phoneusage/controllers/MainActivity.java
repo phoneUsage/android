@@ -108,11 +108,11 @@ public class MainActivity extends Activity {
 		}
 		//Bind to the service if it is already running
 		bindToVoiceServiceIfIsRunning();
-		microphoneStarted = false;
+		/*microphoneStarted = false;
 		if (Context_Service.isMicrophoneRunning()) {
 			Log.d("MainAcc", "microphone running");
 			microphoneStarted = true;
-		}
+		}*/
 		//doBindService();
 	}
 
@@ -190,6 +190,7 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 				case Context_Service.MSG_MICROPHONE_STARTED:
 				{
+					microphoneStarted=true;
 					Toast.makeText(getApplicationContext(), "microphone started", Toast.LENGTH_SHORT).show();
 					Log.d("Handler", "microphone started");
 					break;
@@ -197,6 +198,7 @@ public class MainActivity extends Activity {
 				case Context_Service.MSG_MICROPHONE_STOPPED:
 				{
 					Toast.makeText(getApplicationContext(), "microphone stopped", Toast.LENGTH_SHORT).show();
+					microphoneStarted = false;
 					Log.d("Handler", "microphone stopped");
 					break;
 				}
@@ -231,9 +233,9 @@ public class MainActivity extends Activity {
 			mVoiceService = new Messenger(service);
 			Log.d("Tagg", "Attached to the Service");
 			mIsBound = true;
-			/*if(!Context_Service.isMicrophoneRunning()){
+			if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)){
 				startMicrophone();
-			}*/
+			}
 
 			try {
 				Message msg = Message.obtain(null, Context_Service.MSG_REGISTER_CLIENT);
@@ -254,9 +256,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
 		stopContextService();
-		stopMicrophone();
 		try {
 			doUnbindService();
 		} catch (Throwable t) {
@@ -271,11 +271,16 @@ public class MainActivity extends Activity {
 				// There is nothing special we need to do if the service has crashed.
 			}
 		}
+		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if(microphoneStarted){
+			stopMicrophone();
+		}
+
 		if(mVoiceThread!=null && mVoiceThread.isAlive()){
 			mVoiceThread.interrupt();
 		}
@@ -340,6 +345,9 @@ public class MainActivity extends Activity {
 			Log.d("MainAcc", "StartMic isBound");
 			sendMessageToService(Context_Service.MSG_START_MICROPHONE);
 		}
+		else{
+			doBindService();
+		}
 	}
 
 	/**
@@ -372,13 +380,15 @@ public class MainActivity extends Activity {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
+							if(getFragmentManager().findFragmentByTag("voiceDialog")==null) {
+								new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
+							}
 						}
 					});
 				}
 				voiceVoter.reset();
 				try {
-					sleep(5000);
+					sleep(7000);
 				}
 				catch(InterruptedException e){
 					e.printStackTrace();

@@ -50,6 +50,8 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     private static String TAG = "SVB-WeekFragment";
     private static SimpleDateFormat abbreviatedDayFormatter = new SimpleDateFormat("EEE", Locale.US);
 
+    private Toast mToast;
+
     // Chart specific
     private CombinedChart mChart;
     private Map<String, LocalDailyUsageEntry> mUsageDataMap;
@@ -167,7 +169,9 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
     public void nextWeekClicked() {
         // Prevent navigation to future
         if (mWeeksAwayFromCurrent == 0) {
-            Toast.makeText(getActivity(), "Cannot go to future week!", Toast.LENGTH_SHORT).show();
+            if (mToast != null) { mToast.cancel(); }
+            mToast = Toast.makeText(getActivity(), "Cannot go to future week!", Toast.LENGTH_SHORT);
+            mToast.show();
             return;
         }
 
@@ -279,9 +283,9 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
 
         BarDataSet set = new BarDataSet(entries, "Your Goal Usage Hours");
         // set.setColor(Color.rgb(60, 220, 78));
-        set.setColor(getResources().getColor(android.R.color.holo_green_light));
+        set.setColor(getResources().getColor(android.R.color.holo_green_dark));
         //set.setValueTextColor(Color.rgb(60, 220, 78));
-        set.setValueTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        set.setValueTextColor(getResources().getColor(android.R.color.holo_green_light));
         set.setValueTextSize(14f);
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
 

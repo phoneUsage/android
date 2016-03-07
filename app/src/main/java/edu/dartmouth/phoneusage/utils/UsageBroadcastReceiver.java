@@ -152,6 +152,7 @@ public class UsageBroadcastReceiver extends BroadcastReceiver {
     private void refreshPreferences(SharedPreferences preferences, String durationKey, String unlocksKey) {
         preferences.edit().putLong(durationKey, 0).apply();
         preferences.edit().putLong(unlocksKey, 0).apply();
+        Log.d(TAG, "refreshPreferences");
     }
 
     private void setupWatchDataAPI(final Context context) {

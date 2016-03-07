@@ -76,6 +76,7 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// Execute SQL command on this new database to create our LocalDailyUsageEntry table.
 		db.execSQL(DATABASE_CREATE_SQL);
+		populateTestData(db);
 	}
 
 	@Override
@@ -86,23 +87,6 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 	// ******************** Population of Dummy Data Not Used Anymore! ***************************//
 
 	private void populateTestData(SQLiteDatabase db) {
-		// Create a couple entries for the week of Feb 21st
-
-		Calendar sunday21 = CalendarUtil.calendarForDateStart(Calendar.FEBRUARY, 21, 2016);
-		LocalDailyUsageEntry sunday21Entry = new LocalDailyUsageEntry();
-		sunday21Entry.setDateTimeMS(sunday21.getTimeInMillis());
-		sunday21Entry.setTotalUnlocks(100);
-		sunday21Entry.setTotalUsageInHours(2.21f);
-		sunday21Entry.setGoalHoursInHours(1.88f);
-
-		Calendar saturday27 = CalendarUtil.calendarForDateStart(Calendar.FEBRUARY, 27, 2016);
-		LocalDailyUsageEntry saturday27Entry = new LocalDailyUsageEntry();
-		saturday27Entry.setDateTimeMS(saturday27.getTimeInMillis());
-		saturday27Entry.setTotalUnlocks(144);
-		saturday27Entry.setTotalUsageInHours(5.50f);
-		saturday27Entry.setGoalHoursInHours(2.35f);
-
-
 		// Create entries for Sun - Thurs of the week of Feb 28th
 
 		Calendar sunday28 = CalendarUtil.calendarForDateEnd(Calendar.FEBRUARY, 28, 2016);
@@ -140,13 +124,37 @@ public class LocalDailyUsageEntryDbHelper extends SQLiteOpenHelper {
 		thursday3Entry.setTotalUsageInHours(8.00f);
 		thursday3Entry.setGoalHoursInHours(6.77f);
 
-		insert(db, sunday21Entry);
-		insert(db, saturday27Entry);
+		Calendar friday4 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 4, 2016);
+		LocalDailyUsageEntry friday4Entry = new LocalDailyUsageEntry();
+		friday4Entry.setDateTimeMS(friday4.getTimeInMillis());
+		friday4Entry.setTotalUnlocks(124);
+		friday4Entry.setTotalUsageInHours(5.22f);
+		friday4Entry.setGoalHoursInHours(6.00f);
+
+		Calendar saturday5 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 5, 2016);
+		LocalDailyUsageEntry saturday5Entry = new LocalDailyUsageEntry();
+		saturday5Entry.setDateTimeMS(saturday5.getTimeInMillis());
+		saturday5Entry.setTotalUnlocks(97);
+		saturday5Entry.setTotalUsageInHours(6.22f);
+		saturday5Entry.setGoalHoursInHours(3.72f);
+
+		// Entry for Mar 6th
+		Calendar sunday6 = CalendarUtil.calendarForDateEnd(Calendar.MARCH, 6, 2016);
+		LocalDailyUsageEntry sunday6Entry = new LocalDailyUsageEntry();
+		sunday6Entry.setDateTimeMS(sunday6.getTimeInMillis());
+		sunday6Entry.setTotalUnlocks(54);
+		sunday6Entry.setTotalUsageInHours(1.19f);
+		sunday6Entry.setGoalHoursInHours(5.10f);
+
+
 		insert(db, sunday28Entry);
 		insert(db, monday29Entry);
 		insert(db, tuesday1Entry);
 		insert(db, wednesday2Entry);
 		insert(db, thursday3Entry);
+		insert(db, friday4Entry);
+		insert(db, saturday5Entry);
+		insert(db, sunday6Entry);
 	}
 
 	private void insert(SQLiteDatabase db, LocalDailyUsageEntry entry) {
