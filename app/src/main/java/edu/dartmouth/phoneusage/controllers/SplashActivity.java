@@ -36,9 +36,17 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (mSharedPreferences.getBoolean(getString(R.string.key_for_first_launch), false)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        setContentView(R.layout.activity_splash);
 
         mMessageTextView = (TextView) findViewById(R.id.splashMessage);
         mProgressSpinner = (ProgressBar) findViewById(R.id.splashProgress);
@@ -49,13 +57,6 @@ public class SplashActivity extends Activity {
                 android.graphics.PorterDuff.Mode.SRC_IN);
         mReloadButton.setVisibility(View.INVISIBLE);
 
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (sharedPreferences.getBoolean(getString(R.string.key_for_first_launch), false)) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         loadUsageInformation();
     }
@@ -68,7 +69,6 @@ public class SplashActivity extends Activity {
                 if (success) {
                     Log.d(getClass().getName(), "SPLASH SUCCESS");
                     mSharedPreferences.edit().putBoolean(getString(R.string.key_for_first_launch), true).commit();
-
                     transitionToMainActivity();
 
                 } else {
