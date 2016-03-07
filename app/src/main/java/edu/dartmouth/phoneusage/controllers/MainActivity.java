@@ -11,12 +11,15 @@ package edu.dartmouth.phoneusage.controllers;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -39,7 +42,6 @@ import edu.dartmouth.phoneusage.utils.UsageService;
 import edu.dartmouth.phoneusage.views.SlidingTabLayout;
 import edu.dartmouth.phoneusage.R;
 import edu.dartmouth.phoneusage.views.ActionTabsViewPagerAdapter;
-import edu.dartmouth.phoneusage.views.VoiceDialogFragment;
 
 public class MainActivity extends Activity {
 	private SlidingTabLayout slidingTabLayout;
@@ -71,10 +73,8 @@ public class MainActivity extends Activity {
 
 	Thread mVoiceThread;
 
-	/**
-	 * Called when the activity is first created.
-	 */
-	@Override
+	NotificationManager mNotificationManager;
+	Notification.Builder notif;
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d("SVB-MainActivity", "onCreate");
 		super.onCreate(savedInstanceState);
@@ -89,6 +89,23 @@ public class MainActivity extends Activity {
 
 		startContextService();
 		setupTabs();
+
+		if(!microphoneStarted && prefs.getBoolean("ANTISOCIAL_ALERTS", false)) {
+			startMicrophone();
+			mVoiceThread = new VoiceThread();
+			mVoiceThread.start();
+		}
+
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		notif = new Notification.Builder(getApplicationContext())
+				.setContentTitle("onPause")
+				.setContentText("Get off your phone!")
+				.setSmallIcon(R.mipmap.ic_launcher)
+				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+				.setPriority(Notification.PRIORITY_MAX)
+				.setDefaults(Notification.DEFAULT_VIBRATE);
+
 	}
 
 	private void startContextService() {
@@ -100,12 +117,7 @@ public class MainActivity extends Activity {
 		}
 		//Bind to the service if it is already running
 		bindToVoiceServiceIfIsRunning();
-		/*microphoneStarted = false;
-		if (Context_Service.isMicrophoneRunning()) {
-			Log.d("MainAcc", "microphone running");
-			microphoneStarted = true;
-		}*/
-		//doBindService();
+
 	}
 
 	private void stopContextService(){
@@ -164,11 +176,6 @@ public class MainActivity extends Activity {
 			doBindService();
 		}
 
-		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)) {
-			startMicrophone();
-			mVoiceThread = new VoiceThread();
-			mVoiceThread.start();
-		}
 	}
 
 	/**
@@ -207,8 +214,6 @@ public class MainActivity extends Activity {
 						voiceVoter.incrementNoise();
 						Log.d("Handler", "got noise data");
 					}
-
-					//statusSpeechView.setText(""+speech);
 					break;
 				}
 				default:
@@ -249,6 +254,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		stopContextService();
+		if(microphoneStarted){
+			stopMicrophone();
+		}
+		if(mVoiceThread!=null && mVoiceThread.isAlive()){
+			mVoiceThread.interrupt();
+		}
 		try {
 			doUnbindService();
 		} catch (Throwable t) {
@@ -264,18 +275,6 @@ public class MainActivity extends Activity {
 			}
 		}
 		super.onDestroy();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if(microphoneStarted){
-			stopMicrophone();
-		}
-
-		if(mVoiceThread!=null && mVoiceThread.isAlive()){
-			mVoiceThread.interrupt();
-		}
 	}
 
 
@@ -372,15 +371,13 @@ public class MainActivity extends Activity {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							if(getFragmentManager().findFragmentByTag("voiceDialog")==null) {
-								new VoiceDialogFragment().show(getFragmentManager(), "voiceDialog");
-							}
+							mNotificationManager.notify(0,notif.build());
 						}
 					});
 				}
 				voiceVoter.reset();
 				try {
-					sleep(7000);
+					sleep(2000);
 				}
 				catch(InterruptedException e){
 					e.printStackTrace();
