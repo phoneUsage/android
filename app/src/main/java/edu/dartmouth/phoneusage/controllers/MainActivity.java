@@ -86,8 +86,6 @@ public class MainActivity extends Activity {
 		Intent usageIntent = new Intent(this, UsageService.class);
 		startService(usageIntent);
 
-
-
 		startContextService();
 		setupTabs();
 
@@ -117,7 +115,6 @@ public class MainActivity extends Activity {
 			if(mIsBound){
 				unbindService(mConnection);
 			}
-
 		}
 	}
 
@@ -164,6 +161,11 @@ public class MainActivity extends Activity {
             };
 			delayedHandler.postDelayed(r, 1000);
 		}
+		if(!mIsBound) {
+			Log.d("MainAcc", "StartMic isntBound");
+			doBindService();
+		}
+
 		if(prefs.getBoolean("ANTISOCIAL_ALERTS", false)) {
 			startMicrophone();
 			mVoiceThread = new VoiceThread();
@@ -223,9 +225,9 @@ public class MainActivity extends Activity {
 			mVoiceService = new Messenger(service);
 			Log.d("Tagg", "Attached to the Service");
 			mIsBound = true;
-			if(!Context_Service.isMicrophoneRunning()){
+			/*if(!Context_Service.isMicrophoneRunning()){
 				startMicrophone();
-			}
+			}*/
 
 			try {
 				Message msg = Message.obtain(null, Context_Service.MSG_REGISTER_CLIENT);
@@ -328,10 +330,6 @@ public class MainActivity extends Activity {
 	 */
 	private void startMicrophone() {
 		Log.d("MainAcc", "StartMic called");
-		if(!mIsBound) {
-			Log.d("MainAcc", "StartMic isntBound");
-			doBindService();
-		}
 		if(mIsBound) {
 			Log.d("MainAcc", "StartMic isBound");
 			sendMessageToService(Context_Service.MSG_START_MICROPHONE);
