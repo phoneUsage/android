@@ -64,12 +64,12 @@ public class TodayCircleView extends View {
 
         // center coordinates
         int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
         // shared preferences
         long duration = mSharedPreferences.getLong(mDurationKey, 0);
         long limitation = mSharedPreferences.getLong(mLimitationKey, 21600000);
         int percentile = mSharedPreferences.getInt(mPercentileKey, 50);
         float percentage = ((float) duration / (float) limitation) * 100;
+        // float percentage = (float) 90.3;
         long unlocks = mSharedPreferences.getLong(mUnlocksKey, 0);
 
         String day = mDateFormatter.format(Calendar.getInstance().getTimeInMillis());
@@ -80,12 +80,12 @@ public class TodayCircleView extends View {
         mCircularProgress.setBounds(0, 0, getWidth(), getHeight() / 2);
         mCircularProgress.setProgress(percentage / 100);
 
-        int circleColor = getResources().getColor(android.R.color.holo_green_light);
+        int circleColor = getResources().getColor(android.R.color.holo_green_dark);
 
         if (percentage > 100) { // warning: usage exceeded
             circleColor = getResources().getColor(android.R.color.holo_red_dark);
         } else if (percentage > 50) { // warning: usage limited
-            circleColor = getResources().getColor(android.R.color.holo_orange_light);
+            circleColor = getResources().getColor(android.R.color.holo_orange_dark);
         }
 
         mCircularProgress.centerColor = circleColor;
@@ -101,7 +101,7 @@ public class TodayCircleView extends View {
         if (percentage > 100) {
             mPaint.setColor(Color.WHITE);
         } else {
-            mPaint.setColor(Color.BLACK);
+            mPaint.setColor(Color.WHITE);
         }
 
         // percentage text
@@ -115,7 +115,7 @@ public class TodayCircleView extends View {
         canvas.drawText(String.format("%d hr %02d min", hours, minutes),
                 centerX, mCircularProgress.getBounds().centerY() + OFFSET, mPaint);
 
-        mPaint.setColor(Color.BLACK);
+        mPaint.setColor(Color.LTGRAY);
 
         // limitation text
         long hoursLimit = (limitation / 3600000) % 24;
