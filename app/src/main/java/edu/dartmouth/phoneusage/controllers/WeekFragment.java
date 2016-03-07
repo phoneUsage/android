@@ -3,6 +3,7 @@ package edu.dartmouth.phoneusage.controllers;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -191,13 +192,16 @@ public class WeekFragment extends Fragment implements UpdatableFragment {
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        rightAxis.setTextColor(Color.LTGRAY);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)
+        leftAxis.setTextColor(Color.LTGRAY);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(Color.LTGRAY);
     }
 
     private void populateWeeklyUsageChart(List<LocalDailyUsageEntry> usageEntries) {
